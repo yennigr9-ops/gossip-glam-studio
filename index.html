@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp *</label>
-                    <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos (ej. 8681234567)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                    <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
                 
                 <!-- CATÁLOGO COMPLETO CON MULTI-SELECCIÓN -->
@@ -92,6 +92,17 @@
                     </div>
                     <input type="hidden" id="pubHoraSeleccionada" required>
                 </div>
+
+                <!-- LEYENDA Y BOTÓN DE CITA NOCTURNA -->
+                <div class="p-3 bg-rose-50/70 border border-rose-200 rounded-xl text-left space-y-2">
+                    <p class="text-[11px] text-rose-800 font-medium leading-relaxed">
+                        🌙 <strong>¿Necesitas una cita después de las 9:00 PM?</strong> Las citas nocturnas tienen un costo extra de +$30 MXN y están sujetas a disponibilidad.
+                    </p>
+                    <a id="btnCitaNocturnaWa" href="https://wa.me/?text=Hola,%20quisiera%20consultar%20disponibilidad%20para%20una%20cita%20nocturna%20(después%20de%20las%209%20pm)." target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">
+                        📲 Consultar Cita Nocturna por WhatsApp
+                    </a>
+                </div>
+
                 <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm mt-2">💖 Solicitar Cita</button>
             </form>
             <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
@@ -148,7 +159,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label>
-                                <input type="text" id="nombreClienta" list="listaClientas" required oninput="cargarDatosClienta(this.value)" placeholder="Escribe o selecciona clienta..." class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
+                                <input type="text" id="nombreClienta" list="listaClientas" required oninput="cargarAntecedentesClienta(this.value)" placeholder="Escribe o selecciona clienta..." class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
                                 <datalist id="listaClientas"></datalist>
                             </div>
                             <div>
@@ -246,7 +257,7 @@
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp</label><input type="tel" id="citaTelefono" placeholder="Ej. 8681234567" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio(s)</label><input type="text" id="citaServicio" required placeholder="Ej. Spire Comic + Depilación Bozo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Duración en minutos</label><input type="number" id="citaDuracion" required value="180" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloquea automáticamente el tiempo correspondiente.</p></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Duración en minutos</label><input type="number" id="citaDuracion" required value="180" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Guardar Cita</button>
                     </form>
@@ -280,12 +291,12 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS RECURRENTE -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS RECURRENTE Y EXCEPCIONES -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
                     <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
-                    <p class="text-xs text-slate-500">Bloquea un período (ej. de 11:00 AM a 1:30 PM o de 5:00 PM a 6:00 PM) para evitar reservas.</p>
                     <form onsubmit="guardarBloqueo(event)" class="space-y-4">
+                        <input type="hidden" id="bloqueoEditId">
                         <div>
                             <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Repetir en Días de la Semana:</label>
                             <div class="flex flex-wrap gap-2 text-xs">
@@ -302,50 +313,113 @@
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Inicio</label><input type="time" id="bloqueoHoraInicio" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Fin</label><input type="time" id="bloqueoHoraFin" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         </div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Escuela niños / Asunto personal" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo de Horas</button>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Escuela niños" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo</button>
                     </form>
-                    <div class="mt-4 pt-4 border-t border-rose-100">
+
+                    <!-- APARTADO DE LIBERAR DÍA EXCEPCIONAL -->
+                    <div class="mt-6 pt-4 border-t border-rose-100 space-y-3">
+                        <h3 class="font-bold text-rose-700 text-sm">🔓 Liberar Día Específico (Excepción)</h3>
+                        <p class="text-xs text-slate-500">Si un día recurrente (ej. martes) estás libre, agrega la fecha aquí para saltarte el bloqueo.</p>
+                        <form onsubmit="guardarExcepcion(event)" class="space-y-3">
+                            <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha a Liberar</label><input type="date" id="excepcionFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo</label><input type="text" id="excepcionMotivo" required placeholder="Ej. No hay clases / Libre" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs">✨ Liberar este Día</button>
+                        </form>
+                        <div id="listaExcepciones" class="space-y-1 text-xs pt-2"></div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-rose-100">
                         <h3 class="font-bold text-rose-700 text-sm mb-2">Horarios Bloqueados Activos</h3>
                         <div id="listaBloqueos" class="space-y-2 text-xs"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS -->
+            <!-- 6. SECCIÓN FINANZAS AVANZADAS -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
+                    <div>
+                        <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad de Saldos Personales</h3>
+                        <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y tandas frente a las clientas.</p>
+                    </div>
+                    <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- FORMULARIO DOBLE DE MOVIMIENTOS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                         <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
-                        <form onsubmit="agregarGasto(event)" class="space-y-3">
-                            <select id="tipoMovimiento" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                                <option value="Gasto">Gasto / Insumos</option>
-                                <option value="Ahorro">Dinero Agregado de Ahorros</option>
-                                <option value="Tarjeta">Dinero en Tarjetas Bancarias</option>
-                            </select>
-                            <input type="text" id="gastoDesc" required placeholder="Concepto (Ej. Pigmentos / Depósito)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <input type="number" step="0.01" id="gastoMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <input type="date" id="gastoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar Movimiento</button>
+                        <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
+                            <!-- Fila 1: Tipo de Flujo -->
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-emerald-50 text-emerald-800">
+                                    <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
+                                </label>
+                                <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-rose-50 text-rose-800">
+                                    <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
+                                </label>
+                            </div>
+                            <!-- Fila 2: Categoría -->
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector Destino</label>
+                                <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
+                                    <option value="Gasto/Insumos">Gasto / Insumos</option>
+                                    <option value="Tarjetas">Tarjetas Bancarias</option>
+                                    <option value="Ahorros">Ahorros</option>
+                                    <option value="Tandas">Tandas</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Pago Tanda / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
                         </form>
                     </div>
+
+                    <!-- BALANCE NETO GENERAL -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
                         <div>
                             <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>Total Ingresos Realizados:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Gastos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Ingresos por Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Gastos / Insumos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600 saldo-personal">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600 saldo-personal">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Tandas:</span> <strong id="totalTandas" class="text-amber-600 saldo-personal">$0.00 MXN</strong></div>
                                 <hr class="my-2 border-rose-100">
                                 <div class="flex justify-between text-base"><span>Ganancia Neta Final:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- TABLA DETALLADA DE MOVIMIENTOS -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
+                    <h3 class="text-base font-bold text-rose-700 border-b border-rose-100 pb-2">📋 Historial Detallado de Entradas y Salidas</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="bg-rose-50 text-rose-700 uppercase">
+                                    <th class="p-2.5 rounded-l-lg">Fecha</th>
+                                    <th class="p-2.5">Concepto</th>
+                                    <th class="p-2.5">Flujo</th>
+                                    <th class="p-2.5">Categoría</th>
+                                    <th class="p-2.5">Monto</th>
+                                    <th class="p-2.5 rounded-r-lg text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaHistorialFinanciero">
+                                <tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos registrados.</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -368,6 +442,7 @@
         const db = firebase.firestore();
 
         let modoDiciembre = false;
+        let ocultarSaldosPersonal = false;
 
         function toggleModoDiciembre() {
             modoDiciembre = !modoDiciembre;
@@ -382,6 +457,13 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
+        function toggleOcultarSaldos() {
+            ocultarSaldosPersonal = !ocultarSaldosPersonal;
+            const btn = document.getElementById('btnOcultarSaldos');
+            btn.innerText = ocultarSaldosPersonal ? "👁️‍🗨️ Mostrar Saldos" : "👁️ Ocultar Saldos";
+            calcularFinanzas();
+        }
+
         // Detectar si entra en modo reserva
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('modo') === 'reserva') {
@@ -394,8 +476,9 @@
 
         let fichas = [];
         let citas = [];
-        let gastos = [];
+        let movimientosFinancieros = [];
         let bloqueos = [];
+        let excepciones = [];
 
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
@@ -409,14 +492,20 @@
             calcularFinanzas();
         });
 
-        db.collection("gastos").onSnapshot(snapshot => {
-            gastos = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+        db.collection("movimientosFinancieros").onSnapshot(snapshot => {
+            movimientosFinancieros = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            renderHistorialFinanciero();
             calcularFinanzas();
         });
 
         db.collection("bloqueos").onSnapshot(snapshot => {
             bloqueos = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
             renderBloqueos();
+        });
+
+        db.collection("excepciones").onSnapshot(snapshot => {
+            excepciones = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            renderExcepciones();
         });
 
         setupCanvas('canvasIzq');
@@ -471,6 +560,7 @@
 
         if(document.getElementById('fechaFicha')) {
             document.getElementById('fechaFicha').valueAsDate = new Date();
+            document.getElementById('finFecha').valueAsDate = new Date();
         }
 
         function actualizarDatalist() {
@@ -482,6 +572,45 @@
                 opt.value = nombre;
                 dl.appendChild(opt);
             });
+        }
+
+        // CARGA INTELIGENTE DE ANTECEDENTES EN NUEVA FICHA
+        function cargarAntecedentesClienta(nombre) {
+            const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
+            if(encontrada.length > 0) {
+                // Ordenar por fecha más reciente
+                encontrada.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+                const ultima = encontrada[0];
+
+                // Autocompletar checks según el tipo de servicio
+                if(ultima.servicioTipo === 'Extensión de Pestañas' && ultima.detalles && ultima.detalles.checks) {
+                    document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
+                    toggleServicio();
+                    document.querySelectorAll('input[name="checkPestanas"]').forEach(chk => {
+                        chk.checked = ultima.detalles.checks.includes(chk.value);
+                    });
+                    document.getElementById('tecPestanas').value = ultima.detalles.tec || '';
+                    document.getElementById('disenoPestanas').value = ultima.detalles.diseno || '';
+                    document.getElementById('mappingPestanas').value = ultima.detalles.mapping || '';
+                } else if(ultima.servicioTipo === 'Micropigmentación' && ultima.detalles && ultima.detalles.checks) {
+                    document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
+                    toggleServicio();
+                    document.querySelectorAll('input[name="checkMicro"]').forEach(chk => {
+                        chk.checked = ultima.detalles.checks.includes(chk.value);
+                    });
+                }
+
+                document.getElementById('nombreClientaTitulo').innerText = nombre;
+                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => `
+                    <div class="p-2.5 bg-rose-50 rounded-xl text-xs flex justify-between items-center">
+                        <div><strong>${f.fecha}</strong> - ${f.servicioTipo}</div>
+                        <div class="text-rose-600">${f.notas || 'Sin notas'}</div>
+                    </div>
+                `).join('');
+                document.getElementById('historialClientaActual').classList.remove('hidden');
+            } else {
+                document.getElementById('historialClientaActual').classList.add('hidden');
+            }
         }
 
         function calcularResumenPublico() {
@@ -500,7 +629,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // GENERADOR DE HORARIOS ADAPTABLE (MODO NORMAL Y MODO DICIEMBRE)
+        // GENERADOR DE HORARIOS INTELIGENTE (LIBERA 6PM Y 7PM)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -509,22 +638,25 @@
             if(!fechaSel) return;
 
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            let tiempoRequeridoMin = 180; // Tiempo base de 3 hrs si no elige nada
+            let tiempoRequeridoMin = 180;
             if(seleccionados.length > 0) {
                 tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             }
 
             const horasBase = modoDiciembre 
-                ? ["08:00", "11:00", "14:00", "17:00", "19:00", "21:00", "23:00", "01:00"]
-                : ["08:00", "11:00", "14:00", "17:00", "19:00"];
+                ? ["08:00", "11:00", "14:00", "17:00", "18:00", "19:00", "21:00", "23:00", "01:00"]
+                : ["08:00", "11:00", "14:00", "17:00", "18:00", "19:00"];
             
             cont.innerHTML = '';
 
-            const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay(); // 0 = Dom, 1 = Lun...
+            const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay();
 
             horasBase.forEach(hora => {
                 const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
                 const margenMs = tiempoRequeridoMin * 60 * 1000;
+
+                // Verificar excepción de día libre
+                const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
 
                 // Verificar citas existentes
                 const ocupadoCita = citas.some(c => {
@@ -534,19 +666,22 @@
                     return (timestampDeseado < timeCita + duracionCitaMs) && (timestampDeseado + margenMs > timeCita);
                 });
 
-                // Verificar bloqueos por rango o días recurrentes
-                const ocupadoBloqueo = bloqueos.some(b => {
-                    const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
-                    const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
+                // Verificar bloqueos recurrentes o de fecha
+                let ocupadoBloqueo = false;
+                if(!esExcepcionLibre) {
+                    ocupadoBloqueo = bloqueos.some(b => {
+                        const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
+                        const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
 
-                    if(b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
-                        return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
-                    }
-                    if(b.fecha === fechaSel) {
-                        return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
-                    }
-                    return false;
-                });
+                        if(b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
+                            return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
+                        }
+                        if(b.fecha === fechaSel) {
+                            return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
+                        }
+                        return false;
+                    });
+                }
 
                 const estaBloqueado = ocupadoCita || ocupadoBloqueo;
 
@@ -579,18 +714,17 @@
 
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
             if(seleccionados.length === 0) {
-                alert('⚠️ Por favor selecciona al menos un servicio del menú.');
+                alert('⚠️ Por favor selecciona al menos un servicio.');
                 return;
             }
             if(!hora) {
-                alert('⚠️ Por favor selecciona una hora disponible de la lista.');
+                alert('⚠️ Por favor selecciona una hora disponible.');
                 return;
             }
 
             const serviciosTxt = seleccionados.map(c => c.value).join(', ');
             let tiempoTotalMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             let montoTotal = seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0);
-
             const fechaHora = `${fecha}T${hora}`;
 
             await db.collection("citas").add({
@@ -647,9 +781,7 @@
 
             if(editId) {
                 const docRef = fichas.find(f => f.id == editId);
-                if(docRef) {
-                    await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
-                }
+                if(docRef) await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
             } else {
                 await db.collection("fichas").add(dataFicha);
             }
@@ -665,22 +797,6 @@
             limpiarCanvas('canvasIzq');
             limpiarCanvas('canvasDer');
             document.getElementById('historialClientaActual').classList.add('hidden');
-        }
-
-        function cargarDatosClienta(nombre) {
-            const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
-            if(encontrada.length > 0) {
-                document.getElementById('nombreClientaTitulo').innerText = nombre;
-                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => `
-                    <div class="p-2.5 bg-rose-50 rounded-xl text-xs flex justify-between items-center">
-                        <div><strong>${f.fecha}</strong> - ${f.servicioTipo}</div>
-                        <div class="text-rose-600">${f.notas || 'Sin notas'}</div>
-                    </div>
-                `).join('');
-                document.getElementById('historialClientaActual').classList.remove('hidden');
-            } else {
-                document.getElementById('historialClientaActual').classList.add('hidden');
-            }
         }
 
         async function agendarCita(e) {
@@ -706,9 +822,7 @@
 
             if(editId) {
                 const docRef = citas.find(c => c.id == editId);
-                if(docRef) {
-                    await db.collection("citas").doc(docRef.idDoc).update(dataCita);
-                }
+                if(docRef) await db.collection("citas").doc(docRef.idDoc).update(dataCita);
             } else {
                 await db.collection("citas").add(dataCita);
             }
@@ -732,10 +846,11 @@
                 const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
                 const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
 
-                // Limpieza de número para enlace WhatsApp
                 const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
                 const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita programada para el ${new Date(c.fechaHora).toLocaleString()} para el servicio de: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
                 const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
+
+                const nombreLimpio = c.nombre.split('(')[0].trim();
 
                 return `
                     <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
@@ -747,6 +862,7 @@
                         <div class="flex flex-wrap gap-2">
                             ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">💬 WhatsApp</a>` : ''}
                             <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">📅 Google Cal</a>
+                            <button onclick="crearFichaDesdeCita('${nombreLimpio}', '${c.fechaHora.split('T')[0]}', '${c.servicio}')" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">📋 Crear Ficha Técnica</button>
                             <button onclick="actualizarEstadoCita('${c.idDoc}', 'Realizada')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
                             <button onclick="editarCita(${c.id})" class="bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">Editar</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
@@ -754,6 +870,19 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function crearFichaDesdeCita(nombre, fecha, servicio) {
+            document.getElementById('nombreClienta').value = nombre;
+            document.getElementById('fechaFicha').value = fecha;
+            if(servicio.toLowerCase().includes('micropigmentación') || servicio.toLowerCase().includes('microblading') || servicio.toLowerCase().includes('delineado')) {
+                document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
+            } else {
+                document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
+            }
+            toggleServicio();
+            cargarAntecedentesClienta(nombre);
+            cambiarTab('ficha');
         }
 
         function editarCita(id) {
@@ -779,15 +908,38 @@
 
         async function guardarBloqueo(e) {
             e.preventDefault();
+            const editId = document.getElementById('bloqueoEditId').value;
             const diasRecurrentes = Array.from(document.querySelectorAll('input[name="diasBloqueo"]:checked')).map(c => c.value);
             const fecha = document.getElementById('bloqueoFecha').value;
             const horaInicio = document.getElementById('bloqueoHoraInicio').value;
             const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
 
-            await db.collection("bloqueos").add({ diasRecurrentes, fecha, horaInicio, horaFin, motivo });
+            const dataBloqueo = { diasRecurrentes, fecha, horaInicio, horaFin, motivo };
+
+            if(editId) {
+                const docRef = bloqueos.find(b => b.idDoc === editId);
+                if(docRef) await db.collection("bloqueos").doc(editId).update(dataBloqueo);
+            } else {
+                await db.collection("bloqueos").add(dataBloqueo);
+            }
+
             alert('🔒 Bloqueo guardado correctamente');
+            document.getElementById('bloqueoEditId').value = '';
             e.target.reset();
+        }
+
+        function editarBloqueo(idDoc) {
+            const b = bloqueos.find(item => item.idDoc === idDoc);
+            if(!b) return;
+            document.getElementById('bloqueoEditId').value = b.idDoc;
+            document.querySelectorAll('input[name="diasBloqueo"]').forEach(chk => {
+                chk.checked = b.diasRecurrentes && b.diasRecurrentes.includes(chk.value);
+            });
+            document.getElementById('bloqueoFecha').value = b.fecha || '';
+            document.getElementById('bloqueoHoraInicio').value = b.horaInicio;
+            document.getElementById('bloqueoHoraFin').value = b.horaFin;
+            document.getElementById('bloqueoMotivo').value = b.motivo;
         }
 
         function renderBloqueos() {
@@ -803,7 +955,10 @@
                 return `
                     <div class="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 rounded-lg">
                         <div><strong>${diasTxt}</strong> (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</div>
-                        <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                        <div class="flex gap-2">
+                            <button onclick="editarBloqueo('${b.idDoc}')" class="text-amber-600 font-bold text-xs">Editar</button>
+                            <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -811,6 +966,131 @@
 
         async function eliminarBloqueo(idDoc) {
             await db.collection("bloqueos").doc(idDoc).delete();
+        }
+
+        async function guardarExcepcion(e) {
+            e.preventDefault();
+            const fecha = document.getElementById('excepcionFecha').value;
+            const motivo = document.getElementById('excepcionMotivo').value;
+            await db.collection("excepciones").add({ fecha, motivo });
+            alert('✨ Día liberado con éxito');
+            e.target.reset();
+        }
+
+        function renderExcepciones() {
+            const cont = document.getElementById('listaExcepciones');
+            if(!cont) return;
+            if(excepciones.length === 0) {
+                cont.innerHTML = `<p class="text-slate-400 italic">No hay días excepcionales liberados.</p>`;
+                return;
+            }
+            cont.innerHTML = excepciones.map(ex => `
+                <div class="flex justify-between items-center p-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div><strong>${ex.fecha}</strong> - ${ex.motivo}</div>
+                    <button onclick="eliminarExcepcion('${ex.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                </div>
+            `).join('');
+        }
+
+        async function eliminarExcepcion(idDoc) {
+            await db.collection("excepciones").doc(idDoc).delete();
+        }
+
+        async function agregarMovimientoFinanciero(e) {
+            e.preventDefault();
+            const tipoFlujo = document.querySelector('input[name="tipoFlujo"]:checked').value;
+            const categoria = document.getElementById('finCategoria').value;
+            const desc = document.getElementById('finDesc').value;
+            const monto = parseFloat(document.getElementById('finMonto').value);
+            const fecha = document.getElementById('finFecha').value;
+
+            await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
+            alert('✨ Movimiento guardado correctamente');
+            e.target.reset();
+            document.getElementById('finFecha').valueAsDate = new Date();
+        }
+
+        function renderHistorialFinanciero() {
+            const tbody = document.getElementById('tablaHistorialFinanciero');
+            if(!tbody) return;
+            if(movimientosFinancieros.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos registrados.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = movimientosFinancieros.map(m => `
+                <tr class="border-b border-rose-50">
+                    <td class="p-2.5">${m.fecha}</td>
+                    <td class="p-2.5 font-medium">${m.desc}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${m.tipoFlujo === 'Entrada' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${m.tipoFlujo}</span></td>
+                    <td class="p-2.5">${m.categoria}</td>
+                    <td class="p-2.5 font-bold ${m.tipoFlujo === 'Entrada' ? 'text-emerald-600' : 'text-rose-600'}">$${m.monto.toFixed(2)} MXN</td>
+                    <td class="p-2.5 text-center"><button onclick="eliminarMovimientoFinanciero('${m.idDoc}')" class="text-rose-500 font-bold hover:underline">🗑️</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function eliminarMovimientoFinanciero(idDoc) {
+            if(confirm('¿Eliminar este registro del historial?')) {
+                await db.collection("movimientosFinancieros").doc(idDoc).delete();
+            }
+        }
+
+        function calcularFinanzas() {
+            if(!document.getElementById('gananciaSemanal')) return;
+            
+            const realizadas = citas.filter(c => c.estado === 'Realizada');
+            const totalIngresosServicios = realizadas.reduce((acc, c) => acc + c.monto, 0);
+
+            let totalGastos = 0;
+            let totalAhorros = 0;
+            let totalTarjetas = 0;
+            let totalTandas = 0;
+
+            movimientosFinancieros.forEach(m => {
+                if(m.categoria === 'Gasto/Insumos') {
+                    if(m.tipoFlujo === 'Entrada') totalGastos -= m.monto;
+                    else totalGastos += m.monto;
+                }
+                if(m.categoria === 'Ahorros') {
+                    if(m.tipoFlujo === 'Entrada') totalAhorros += m.monto;
+                    else totalAhorros -= m.monto;
+                }
+                if(m.categoria === 'Tarjetas') {
+                    if(m.tipoFlujo === 'Entrada') totalTarjetas += m.monto;
+                    else totalTarjetas -= m.monto;
+                }
+                if(m.categoria === 'Tandas') {
+                    if(m.tipoFlujo === 'Entrada') totalTandas += m.monto;
+                    else totalTandas -= m.monto;
+                }
+            });
+
+            const ahora = new Date();
+            const semanaPasada = new Date(ahora.getTime() - 7*24*60*60*1000);
+            const mesActual = ahora.getMonth();
+            const anioActual = ahora.getFullYear();
+
+            const sem = realizadas.filter(c => new Date(c.fechaHora) >= semanaPasada).reduce((acc, c) => acc + c.monto, 0);
+            const mes = realizadas.filter(c => new Date(c.fechaHora).getMonth() === mesActual).reduce((acc, c) => acc + c.monto, 0);
+            const anio = realizadas.filter(c => new Date(c.fechaHora).getFullYear() === anioActual).reduce((acc, c) => acc + c.monto, 0);
+
+            document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
+            document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
+            document.getElementById('gananciaAnual').innerText = `$${anio.toFixed(2)} MXN`;
+            document.getElementById('totalIngresos').innerText = `$${totalIngresosServicios.toFixed(2)} MXN`;
+            document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
+
+            if(ocultarSaldosPersonal) {
+                document.getElementById('totalAhorros').innerText = `$**** MXN`;
+                document.getElementById('totalTarjetas').innerText = `$**** MXN`;
+                document.getElementById('totalTandas').innerText = `$**** MXN`;
+            } else {
+                document.getElementById('totalAhorros').innerText = `$${totalAhorros.toFixed(2)} MXN`;
+                document.getElementById('totalTarjetas').innerText = `$${totalTarjetas.toFixed(2)} MXN`;
+                document.getElementById('totalTandas').innerText = `$${totalTandas.toFixed(2)} MXN`;
+            }
+
+            document.getElementById('gananciaNeta').innerText = `$${(totalIngresosServicios - totalGastos).toFixed(2)} MXN`;
         }
 
         function renderExpedientes() {
@@ -856,7 +1136,7 @@
             document.getElementById('fechaFicha').value = f.fecha;
             document.getElementById('notasFicha').value = f.notas || '';
             document.getElementById('proximaCitaFicha').value = f.proximaCita || '';
-            cargarDatosClienta(f.nombre);
+            cargarAntecedentesClienta(f.nombre);
             cambiarTab('ficha');
         }
 
@@ -864,46 +1144,6 @@
             if(confirm('¿Estás segura de eliminar este expediente?')) {
                 await db.collection("fichas").doc(idDoc).delete();
             }
-        }
-
-        async function agregarGasto(e) {
-            e.preventDefault();
-            await db.collection("gastos").add({
-                tipo: document.getElementById('tipoMovimiento').value,
-                desc: document.getElementById('gastoDesc').value,
-                monto: parseFloat(document.getElementById('gastoMonto').value),
-                fecha: document.getElementById('gastoFecha').value
-            });
-            alert('✨ Movimiento registrado');
-            e.target.reset();
-        }
-
-        function calcularFinanzas() {
-            if(!document.getElementById('gananciaSemanal')) return;
-            const realizadas = citas.filter(c => c.estado === 'Realizada');
-            const totalIngresos = realizadas.reduce((acc, c) => acc + c.monto, 0);
-            
-            const totalGastos = gastos.filter(g => g.tipo === 'Gasto').reduce((acc, g) => acc + g.monto, 0);
-            const totalAhorros = gastos.filter(g => g.tipo === 'Ahorro').reduce((acc, g) => acc + g.monto, 0);
-            const totalTarjetas = gastos.filter(g => g.tipo === 'Tarjeta').reduce((acc, g) => acc + g.monto, 0);
-
-            const ahora = new Date();
-            const semanaPasada = new Date(ahora.getTime() - 7*24*60*60*1000);
-            const mesActual = ahora.getMonth();
-            const anioActual = ahora.getFullYear();
-
-            const sem = realizadas.filter(c => new Date(c.fechaHora) >= semanaPasada).reduce((acc, c) => acc + c.monto, 0);
-            const mes = realizadas.filter(c => new Date(c.fechaHora).getMonth() === mesActual).reduce((acc, c) => acc + c.monto, 0);
-            const anio = realizadas.filter(c => new Date(c.fechaHora).getFullYear() === anioActual).reduce((acc, c) => acc + c.monto, 0);
-
-            document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
-            document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
-            document.getElementById('gananciaAnual').innerText = `$${anio.toFixed(2)} MXN`;
-            document.getElementById('totalIngresos').innerText = `$${totalIngresos.toFixed(2)} MXN`;
-            document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
-            document.getElementById('totalAhorros').innerText = `$${totalAhorros.toFixed(2)} MXN`;
-            document.getElementById('totalTarjetas').innerText = `$${totalTarjetas.toFixed(2)} MXN`;
-            document.getElementById('gananciaNeta').innerText = `$${(totalIngresos - totalGastos).toFixed(2)} MXN`;
         }
     </script>
 </body>
