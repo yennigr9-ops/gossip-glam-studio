@@ -22,7 +22,7 @@
 
     <!-- VISTA PÚBLICA PARA CLIENTAS (?modo=reserva) -->
     <div id="vistaPublica" class="hidden min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-2xl shadow-md border border-rose-100 max-w-md w-full space-y-4 text-center">
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-rose-100 max-w-lg w-full space-y-4 text-center">
             <span class="text-3xl">👑</span>
             <h1 class="text-xl font-bold text-rose-600">Gossip & Glam Studio</h1>
             <p class="text-xs text-rose-400 font-medium">Reserva tu cita en línea</p>
@@ -34,18 +34,53 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp *</label>
-                    <input type="tel" id="pubTelefono" required placeholder="Número de contacto" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                    <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos (ej. 8681234567)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
+                
+                <!-- CATÁLOGO COMPLETO CON MULTI-SELECCIÓN -->
                 <div>
-                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio Deseado *</label>
-                    <select id="pubServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                        <option value="Extensiones de Pestañas">Extensiones de Pestañas (3 hrs)</option>
-                        <option value="Micropigmentación Cejas">Micropigmentación Cejas (3 hrs)</option>
-                        <option value="Micropigmentación Labios">Micropigmentación Labios (3 hrs)</option>
-                        <option value="Delineado">Delineado (3 hrs)</option>
-                        <option value="Retoque">Retoque (2.5 hrs)</option>
-                    </select>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Selecciona Servicio(s) Deseado(s) *</label>
+                    <div class="max-h-48 overflow-y-auto border border-rose-200 rounded-xl p-3 bg-rose-50/30 space-y-2 text-xs">
+                        <p class="font-bold text-rose-600 border-b pb-1">✨ Extensión de Pestañas (3 hrs)</p>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Spire Comic" data-tiempo="180" data-precio="550" onchange="calcularResumenPublico()"> Spire Comic <span>$550</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Wispy" data-tiempo="180" data-precio="600" onchange="calcularResumenPublico()"> Wispy <span>$600</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Buchilashes XL" data-tiempo="180" data-precio="800" onchange="calcularResumenPublico()"> Buchilashes XL <span>$800</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Hawaiano" data-tiempo="180" data-precio="400" onchange="calcularResumenPublico()"> Hawaiano <span>$400</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Egipcio" data-tiempo="180" data-precio="500" onchange="calcularResumenPublico()"> Egipcio <span>$500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Griego" data-tiempo="180" data-precio="450" onchange="calcularResumenPublico()"> Griego <span>$450</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Aurora" data-tiempo="180" data-precio="450" onchange="calcularResumenPublico()"> Aurora <span>$450</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Pestañas Volumen Tech" data-tiempo="180" data-precio="550" onchange="calcularResumenPublico()"> Volumen Tech <span>$550</span></label>
+
+                        <p class="font-bold text-rose-600 border-b pb-1 pt-2">🎨 Micropigmentación (3 hrs)</p>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Microblading" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Microblading <span>$1500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Powder Brows" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Powder Brows <span>$1500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Microlips" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Microlips <span>$1500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Delineado Ojos" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Delineado <span>$1500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Delineado + Línea de Luz" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Delineado + Línea de luz <span>$1500</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Retoque Micropigmentación" data-tiempo="150" data-precio="1100" onchange="calcularResumenPublico()"> Retoque <span>$1100</span></label>
+
+                        <p class="font-bold text-rose-600 border-b pb-1 pt-2">🌿 Cejas & Estilo (1.5 hrs)</p>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Cejas HD" data-tiempo="90" data-precio="200" onchange="calcularResumenPublico()"> Cejas HD <span>$200</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Cejas 4K" data-tiempo="90" data-precio="250" onchange="calcularResumenPublico()"> Cejas 4K <span>$250</span></label>
+
+                        <p class="font-bold text-rose-600 border-b pb-1 pt-2">🕯️ Depilación con Cera (30 mins)</p>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Facial" data-tiempo="30" data-precio="200" onchange="calcularResumenPublico()"> Facial <span>$200</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Bozo" data-tiempo="20" data-precio="70" onchange="calcularResumenPublico()"> Bozo <span>$70</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Patillas" data-tiempo="20" data-precio="65" onchange="calcularResumenPublico()"> Patillas <span>$65</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Diseño Ceja y Depilación" data-tiempo="30" data-precio="100" onchange="calcularResumenPublico()"> Diseño Ceja y Depilación <span>$100</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Axilas" data-tiempo="30" data-precio="200" onchange="calcularResumenPublico()"> Axilas <span>$200</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Brazos" data-tiempo="40" data-precio="250" onchange="calcularResumenPublico()"> Brazos <span>$250</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Espalda" data-tiempo="40" data-precio="300" onchange="calcularResumenPublico()"> Espalda <span>$300</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Piernas Completas" data-tiempo="50" data-precio="370" onchange="calcularResumenPublico()"> Piernas Completas <span>$370</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Depilación Medias Piernas" data-tiempo="30" data-precio="300" onchange="calcularResumenPublico()"> Medias Piernas <span>$300</span></label>
+                    </div>
                 </div>
+
+                <div class="p-3 bg-rose-50 border border-rose-100 rounded-xl flex justify-between text-xs font-bold text-rose-700">
+                    <span>Duración estim.: <strong id="pubTiempoTotal">0 min</strong></span>
+                    <span>Total estim.: <strong id="pubMontoTotal">$0 MXN</strong></span>
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">1. Selecciona la Fecha *</label>
                     <input type="date" id="pubFecha" required onchange="cargarHorariosDisponibles()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
@@ -60,7 +95,7 @@
                 <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm mt-2">💖 Solicitar Cita</button>
             </form>
             <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
-                ¡Cita registrada con éxito! Tu horario quedó apartado.
+                ¡Solicitud enviada! Nos pondremos en contacto contigo por WhatsApp para confirmar tu cita.
             </div>
         </div>
     </div>
@@ -78,6 +113,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
+                    <button id="btnModoDiciembre" onclick="toggleModoDiciembre()" class="text-xs bg-purple-100 text-purple-800 border border-purple-200 px-2.5 py-1 rounded-full font-bold">🎄 Modo Normal (8am-7pm)</button>
                     <span id="estadoCloud" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">☁️ Conectando Nube...</span>
                     <a href="https://calendar.google.com" target="_blank" class="bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-rose-100 flex items-center gap-1 shadow-sm">
                         📅 Google Calendar
@@ -123,7 +159,7 @@
 
                         <!-- Selector de Servicio -->
                         <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100">
-                            <label class="block text-xs font-bold text-rose-700 uppercase mb-2">Seleccionar Servicio:</label>
+                            <label class="block text-xs font-bold text-rose-700 uppercase mb-2">Seleccionar Servicio Principal:</label>
                             <div class="flex gap-6">
                                 <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
                                     <input type="radio" name="tipoServicio" value="pestanas" checked onchange="toggleServicio()" class="text-rose-600"> Extensión de Pestañas
@@ -207,8 +243,10 @@
                     <form onsubmit="agendarCita(event)" class="space-y-4">
                         <input type="hidden" id="citaEditId">
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label><input type="text" id="citaNombre" list="listaClientas" required placeholder="Nombre completo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloqueo automático de 3 horas por servicio.</p></div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio</label><select id="citaServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="Extensiones de Pestañas">Extensiones de Pestañas</option><option value="Micropigmentación Cejas">Micropigmentación Cejas</option><option value="Micropigmentación Labios">Micropigmentación Labios</option><option value="Delineado">Delineado</option><option value="Retoque">Retoque</option></select></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp</label><input type="tel" id="citaTelefono" placeholder="Ej. 8681234567" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio(s)</label><input type="text" id="citaServicio" required placeholder="Ej. Spire Comic + Depilación Bozo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Duración en minutos</label><input type="number" id="citaDuracion" required value="180" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloquea automáticamente el tiempo correspondiente.</p></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Guardar Cita</button>
                     </form>
@@ -242,19 +280,30 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS POR RANGO -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS RECURRENTE -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
-                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Rango de Horarios (Familia / Asuntos)</h2>
-                    <p class="text-xs text-slate-500">Bloquea un período (ej. de 8:00 AM a 11:00 AM) para evitar reservas.</p>
+                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
+                    <p class="text-xs text-slate-500">Bloquea un período (ej. de 11:00 AM a 1:30 PM o de 5:00 PM a 6:00 PM) para evitar reservas.</p>
                     <form onsubmit="guardarBloqueo(event)" class="space-y-4">
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha a Bloquear</label><input type="date" id="bloqueoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Repetir en Días de la Semana:</label>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="1"> Lun</label>
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="2"> Mar</label>
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="3"> Mié</label>
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="4"> Jue</label>
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="5"> Vie</label>
+                                <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="6"> Sáb</label>
+                            </div>
+                        </div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">O Fecha Específica (Opcional)</label><input type="date" id="bloqueoFecha" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Inicio</label><input type="time" id="bloqueoHoraInicio" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Fin</label><input type="time" id="bloqueoHoraFin" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         </div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Compromiso familiar / Niños" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Bloquear Rango de Horas</button>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Escuela niños / Asunto personal" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo de Horas</button>
                     </form>
                     <div class="mt-4 pt-4 border-t border-rose-100">
                         <h3 class="font-bold text-rose-700 text-sm mb-2">Horarios Bloqueados Activos</h3>
@@ -317,6 +366,21 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
+        let modoDiciembre = false;
+
+        function toggleModoDiciembre() {
+            modoDiciembre = !modoDiciembre;
+            const btn = document.getElementById('btnModoDiciembre');
+            if(modoDiciembre) {
+                btn.className = "text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-full font-bold";
+                btn.innerText = "🎄 Modo Diciembre Activo (8am-3am)";
+            } else {
+                btn.className = "text-xs bg-purple-100 text-purple-800 border border-purple-200 px-2.5 py-1 rounded-full font-bold";
+                btn.innerText = "🎄 Modo Normal (8am-7pm)";
+            }
+            if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
+        }
 
         // Detectar si entra en modo reserva
         const urlParams = new URLSearchParams(window.location.search);
@@ -420,7 +484,23 @@
             });
         }
 
-        // GENERADOR DE HORARIOS INTELIGENTE (8:00 AM A 7:00 PM)
+        function calcularResumenPublico() {
+            const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
+            let tiempo = 0;
+            let precio = 0;
+
+            seleccionados.forEach(c => {
+                tiempo += parseInt(c.getAttribute('data-tiempo'));
+                precio += parseFloat(c.getAttribute('data-precio'));
+            });
+
+            document.getElementById('pubTiempoTotal').innerText = `${tiempo} min`;
+            document.getElementById('pubMontoTotal').innerText = `$${precio.toFixed(2)} MXN`;
+
+            if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
+        }
+
+        // GENERADOR DE HORARIOS ADAPTABLE (MODO NORMAL Y MODO DICIEMBRE)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -428,25 +508,44 @@
 
             if(!fechaSel) return;
 
-            const horasBase = ["08:00", "11:00", "14:00", "17:00", "19:00"];
+            const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
+            let tiempoRequeridoMin = 180; // Tiempo base de 3 hrs si no elige nada
+            if(seleccionados.length > 0) {
+                tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
+            }
+
+            const horasBase = modoDiciembre 
+                ? ["08:00", "11:00", "14:00", "17:00", "19:00", "21:00", "23:00", "01:00"]
+                : ["08:00", "11:00", "14:00", "17:00", "19:00"];
+            
             cont.innerHTML = '';
+
+            const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay(); // 0 = Dom, 1 = Lun...
 
             horasBase.forEach(hora => {
                 const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
-                const margenMs = 3 * 60 * 60 * 1000; // 3 Horas de margen
+                const margenMs = tiempoRequeridoMin * 60 * 1000;
 
-                // Verificar citas
+                // Verificar citas existentes
                 const ocupadoCita = citas.some(c => {
                     if(c.estado === 'Cancelada') return false;
                     const timeCita = new Date(c.fechaHora).getTime();
-                    return Math.abs(timeCita - timestampDeseado) < margenMs;
+                    const duracionCitaMs = (c.duracionMin || 180) * 60 * 1000;
+                    return (timestampDeseado < timeCita + duracionCitaMs) && (timestampDeseado + margenMs > timeCita);
                 });
 
-                // Verificar bloqueos por rango
+                // Verificar bloqueos por rango o días recurrentes
                 const ocupadoBloqueo = bloqueos.some(b => {
-                    const inicioB = new Date(`${b.fecha}T${b.horaInicio}:00`).getTime();
-                    const finB = new Date(`${b.fecha}T${b.horaFin}:00`).getTime();
-                    return timestampDeseado >= inicioB && timestampDeseado < finB;
+                    const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
+                    const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
+
+                    if(b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
+                        return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
+                    }
+                    if(b.fecha === fechaSel) {
+                        return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
+                    }
+                    return false;
                 });
 
                 const estaBloqueado = ocupadoCita || ocupadoBloqueo;
@@ -475,29 +574,39 @@
             e.preventDefault();
             const nombre = document.getElementById('pubNombre').value.trim();
             const telefono = document.getElementById('pubTelefono').value.trim();
-            const servicio = document.getElementById('pubServicio').value;
             const fecha = document.getElementById('pubFecha').value;
             const hora = document.getElementById('pubHoraSeleccionada').value;
 
+            const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
+            if(seleccionados.length === 0) {
+                alert('⚠️ Por favor selecciona al menos un servicio del menú.');
+                return;
+            }
             if(!hora) {
                 alert('⚠️ Por favor selecciona una hora disponible de la lista.');
                 return;
             }
+
+            const serviciosTxt = seleccionados.map(c => c.value).join(', ');
+            let tiempoTotalMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
+            let montoTotal = seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0);
 
             const fechaHora = `${fecha}T${hora}`;
 
             await db.collection("citas").add({
                 id: Date.now(),
                 nombre: `${nombre} (${telefono})`,
+                telefono,
                 fechaHora,
-                servicio,
-                monto: 0,
-                estado: 'Programada'
+                servicio: serviciosTxt,
+                duracionMin: tiempoTotalMin,
+                monto: montoTotal,
+                estado: 'Pendiente'
             });
 
             document.getElementById('pubMensajeExito').classList.remove('hidden');
             e.target.reset();
-            cargarHorariosDisponibles();
+            calcularResumenPublico();
         }
 
         async function guardarFicha(e) {
@@ -578,28 +687,19 @@
             e.preventDefault();
             const editId = document.getElementById('citaEditId').value;
             const nombre = document.getElementById('citaNombre').value.trim();
+            const telefono = document.getElementById('citaTelefono').value.trim();
             const fechaHora = document.getElementById('citaFechaHora').value;
             const servicio = document.getElementById('citaServicio').value;
+            const duracionMin = parseInt(document.getElementById('citaDuracion').value);
             const monto = parseFloat(document.getElementById('citaMonto').value);
-
-            const nuevaFechaObj = new Date(fechaHora);
-            const margenMs = 3 * 60 * 60 * 1000;
-
-            const conflicto = citas.find(c => {
-                if(c.estado === 'Cancelada' || (editId && c.id == editId)) return false;
-                return Math.abs(new Date(c.fechaHora).getTime() - nuevaFechaObj.getTime()) < margenMs;
-            });
-
-            if(conflicto) {
-                alert('⚠️ Conflicto de horario: Debe haber un margen de 3 horas entre citas.');
-                return;
-            }
 
             const dataCita = {
                 id: editId ? Number(editId) : Date.now(),
-                nombre,
+                nombre: telefono ? `${nombre} (${telefono})` : nombre,
+                telefono,
                 fechaHora,
                 servicio,
+                duracionMin,
                 monto,
                 estado: 'Programada'
             };
@@ -628,20 +728,26 @@
             }
             cont.innerHTML = citas.map(c => {
                 const start = new Date(c.fechaHora);
-                const end = new Date(start.getTime() + 3 * 60 * 60 * 1000);
+                const end = new Date(start.getTime() + (c.duracionMin || 180) * 60 * 1000);
                 const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
                 const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
+
+                // Limpieza de número para enlace WhatsApp
+                const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
+                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita programada para el ${new Date(c.fechaHora).toLocaleString()} para el servicio de: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
+                const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
 
                 return `
                     <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
                         <div>
                             <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
-                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
+                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} (${c.duracionMin || 180} min) | 💵 $${c.monto.toFixed(2)} MXN</p>
                             <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : c.estado === 'Cancelada' ? 'bg-rose-200 text-rose-800' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
                         </div>
                         <div class="flex flex-wrap gap-2">
+                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">💬 WhatsApp</a>` : ''}
                             <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">📅 Google Cal</a>
-                            <button onclick="actualizarEstadoCita('${c.idDoc}', 'Realizada')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                            <button onclick="actualizarEstadoCita('${c.idDoc}', 'Realizada')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
                             <button onclick="editarCita(${c.id})" class="bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">Editar</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
                         </div>
@@ -654,9 +760,11 @@
             const c = citas.find(item => item.id == id);
             if(!c) return;
             document.getElementById('citaEditId').value = c.id;
-            document.getElementById('citaNombre').value = c.nombre;
+            document.getElementById('citaNombre').value = c.nombre.split('(')[0].trim();
+            document.getElementById('citaTelefono').value = c.telefono || '';
             document.getElementById('citaFechaHora').value = c.fechaHora;
             document.getElementById('citaServicio').value = c.servicio;
+            document.getElementById('citaDuracion').value = c.duracionMin || 180;
             document.getElementById('citaMonto').value = c.monto;
             cambiarTab('agendar');
         }
@@ -671,13 +779,14 @@
 
         async function guardarBloqueo(e) {
             e.preventDefault();
+            const diasRecurrentes = Array.from(document.querySelectorAll('input[name="diasBloqueo"]:checked')).map(c => c.value);
             const fecha = document.getElementById('bloqueoFecha').value;
             const horaInicio = document.getElementById('bloqueoHoraInicio').value;
             const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
 
-            await db.collection("bloqueos").add({ fecha, horaInicio, horaFin, motivo });
-            alert('🔒 Rango de horario bloqueado correctamente');
+            await db.collection("bloqueos").add({ diasRecurrentes, fecha, horaInicio, horaFin, motivo });
+            alert('🔒 Bloqueo guardado correctamente');
             e.target.reset();
         }
 
@@ -688,12 +797,16 @@
                 cont.innerHTML = `<p class="text-slate-400 italic">No hay horarios bloqueados.</p>`;
                 return;
             }
-            cont.innerHTML = bloqueos.map(b => `
-                <div class="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                    <div><strong>${b.fecha}</strong> (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</div>
-                    <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
-                </div>
-            `).join('');
+            const nombresDias = { "1": "Lun", "2": "Mar", "3": "Mié", "4": "Jue", "5": "Vie", "6": "Sáb" };
+            cont.innerHTML = bloqueos.map(b => {
+                const diasTxt = b.diasRecurrentes && b.diasRecurrentes.length > 0 ? b.diasRecurrentes.map(d => nombresDias[d]).join(', ') : b.fecha;
+                return `
+                    <div class="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        <div><strong>${diasTxt}</strong> (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</div>
+                        <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                    </div>
+                `;
+            }).join('');
         }
 
         async function eliminarBloqueo(idDoc) {
