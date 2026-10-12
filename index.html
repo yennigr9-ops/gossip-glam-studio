@@ -20,237 +20,278 @@
 </head>
 <body class="bg-baby-pink min-h-screen text-slate-700 flex flex-col">
 
-    <!-- BARRA SUPERIOR -->
-    <header class="bg-white shadow-md border-b border-rose-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <span class="text-2xl">👑</span>
+    <!-- VISTA PÚBLICA PARA CLIENTAS (?modo=reserva) -->
+    <div id="vistaPublica" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-rose-100 max-w-md w-full space-y-4 text-center">
+            <span class="text-3xl">👑</span>
+            <h1 class="text-xl font-bold text-rose-600">Gossip & Glam Studio</h1>
+            <p class="text-xs text-rose-400 font-medium">Reserva tu cita en línea</p>
+            
+            <form onsubmit="reservarClientaPublica(event)" class="space-y-4 text-left pt-2">
                 <div>
-                    <h1 class="text-xl font-bold text-rose-600 tracking-wide">Gossip & Glam Studio</h1>
-                    <p class="text-xs text-rose-400 font-medium">Lash & Brow Professional Book</p>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre Completo *</label>
+                    <input type="text" id="pubNombre" required placeholder="Tu nombre" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span id="estadoCloud" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">☁️ Conectando Nube...</span>
-                <a href="https://calendar.google.com" target="_blank" class="bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-rose-100 flex items-center gap-1 shadow-sm">
-                    📅 Google Calendar
-                </a>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp *</label>
+                    <input type="tel" id="pubTelefono" required placeholder="Número de contacto" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio Deseado *</label>
+                    <select id="pubServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
+                        <option value="Extensiones de Pestañas">Extensiones de Pestañas</option>
+                        <option value="Micropigmentación Cejas">Micropigmentación Cejas</option>
+                        <option value="Micropigmentación Labios">Micropigmentación Labios</option>
+                        <option value="Delineado">Delineado</option>
+                        <option value="Retoque">Retoque</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora Preferida *</label>
+                    <input type="datetime-local" id="pubFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                </div>
+                <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">💖 Solicitar Cita</button>
+            </form>
+            <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
+                ¡Cita solicitada con éxito! Nos pondremos en contacto contigo para confirmarla.
             </div>
         </div>
+    </div>
 
-        <!-- Pestañas de Navegación -->
-        <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
-            <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
-            <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
-            <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
-            <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
-            <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
-            <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
-        </nav>
-    </header>
-
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
-
-        <!-- 1. SECCIÓN FICHA TÉCNICA -->
-        <section id="seccion-ficha" class="space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                <div class="flex justify-between items-center mb-6 border-b border-rose-100 pb-4">
-                    <h2 class="text-lg font-bold text-rose-700 flex items-center gap-2">📋 Expediente y Ficha Técnica</h2>
-                    <button onclick="limpiarFicha()" class="text-xs bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg hover:bg-rose-200 font-medium">✨ Limpiar / Nueva Ficha</button>
-                </div>
-
-                <form id="formFicha" onsubmit="guardarFicha(event)" class="space-y-6">
-                    <input type="hidden" id="fichaEditId">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label>
-                            <input type="text" id="nombreClienta" list="listaClientas" required oninput="cargarDatosClienta(this.value)" placeholder="Escribe o selecciona clienta..." class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
-                            <datalist id="listaClientas"></datalist>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha</label>
-                            <input type="date" id="fechaFicha" required class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
-                        </div>
+    <!-- PANEL PRIVADO (ADMINISTRACIÓN) -->
+    <div id="panelPrivado" class="flex flex-col flex-grow">
+        <!-- BARRA SUPERIOR -->
+        <header class="bg-white shadow-md border-b border-rose-100 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">👑</span>
+                    <div>
+                        <h1 class="text-xl font-bold text-rose-600 tracking-wide">Gossip & Glam Studio</h1>
+                        <p class="text-xs text-rose-400 font-medium">Lash & Brow Professional Book</p>
                     </div>
-
-                    <!-- Selector de Servicio -->
-                    <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100">
-                        <label class="block text-xs font-bold text-rose-700 uppercase mb-2">Seleccionar Servicio:</label>
-                        <div class="flex gap-6">
-                            <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
-                                <input type="radio" name="tipoServicio" value="pestanas" checked onchange="toggleServicio()" class="text-rose-600"> Extensión de Pestañas
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
-                                <input type="radio" name="tipoServicio" value="micropigmentacion" onchange="toggleServicio()" class="text-rose-600"> Micropigmentación
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- BLOQUE PESTAÑAS -->
-                    <div id="bloquePestanas" class="space-y-4">
-                        <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Diseño de Pestañas</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Alergias"> Alergias</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Embarazo o lactancia"> Embarazo / Lactancia</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Sensibilidad Ocular"> Sensibilidad Ocular</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Tiroides"> Tiroides</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Lentes de contacto"> Lentes de contacto</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Cirugía ocular previa"> Cirugía</label>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="tecPestanas" placeholder="Ej. Volumen Humo" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Diseño / Efecto</label><input type="text" id="disenoPestanas" placeholder="Ej. Cat Eye" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                            <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Izquierdo</label><canvas id="canvasIzq" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasIzq')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
-                            <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Derecho</label><canvas id="canvasDer" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasDer')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
-                        </div>
-                    </div>
-
-                    <!-- BLOQUE MICROPIGMENTACIÓN -->
-                    <div id="bloqueMicro" class="space-y-4 hidden">
-                        <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Detalles Técnicos (Micropigmentación)</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Diabetes"> Diabetes</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Keloides"> Keloides</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Cáncer"> Cáncer</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="VIH / Hepatitis"> VIH / Hepatitis</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Embarazo/Lactancia"> Embarazo/Lactancia</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Trabajo previo"> Trabajo previo</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Tratamientos rostro"> Tratamientos rostro</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos</label><input type="text" id="microPigmentos" placeholder="Ej. Dark Brown" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                        </div>
-                    </div>
-
-                    <!-- Notas y Próxima Cita -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Observaciones</label>
-                            <textarea id="notasFicha" rows="3" placeholder="Notas adicionales..." class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Próxima Cita Sugerida</label>
-                            <input type="datetime-local" id="proximaCitaFicha" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none mb-3">
-                            <button type="submit" class="w-full btn-glam text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-sm">💾 Guardar Ficha en la Nube</button>
-                        </div>
-                    </div>
-                </form>
-
-                <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
-                    <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
-                    <div id="listaHistorialClienta" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="estadoCloud" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">☁️ Conectando Nube...</span>
+                    <a href="https://calendar.google.com" target="_blank" class="bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-rose-100 flex items-center gap-1 shadow-sm">
+                        📅 Google Calendar
+                    </a>
                 </div>
             </div>
-        </section>
 
-        <!-- 2. SECCIÓN AGENDAR CITA -->
-        <section id="seccion-agendar" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
-                <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
-                <form onsubmit="agendarCita(event)" class="space-y-4">
-                    <input type="hidden" id="citaEditId">
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label><input type="text" id="citaNombre" list="listaClientas" required placeholder="Nombre completo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloqueo automático de 3 horas por servicio.</p></div>
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio</label><select id="citaServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="Extensiones de Pestañas">Extensiones de Pestañas</option><option value="Micropigmentación Cejas">Micropigmentación Cejas</option><option value="Micropigmentación Labios">Micropigmentación Labios</option><option value="Delineado">Delineado</option><option value="Retoque">Retoque</option></select></div>
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                    <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Guardar Cita</button>
-                </form>
-            </div>
-        </section>
+            <!-- Pestañas de Navegación -->
+            <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
+                <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
+                <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
+                <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
+                <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
+                <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
+                <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
+            </nav>
+        </header>
 
-        <!-- 3. SECCIÓN AGENDA Y CITAS -->
-        <section id="seccion-agenda" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
-                    <h2 class="text-lg font-bold text-rose-700">📖 Agenda y Citas Programadas</h2>
-                    <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
-                </div>
-                <div id="contenedorListaCitas" class="space-y-3"></div>
-            </div>
-        </section>
+        <!-- CONTENEDOR PRINCIPAL -->
+        <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
 
-        <!-- 4. SECCIÓN EXPEDIENTES -->
-        <section id="seccion-expedientes" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
-                    <h2 class="text-lg font-bold text-rose-700">📂 Expedientes de Clientas (Nube)</h2>
-                    <button onclick="cambiarTab('ficha')" class="btn-glam text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">+ Nueva Ficha</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="buscadorExpedientes" oninput="renderExpedientes()" placeholder="🔍 Buscar por nombre..." class="p-2.5 border border-rose-200 rounded-xl text-sm">
-                    <select id="filtroServicioExp" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="todos">Todos los servicios</option><option value="pestanas">Extensión de Pestañas</option><option value="micropigmentacion">Micropigmentación</option></select>
-                    <select id="ordenExpedientes" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="nombre">Ordenar por Nombre</option><option value="reciente">Ordenar por Última Visita</option></select>
-                </div>
-                <div id="gridExpedientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
-            </div>
-        </section>
-
-        <!-- 5. SECCIÓN BLOQUEO DE HORARIOS (FAMILIA) -->
-        <section id="seccion-bloqueos" class="space-y-6 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
-                <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horas (Familia / Niños)</h2>
-                <p class="text-xs text-slate-500">Aparta horarios para que no se crucen citas personales o familiares.</p>
-                <form onsubmit="guardarBloqueo(event)" class="space-y-4">
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora a Bloquear</label><input type="datetime-local" id="bloqueoFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Compromiso familiar / Escuela" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                    <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Bloquear Horario</button>
-                </form>
-                <div class="mt-4 pt-4 border-t border-rose-100">
-                    <h3 class="font-bold text-rose-700 text-sm mb-2">Horarios Bloqueados Activos</h3>
-                    <div id="listaBloqueos" class="space-y-2 text-xs"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. SECCIÓN FINANZAS (CON AHORROS Y TARJETAS) -->
-        <section id="seccion-finanzas" class="space-y-6 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 1. SECCIÓN FICHA TÉCNICA -->
+            <section id="seccion-ficha" class="space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                    <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
-                    <form onsubmit="agregarGasto(event)" class="space-y-3">
-                        <select id="tipoMovimiento" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                            <option value="Gasto">Gasto / Insumos</option>
-                            <option value="Ahorro">Dinero Agregado de Ahorros</option>
-                            <option value="Tarjeta">Dinero en Tarjetas Bancarias</option>
-                        </select>
-                        <input type="text" id="gastoDesc" required placeholder="Concepto (Ej. Pigmentos / Depósito)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                        <input type="number" step="0.01" id="gastoMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                        <input type="date" id="gastoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar Movimiento</button>
+                    <div class="flex justify-between items-center mb-6 border-b border-rose-100 pb-4">
+                        <h2 class="text-lg font-bold text-rose-700 flex items-center gap-2">📋 Expediente y Ficha Técnica</h2>
+                        <button onclick="limpiarFicha()" class="text-xs bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg hover:bg-rose-200 font-medium">✨ Limpiar / Nueva Ficha</button>
+                    </div>
+
+                    <form id="formFicha" onsubmit="guardarFicha(event)" class="space-y-6">
+                        <input type="hidden" id="fichaEditId">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label>
+                                <input type="text" id="nombreClienta" list="listaClientas" required oninput="cargarDatosClienta(this.value)" placeholder="Escribe o selecciona clienta..." class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
+                                <datalist id="listaClientas"></datalist>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha</label>
+                                <input type="date" id="fechaFicha" required class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
+                            </div>
+                        </div>
+
+                        <!-- Selector de Servicio -->
+                        <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                            <label class="block text-xs font-bold text-rose-700 uppercase mb-2">Seleccionar Servicio:</label>
+                            <div class="flex gap-6">
+                                <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
+                                    <input type="radio" name="tipoServicio" value="pestanas" checked onchange="toggleServicio()" class="text-rose-600"> Extensión de Pestañas
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
+                                    <input type="radio" name="tipoServicio" value="micropigmentacion" onchange="toggleServicio()" class="text-rose-600"> Micropigmentación
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- BLOQUE PESTAÑAS -->
+                        <div id="bloquePestanas" class="space-y-4">
+                            <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Diseño de Pestañas</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Alergias"> Alergias</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Embarazo o lactancia"> Embarazo / Lactancia</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Sensibilidad Ocular"> Sensibilidad Ocular</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Tiroides"> Tiroides</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Lentes de contacto"> Lentes de contacto</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Cirugía ocular previa"> Cirugía</label>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="tecPestanas" placeholder="Ej. Volumen Humo" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Diseño / Efecto</label><input type="text" id="disenoPestanas" placeholder="Ej. Cat Eye" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Izquierdo</label><canvas id="canvasIzq" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasIzq')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
+                                <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Derecho</label><canvas id="canvasDer" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasDer')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
+                            </div>
+                        </div>
+
+                        <!-- BLOQUE MICROPIGMENTACIÓN -->
+                        <div id="bloqueMicro" class="space-y-4 hidden">
+                            <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Detalles Técnicos (Micropigmentación)</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Diabetes"> Diabetes</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Keloides"> Keloides</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Cáncer"> Cáncer</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="VIH / Hepatitis"> VIH / Hepatitis</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Embarazo/Lactancia"> Embarazo/Lactancia</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Trabajo previo"> Trabajo previo</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Tratamientos rostro"> Tratamientos rostro</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos</label><input type="text" id="microPigmentos" placeholder="Ej. Dark Brown" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- Notas y Próxima Cita -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Observaciones</label>
+                                <textarea id="notasFicha" rows="3" placeholder="Notas adicionales..." class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Próxima Cita Sugerida</label>
+                                <input type="datetime-local" id="proximaCitaFicha" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none mb-3">
+                                <button type="submit" class="w-full btn-glam text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-sm">💾 Guardar Ficha en la Nube</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
+                        <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
+                        <div id="listaHistorialClienta" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SECCIÓN AGENDAR CITA -->
+            <section id="seccion-agendar" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
+                    <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
+                    <form onsubmit="agendarCita(event)" class="space-y-4">
+                        <input type="hidden" id="citaEditId">
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label><input type="text" id="citaNombre" list="listaClientas" required placeholder="Nombre completo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloqueo automático de 3 horas por servicio.</p></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio</label><select id="citaServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="Extensiones de Pestañas">Extensiones de Pestañas</option><option value="Micropigmentación Cejas">Micropigmentación Cejas</option><option value="Micropigmentación Labios">Micropigmentación Labios</option><option value="Delineado">Delineado</option><option value="Retoque">Retoque</option></select></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Guardar Cita</button>
                     </form>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between"><span>Total Ingresos Realizados:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
-                            <div class="flex justify-between"><span>Total Gastos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
-                            <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600">$0.00 MXN</strong></div>
-                            <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600">$0.00 MXN</strong></div>
-                            <hr class="my-2 border-rose-100">
-                            <div class="flex justify-between text-base"><span>Ganancia Neta Final:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
+            </section>
+
+            <!-- 3. SECCIÓN AGENDA Y CITAS -->
+            <section id="seccion-agenda" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
+                        <h2 class="text-lg font-bold text-rose-700">📖 Agenda y Citas Programadas</h2>
+                        <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
+                    </div>
+                    <div id="contenedorListaCitas" class="space-y-3"></div>
+                </div>
+            </section>
+
+            <!-- 4. SECCIÓN EXPEDIENTES -->
+            <section id="seccion-expedientes" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                    <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
+                        <h2 class="text-lg font-bold text-rose-700">📂 Expedientes de Clientas (Nube)</h2>
+                        <button onclick="cambiarTab('ficha')" class="btn-glam text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">+ Nueva Ficha</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="text" id="buscadorExpedientes" oninput="renderExpedientes()" placeholder="🔍 Buscar por nombre..." class="p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <select id="filtroServicioExp" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="todos">Todos los servicios</option><option value="pestanas">Extensión de Pestañas</option><option value="micropigmentacion">Micropigmentación</option></select>
+                        <select id="ordenExpedientes" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="nombre">Ordenar por Nombre</option><option value="reciente">Ordenar por Última Visita</option></select>
+                    </div>
+                    <div id="gridExpedientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS (FAMILIA) -->
+            <section id="seccion-bloqueos" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
+                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horas (Familia / Niños)</h2>
+                    <p class="text-xs text-slate-500">Aparta horarios para que no se crucen citas personales o familiares.</p>
+                    <form onsubmit="guardarBloqueo(event)" class="space-y-4">
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora a Bloquear</label><input type="datetime-local" id="bloqueoFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Compromiso familiar / Escuela" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Bloquear Horario</button>
+                    </form>
+                    <div class="mt-4 pt-4 border-t border-rose-100">
+                        <h3 class="font-bold text-rose-700 text-sm mb-2">Horarios Bloqueados Activos</h3>
+                        <div id="listaBloqueos" class="space-y-2 text-xs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. SECCIÓN FINANZAS (CON AHORROS Y TARJETAS) -->
+            <section id="seccion-finanzas" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
+                        <form onsubmit="agregarGasto(event)" class="space-y-3">
+                            <select id="tipoMovimiento" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
+                                <option value="Gasto">Gasto / Insumos</option>
+                                <option value="Ahorro">Dinero Agregado de Ahorros</option>
+                                <option value="Tarjeta">Dinero en Tarjetas Bancarias</option>
+                            </select>
+                            <input type="text" id="gastoDesc" required placeholder="Concepto (Ej. Pigmentos / Depósito)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="number" step="0.01" id="gastoMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="date" id="gastoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar Movimiento</button>
+                        </form>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between"><span>Total Ingresos Realizados:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Gastos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600">$0.00 MXN</strong></div>
+                                <hr class="my-2 border-rose-100">
+                                <div class="flex justify-between text-base"><span>Ganancia Neta Final:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-    </main>
+        </main>
+    </div>
 
     <!-- SCRIPT FIREBASE Y LÓGICA -->
     <script>
@@ -265,6 +306,13 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
+        // Detectar modo público para clientas
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('modo') === 'reserva') {
+            document.getElementById('vistaPublica').classList.remove('hidden');
+            document.getElementById('panelPrivado').classList.add('hidden');
+        }
 
         document.getElementById('estadoCloud').innerText = "☁️ Nube Activa (Firebase)";
         document.getElementById('estadoCloud').className = "text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold";
@@ -301,6 +349,7 @@
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
+            if(!canvas) return;
             const ctx = canvas.getContext('2d');
             let dibujando = false;
             ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 2; ctx.lineCap = 'round';
@@ -345,16 +394,39 @@
             }
         }
 
-        document.getElementById('fechaFicha').valueAsDate = new Date();
+        if(document.getElementById('fechaFicha')) {
+            document.getElementById('fechaFicha').valueAsDate = new Date();
+        }
 
         function actualizarDatalist() {
             const dl = document.getElementById('listaClientas');
+            if(!dl) return;
             dl.innerHTML = '';
             [...new Set(fichas.map(f => f.nombre))].forEach(nombre => {
                 const opt = document.createElement('option');
                 opt.value = nombre;
                 dl.appendChild(opt);
             });
+        }
+
+        async function reservarClientaPublica(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('pubNombre').value.trim();
+            const telefono = document.getElementById('pubTelefono').value.trim();
+            const servicio = document.getElementById('pubServicio').value;
+            const fechaHora = document.getElementById('pubFechaHora').value;
+
+            await db.collection("citas").add({
+                id: Date.now(),
+                nombre: `${nombre} (${telefono})`,
+                fechaHora,
+                servicio,
+                monto: 0,
+                estado: 'Programada'
+            });
+
+            document.getElementById('pubMensajeExito').classList.remove('hidden');
+            e.target.reset();
         }
 
         async function guardarFicha(e) {
@@ -541,6 +613,7 @@
 
         function renderBloqueos() {
             const cont = document.getElementById('listaBloqueos');
+            if(!cont) return;
             if(bloqueos.length === 0) {
                 cont.innerHTML = `<p class="text-slate-400 italic">No hay horarios bloqueados.</p>`;
                 return;
@@ -559,6 +632,7 @@
 
         function renderExpedientes() {
             const grid = document.getElementById('gridExpedientes');
+            if(!grid) return;
             const busqueda = document.getElementById('buscadorExpedientes').value.toLowerCase();
             const filtro = document.getElementById('filtroServicioExp').value;
             const orden = document.getElementById('ordenExpedientes').value;
@@ -566,7 +640,7 @@
             let filtrados = fichas.filter(f => f.nombre.toLowerCase().includes(busqueda));
             if(filtro !== 'todos') filtrados = filtrados.filter(f => f.servicioTipo.toLowerCase().includes(filtro));
             if(orden === 'nombre') filtrados.sort((a,b) => a.nombre.localeCompare(b.nombre));
-            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(b.fecha));
 
             if(filtrados.length === 0) {
                 grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay expedientes.</p>`;
@@ -622,6 +696,7 @@
         }
 
         function calcularFinanzas() {
+            if(!document.getElementById('gananciaSemanal')) return;
             const realizadas = citas.filter(c => c.estado === 'Realizada');
             const totalIngresos = realizadas.reduce((acc, c) => acc + c.monto, 0);
             
