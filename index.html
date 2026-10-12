@@ -39,21 +39,28 @@
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio Deseado *</label>
                     <select id="pubServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                        <option value="Extensiones de Pestañas">Extensiones de Pestañas</option>
-                        <option value="Micropigmentación Cejas">Micropigmentación Cejas</option>
-                        <option value="Micropigmentación Labios">Micropigmentación Labios</option>
-                        <option value="Delineado">Delineado</option>
-                        <option value="Retoque">Retoque</option>
+                        <option value="Extensiones de Pestañas">Extensiones de Pestañas (3 hrs)</option>
+                        <option value="Micropigmentación Cejas">Micropigmentación Cejas (3 hrs)</option>
+                        <option value="Micropigmentación Labios">Micropigmentación Labios (3 hrs)</option>
+                        <option value="Delineado">Delineado (3 hrs)</option>
+                        <option value="Retoque">Retoque (2.5 hrs)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora Preferida *</label>
-                    <input type="datetime-local" id="pubFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">1. Selecciona la Fecha *</label>
+                    <input type="date" id="pubFecha" required onchange="cargarHorariosDisponibles()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
-                <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">💖 Solicitar Cita</button>
+                <div>
+                    <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">2. Selecciona Hora Disponible *</label>
+                    <div id="contenedorHorarios" class="grid grid-cols-3 gap-2 pt-1">
+                        <p class="text-xs text-slate-400 col-span-3 text-center italic">Elige una fecha para ver horarios disponibles.</p>
+                    </div>
+                    <input type="hidden" id="pubHoraSeleccionada" required>
+                </div>
+                <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm mt-2">💖 Solicitar Cita</button>
             </form>
             <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
-                ¡Cita solicitada con éxito! Nos pondremos en contacto contigo para confirmarla.
+                ¡Cita registrada con éxito! Tu horario quedó apartado.
             </div>
         </div>
     </div>
@@ -193,7 +200,7 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN AGENDAR CITA -->
+            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) -->
             <section id="seccion-agendar" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
                     <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
@@ -235,15 +242,19 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS (FAMILIA) -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS POR RANGO -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
-                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horas (Familia / Niños)</h2>
-                    <p class="text-xs text-slate-500">Aparta horarios para que no se crucen citas personales o familiares.</p>
+                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Rango de Horarios (Familia / Asuntos)</h2>
+                    <p class="text-xs text-slate-500">Bloquea un período (ej. de 8:00 AM a 11:00 AM) para evitar reservas.</p>
                     <form onsubmit="guardarBloqueo(event)" class="space-y-4">
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora a Bloquear</label><input type="datetime-local" id="bloqueoFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Compromiso familiar / Escuela" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Bloquear Horario</button>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha a Bloquear</label><input type="date" id="bloqueoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Inicio</label><input type="time" id="bloqueoHoraInicio" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Fin</label><input type="time" id="bloqueoHoraFin" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        </div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Compromiso familiar / Niños" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Bloquear Rango de Horas</button>
                     </form>
                     <div class="mt-4 pt-4 border-t border-rose-100">
                         <h3 class="font-bold text-rose-700 text-sm mb-2">Horarios Bloqueados Activos</h3>
@@ -252,7 +263,7 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS (CON AHORROS Y TARJETAS) -->
+            <!-- 6. SECCIÓN FINANZAS -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
@@ -307,7 +318,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Detectar modo público para clientas
+        // Detectar si entra en modo reserva
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('modo') === 'reserva') {
             document.getElementById('vistaPublica').classList.remove('hidden');
@@ -409,12 +420,71 @@
             });
         }
 
+        // GENERADOR DE HORARIOS INTELIGENTE (8:00 AM A 7:00 PM)
+        function cargarHorariosDisponibles() {
+            const fechaSel = document.getElementById('pubFecha').value;
+            const cont = document.getElementById('contenedorHorarios');
+            document.getElementById('pubHoraSeleccionada').value = '';
+
+            if(!fechaSel) return;
+
+            const horasBase = ["08:00", "11:00", "14:00", "17:00", "19:00"];
+            cont.innerHTML = '';
+
+            horasBase.forEach(hora => {
+                const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
+                const margenMs = 3 * 60 * 60 * 1000; // 3 Horas de margen
+
+                // Verificar citas
+                const ocupadoCita = citas.some(c => {
+                    if(c.estado === 'Cancelada') return false;
+                    const timeCita = new Date(c.fechaHora).getTime();
+                    return Math.abs(timeCita - timestampDeseado) < margenMs;
+                });
+
+                // Verificar bloqueos por rango
+                const ocupadoBloqueo = bloqueos.some(b => {
+                    const inicioB = new Date(`${b.fecha}T${b.horaInicio}:00`).getTime();
+                    const finB = new Date(`${b.fecha}T${b.horaFin}:00`).getTime();
+                    return timestampDeseado >= inicioB && timestampDeseado < finB;
+                });
+
+                const estaBloqueado = ocupadoCita || ocupadoBloqueo;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `p-2 rounded-xl text-xs font-bold border ${estaBloqueado ? 'bg-gray-200 text-gray-400 border-gray-300 line-through cursor-not-allowed' : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'}`;
+                btn.innerText = hora;
+                btn.disabled = estaBloqueado;
+
+                if(!estaBloqueado) {
+                    btn.onclick = () => {
+                        document.querySelectorAll('#contenedorHorarios button').forEach(b => {
+                            if(!b.disabled) b.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-50 text-rose-700 border-rose-200';
+                        });
+                        btn.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-600 text-white border-rose-600';
+                        document.getElementById('pubHoraSeleccionada').value = hora;
+                    };
+                }
+
+                cont.appendChild(btn);
+            });
+        }
+
         async function reservarClientaPublica(e) {
             e.preventDefault();
             const nombre = document.getElementById('pubNombre').value.trim();
             const telefono = document.getElementById('pubTelefono').value.trim();
             const servicio = document.getElementById('pubServicio').value;
-            const fechaHora = document.getElementById('pubFechaHora').value;
+            const fecha = document.getElementById('pubFecha').value;
+            const hora = document.getElementById('pubHoraSeleccionada').value;
+
+            if(!hora) {
+                alert('⚠️ Por favor selecciona una hora disponible de la lista.');
+                return;
+            }
+
+            const fechaHora = `${fecha}T${hora}`;
 
             await db.collection("citas").add({
                 id: Date.now(),
@@ -427,6 +497,7 @@
 
             document.getElementById('pubMensajeExito').classList.remove('hidden');
             e.target.reset();
+            cargarHorariosDisponibles();
         }
 
         async function guardarFicha(e) {
@@ -519,12 +590,8 @@
                 return Math.abs(new Date(c.fechaHora).getTime() - nuevaFechaObj.getTime()) < margenMs;
             });
 
-            const conflictoBloqueo = bloqueos.find(b => {
-                return Math.abs(new Date(b.fechaHora).getTime() - nuevaFechaObj.getTime()) < margenMs;
-            });
-
-            if(conflicto || conflictoBloqueo) {
-                alert('⚠️ Conflicto de horario: Debe haber un margen de 3 horas o el horario está bloqueado por asuntos familiares.');
+            if(conflicto) {
+                alert('⚠️ Conflicto de horario: Debe haber un margen de 3 horas entre citas.');
                 return;
             }
 
@@ -561,7 +628,7 @@
             }
             cont.innerHTML = citas.map(c => {
                 const start = new Date(c.fechaHora);
-                const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+                const end = new Date(start.getTime() + 3 * 60 * 60 * 1000);
                 const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
                 const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
 
@@ -604,10 +671,13 @@
 
         async function guardarBloqueo(e) {
             e.preventDefault();
-            const fechaHora = document.getElementById('bloqueoFechaHora').value;
+            const fecha = document.getElementById('bloqueoFecha').value;
+            const horaInicio = document.getElementById('bloqueoHoraInicio').value;
+            const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
-            await db.collection("bloqueos").add({ fechaHora, motivo });
-            alert('🔒 Horario bloqueado correctamente');
+
+            await db.collection("bloqueos").add({ fecha, horaInicio, horaFin, motivo });
+            alert('🔒 Rango de horario bloqueado correctamente');
             e.target.reset();
         }
 
@@ -620,7 +690,7 @@
             }
             cont.innerHTML = bloqueos.map(b => `
                 <div class="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                    <div><strong>${new Date(b.fechaHora).toLocaleString()}</strong> - ${b.motivo}</div>
+                    <div><strong>${b.fecha}</strong> (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</div>
                     <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
                 </div>
             `).join('');
@@ -640,7 +710,7 @@
             let filtrados = fichas.filter(f => f.nombre.toLowerCase().includes(busqueda));
             if(filtro !== 'todos') filtrados = filtrados.filter(f => f.servicioTipo.toLowerCase().includes(filtro));
             if(orden === 'nombre') filtrados.sort((a,b) => a.nombre.localeCompare(b.nombre));
-            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(b.fecha));
+            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
 
             if(filtrados.length === 0) {
                 grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay expedientes.</p>`;
