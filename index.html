@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gossip & Glam Studio - Lash & Brow Book</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <style>
+        .bg-baby-pink { background-color: #fff1f2; }
+        .text-baby-pink { color: #e11d48; }
+        .border-baby-pink { border-color: #fecdd3; }
+        .btn-glam { background-color: #fb7185; transition: all 0.2s; }
+        .btn-glam:hover { background-color: #f43f5e; }
+        .nav-tab.active { border-bottom: 3px solid #e11d48; color: #be123c; font-weight: bold; background-color: #ffe4e6; }
+        canvas { touch-action: none; background: #ffffff; border: 2px dashed #fbcfe8; border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-baby-pink min-h-screen text-slate-700 flex flex-col">
+
+    <!-- BARRA SUPERIOR -->
+    <header class="bg-white shadow-md border-b border-rose-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">👑</span>
+                <div>
+                    <h1 class="text-xl font-bold text-rose-600 tracking-wide">Gossip & Glam Studio</h1>
+                    <p class="text-xs text-rose-400 font-medium">Lash & Brow Professional Book</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="estadoCloud" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-bold">☁️ Conectando Nube...</span>
+                <a href="https://calendar.google.com" target="_blank" class="bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-rose-100 flex items-center gap-1 shadow-sm">
+                    📅 Google Calendar
+                </a>
+            </div>
+        </div>
+
+        <!-- Pestañas de Navegación -->
+        <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
+            <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
+            <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
+            <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
+            <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
+            <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
+        </nav>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- 1. SECCIÓN FICHA TÉCNICA -->
+        <section id="seccion-ficha" class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                <div class="flex justify-between items-center mb-6 border-b border-rose-100 pb-4">
+                    <h2 class="text-lg font-bold text-rose-700 flex items-center gap-2">📋 Expediente y Ficha Técnica</h2>
+                    <button onclick="limpiarFicha()" class="text-xs bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg hover:bg-rose-200 font-medium">✨ Limpiar / Nueva Ficha</button>
+                </div>
+
+                <form id="formFicha" onsubmit="guardarFicha(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label>
+                            <input type="text" id="nombreClienta" list="listaClientas" required oninput="cargarDatosClienta(this.value)" placeholder="Escribe o selecciona clienta..." class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
+                            <datalist id="listaClientas"></datalist>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha</label>
+                            <input type="date" id="fechaFicha" required class="w-full p-2.5 border border-rose-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:outline-none bg-rose-50/30">
+                        </div>
+                    </div>
+
+                    <!-- Selector de Servicio -->
+                    <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                        <label class="block text-xs font-bold text-rose-700 uppercase mb-2">Seleccionar Servicio:</label>
+                        <div class="flex gap-6">
+                            <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
+                                <input type="radio" name="tipoServicio" value="pestanas" checked onchange="toggleServicio()" class="text-rose-600"> Extensión de Pestañas
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
+                                <input type="radio" name="tipoServicio" value="micropigmentacion" onchange="toggleServicio()" class="text-rose-600"> Micropigmentación
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE PESTAÑAS -->
+                    <div id="bloquePestanas" class="space-y-4">
+                        <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Diseño de Pestañas</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Alergias"> Alergias</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Embarazo o lactancia"> Embarazo / Lactancia</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Sensibilidad Ocular"> Sensibilidad Ocular</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Tiroides"> Tiroides</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Lentes de contacto"> Lentes de contacto</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkPestanas" value="Cirugía ocular previa"> Cirugía</label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="tecPestanas" placeholder="Ej. Volumen Humo" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Diseño / Efecto</label><input type="text" id="disenoPestanas" placeholder="Ej. Cat Eye" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Izquierdo</label><canvas id="canvasIzq" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasIzq')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
+                            <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Derecho</label><canvas id="canvasDer" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasDer')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE MICROPIGMENTACIÓN -->
+                    <div id="bloqueMicro" class="space-y-4 hidden">
+                        <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Detalles Técnicos (Micropigmentación)</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Diabetes"> Diabetes</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Keloides"> Keloides</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Cáncer"> Cáncer</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="VIH / Hepatitis"> VIH / Hepatitis</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Embarazo/Lactancia"> Embarazo/Lactancia</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Trabajo previo"> Trabajo previo</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Tratamientos rostro"> Tratamientos rostro</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos</label><input type="text" id="microPigmentos" placeholder="Ej. Dark Brown" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                            <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                        </div>
+                    </div>
+
+                    <!-- Notas y Próxima Cita -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Observaciones</label>
+                            <textarea id="notasFicha" rows="3" placeholder="Notas adicionales..." class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Próxima Cita Sugerida</label>
+                            <input type="datetime-local" id="proximaCitaFicha" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-400 focus:outline-none mb-3">
+                            <button type="submit" class="w-full btn-glam text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-sm">💾 Guardar Ficha en la Nube</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
+                    <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
+                    <div id="listaHistorialClienta" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SECCIÓN AGENDAR CITA -->
+        <section id="seccion-agendar" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
+                <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
+                <form onsubmit="agendarCita(event)" class="space-y-4">
+                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label><input type="text" id="citaNombre" list="listaClientas" required placeholder="Nombre completo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"><p class="text-[11px] text-rose-400 mt-1">⚠️ Bloqueo automático de 3 horas por servicio.</p></div>
+                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio</label><select id="citaServicio" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="Extensiones de Pestañas">Extensiones de Pestañas</option><option value="Micropigmentación Cejas">Micropigmentación Cejas</option><option value="Micropigmentación Labios">Micropigmentación Labios</option><option value="Delineado">Delineado</option><option value="Retoque">Retoque</option></select></div>
+                    <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                    <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Agendar Cita y Sincronizar Google Calendar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. SECCIÓN AGENDA Y CITAS -->
+        <section id="seccion-agenda" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
+                    <h2 class="text-lg font-bold text-rose-700">📖 Agenda y Citas Programadas</h2>
+                    <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
+                </div>
+                <div id="contenedorListaCitas" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- 4. SECCIÓN EXPEDIENTES -->
+        <section id="seccion-expedientes" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
+                    <h2 class="text-lg font-bold text-rose-700">📂 Expedientes de Clientas (Nube)</h2>
+                    <button onclick="cambiarTab('ficha')" class="btn-glam text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">+ Nueva Ficha</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="buscadorExpedientes" oninput="renderExpedientes()" placeholder="🔍 Buscar por nombre..." class="p-2.5 border border-rose-200 rounded-xl text-sm">
+                    <select id="filtroServicioExp" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="todos">Todos los servicios</option><option value="pestanas">Extensión de Pestañas</option><option value="micropigmentacion">Micropigmentación</option></select>
+                    <select id="ordenExpedientes" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="nombre">Ordenar por Nombre</option><option value="reciente">Ordenar por Última Visita</option></select>
+                </div>
+                <div id="gridExpedientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+            </div>
+        </section>
+
+        <!-- 5. SECCIÓN FINANZAS -->
+        <section id="seccion-finanzas" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                    <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💸 Agregar Gasto o Insumo</h3>
+                    <form onsubmit="agregarGasto(event)" class="space-y-3">
+                        <input type="text" id="gastoDesc" required placeholder="Concepto (Ej. Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <input type="number" step="0.01" id="gastoMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <input type="date" id="gastoFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar Gasto</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span>Total Ingresos Realizados:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
+                            <div class="flex justify-between"><span>Total Gastos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
+                            <hr class="my-2 border-rose-100">
+                            <div class="flex justify-between text-base"><span>Ganancia Neta Final:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPT FIREBASE Y LÓGICA -->
+    <script>
+        // Credenciales Integradas de Gossip & Glam Studio
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpJ6_-esNJVhtznPhidO60O0yrrPJLjs0",
+            authDomain: "gossip-810ba.firebaseapp.com",
+            projectId: "gossip-810ba",
+            storageBucket: "gossip-810ba.firebasestorage.app",
+            messagingSenderId: "113442417508",
+            appId: "1:113442417508:web:1c1b4f898d88c96d656871"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.getElementById('estadoCloud').innerText = "☁️ Nube Activa (Firebase)";
+        document.getElementById('estadoCloud').className = "text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold";
+
+        let fichas = [];
+        let citas = [];
+        let gastos = [];
+
+        db.collection("fichas").onSnapshot(snapshot => {
+            fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            actualizarDatalist();
+            if(!document.getElementById('seccion-expedientes').classList.contains('hidden')) renderExpedientes();
+        });
+
+        db.collection("citas").onSnapshot(snapshot => {
+            citas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            if(!document.getElementById('seccion-agenda').classList.contains('hidden')) renderCitas();
+            calcularFinanzas();
+        });
+
+        db.collection("gastos").onSnapshot(snapshot => {
+            gastos = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            calcularFinanzas();
+        });
+
+        setupCanvas('canvasIzq');
+        setupCanvas('canvasDer');
+
+        function setupCanvas(id) {
+            const canvas = document.getElementById(id);
+            const ctx = canvas.getContext('2d');
+            let dibujando = false;
+            ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+            const obtenerPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            };
+            canvas.addEventListener('mousedown', (e) => { dibujando = true; const p = obtenerPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+            canvas.addEventListener('mousemove', (e) => { if (!dibujando) return; const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+            canvas.addEventListener('mouseup', () => dibujando = false);
+            canvas.addEventListener('mouseleave', () => dibujando = false);
+            canvas.addEventListener('touchstart', (e) => { dibujando = true; const p = obtenerPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+            canvas.addEventListener('touchmove', (e) => { if (!dibujando) return; const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
+            canvas.addEventListener('touchend', () => dibujando = false);
+        }
+
+        function limpiarCanvas(id) {
+            const canvas = document.getElementById(id);
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function cambiarTab(tab) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`seccion-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            if(tab === 'agenda') renderCitas();
+            if(tab === 'expedientes') renderExpedientes();
+            if(tab === 'finanzas') calcularFinanzas();
+        }
+
+        function toggleServicio() {
+            const tipo = document.querySelector('input[name="tipoServicio"]:checked').value;
+            if(tipo === 'pestanas') {
+                document.getElementById('bloquePestanas').classList.remove('hidden');
+                document.getElementById('bloqueMicro').classList.add('hidden');
+            } else {
+                document.getElementById('bloquePestanas').classList.add('hidden');
+                document.getElementById('bloqueMicro').classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('fechaFicha').valueAsDate = new Date();
+
+        function actualizarDatalist() {
+            const dl = document.getElementById('listaClientas');
+            dl.innerHTML = '';
+            [...new Set(fichas.map(f => f.nombre))].forEach(nombre => {
+                const opt = document.createElement('option');
+                opt.value = nombre;
+                dl.appendChild(opt);
+            });
+        }
+
+        async function guardarFicha(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('nombreClienta').value.trim();
+            const fecha = document.getElementById('fechaFicha').value;
+            const servicioTipo = document.querySelector('input[name="tipoServicio"]:checked').value;
+
+            let detalles = servicioTipo === 'pestanas' ? {
+                tipo: 'Extensión de Pestañas',
+                checks: Array.from(document.querySelectorAll('input[name="checkPestanas"]:checked')).map(c => c.value),
+                tec: document.getElementById('tecPestanas').value,
+                diseno: document.getElementById('disenoPestanas').value,
+                mapping: document.getElementById('mappingPestanas').value,
+                imgIzq: document.getElementById('canvasIzq').toDataURL(),
+                imgDer: document.getElementById('canvasDer').toDataURL()
+            } : {
+                tipo: 'Micropigmentación',
+                checks: Array.from(document.querySelectorAll('input[name="checkMicro"]:checked')).map(c => c.value),
+                zona: document.getElementById('microZona').value,
+                pigmentos: document.getElementById('microPigmentos').value,
+                tec: document.getElementById('microTecnica').value,
+                cartucho: document.getElementById('microCartucho').value,
+                voltaje: document.getElementById('microVoltaje').value,
+                neutralizacion: document.getElementById('microNeutralizacion').value
+            };
+
+            await db.collection("fichas").add({
+                id: Date.now(),
+                nombre,
+                fecha,
+                servicioTipo: detalles.tipo,
+                detalles,
+                notas: document.getElementById('notasFicha').value,
+                proximaCita: document.getElementById('proximaCitaFicha').value
+            });
+
+            alert('✨ ¡Ficha técnica guardada en la nube con éxito!');
+            limpiarFicha();
+        }
+
+        function limpiarFicha() {
+            document.getElementById('formFicha').reset();
+            document.getElementById('fechaFicha').valueAsDate = new Date();
+            limpiarCanvas('canvasIzq');
+            limpiarCanvas('canvasDer');
+            document.getElementById('historialClientaActual').classList.add('hidden');
+        }
+
+        function cargarDatosClienta(nombre) {
+            const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
+            if(encontrada.length > 0) {
+                document.getElementById('nombreClientaTitulo').innerText = nombre;
+                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => `
+                    <div class="p-2.5 bg-rose-50 rounded-xl text-xs flex justify-between items-center">
+                        <div><strong>${f.fecha}</strong> - ${f.servicioTipo}</div>
+                        <div class="text-rose-600">${f.notas || 'Sin notas'}</div>
+                    </div>
+                `).join('');
+                document.getElementById('historialClientaActual').classList.remove('hidden');
+            } else {
+                document.getElementById('historialClientaActual').classList.add('hidden');
+            }
+        }
+
+        async function agendarCita(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('citaNombre').value.trim();
+            const fechaHora = document.getElementById('citaFechaHora').value;
+            const servicio = document.getElementById('citaServicio').value;
+            const monto = parseFloat(document.getElementById('citaMonto').value);
+
+            const nuevaFechaObj = new Date(fechaHora);
+            const margenMs = 3 * 60 * 60 * 1000;
+
+            const conflicto = citas.find(c => {
+                if(c.estado === 'Cancelada') return false;
+                return Math.abs(new Date(c.fechaHora).getTime() - nuevaFechaObj.getTime()) < margenMs;
+            });
+
+            if(conflicto) {
+                alert('⚠️ Conflicto: Debe haber un margen de 3 horas entre servicios.');
+                return;
+            }
+
+            await db.collection("citas").add({
+                id: Date.now(),
+                nombre,
+                fechaHora,
+                servicio,
+                monto,
+                estado: 'Programada'
+            });
+
+            const fechaGoogle = new Date(nuevaFechaObj.getTime() + (3 * 60 * 60 * 1000)).toISOString().replace(/-|:|\.\d\d\d/g, "");
+            const fechaInicioGoogle = nuevaFechaObj.toISOString().replace(/-|:|\.\d\d\d/g, "");
+            window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+${encodeURIComponent(servicio)}+-+${encodeURIComponent(nombre)}&dates=${fechaInicioGoogle}/${fechaGoogle}&details=Gossip+%26+Glam+Studio`, '_blank');
+            
+            alert('✨ Cita guardada en la nube y lista para Google Calendar');
+            e.target.reset();
+        }
+
+        function renderCitas() {
+            const cont = document.getElementById('contenedorListaCitas');
+            document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
+            if(citas.length === 0) {
+                cont.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">No hay citas registradas.</p>`;
+                return;
+            }
+            cont.innerHTML = citas.map(c => `
+                <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
+                        <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
+                        <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : c.estado === 'Cancelada' ? 'bg-rose-200 text-rose-800' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="actualizarEstadoCita('${c.idDoc}', 'Realizada')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                        <button onclick="actualizarEstadoCita('${c.idDoc}', 'Cancelada')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Cancelar</button>
+                        <button onclick="eliminarCita('${c.idDoc}')" class="text-rose-400 text-xs px-2">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function actualizarEstadoCita(idDoc, estado) {
+            await db.collection("citas").doc(idDoc).update({ estado });
+        }
+
+        async function eliminarCita(idDoc) {
+            if(confirm('¿Eliminar cita?')) await db.collection("citas").doc(idDoc).delete();
+        }
+
+        function renderExpedientes() {
+            const grid = document.getElementById('gridExpedientes');
+            const busqueda = document.getElementById('buscadorExpedientes').value.toLowerCase();
+            const filtro = document.getElementById('filtroServicioExp').value;
+            const orden = document.getElementById('ordenExpedientes').value;
+
+            let filtrados = fichas.filter(f => f.nombre.toLowerCase().includes(busqueda));
+            if(filtro !== 'todos') filtrados = filtrados.filter(f => f.servicioTipo.toLowerCase().includes(filtro));
+            if(orden === 'nombre') filtrados.sort((a,b) => a.nombre.localeCompare(b.nombre));
+            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+
+            if(filtrados.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay expedientes.</p>`;
+                return;
+            }
+
+            grid.innerHTML = filtrados.map(f => `
+                <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
+                        <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
+                    </div>
+                    <div class="text-xs space-y-1 text-slate-600">
+                        <p><strong>Última Visita:</strong> ${f.fecha}</p>
+                        <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
+                    </div>
+                    <button onclick="cargarFichaEnFormulario('${f.id}')" class="w-full bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir ficha</button>
+                </div>
+            `).join('');
+        }
+
+        function cargarFichaEnFormulario(id) {
+            const f = fichas.find(item => item.id == id);
+            if(!f) return;
+            document.getElementById('nombreClienta').value = f.nombre;
+            document.getElementById('fechaFicha').value = f.fecha;
+            document.getElementById('notasFicha').value = f.notas || '';
+            document.getElementById('proximaCitaFicha').value = f.proximaCita || '';
+            cargarDatosClienta(f.nombre);
+            cambiarTab('ficha');
+        }
+
+        async function agregarGasto(e) {
+            e.preventDefault();
+            await db.collection("gastos").add({
+                desc: document.getElementById('gastoDesc').value,
+                monto: parseFloat(document.getElementById('gastoMonto').value),
+                fecha: document.getElementById('gastoFecha').value
+            });
+            alert('✨ Gasto registrado');
+            e.target.reset();
+        }
+
+        function calcularFinanzas() {
+            const realizadas = citas.filter(c => c.estado === 'Realizada');
+            const totalIngresos = realizadas.reduce((acc, c) => acc + c.monto, 0);
+            const totalGastos = gastos.reduce((acc, g) => acc + g.monto, 0);
+
+            const ahora = new Date();
+            const semanaPasada = new Date(ahora.getTime() - 7*24*60*60*1000);
+            const mesActual = ahora.getMonth();
+            const anioActual = ahora.getFullYear();
+
+            const sem = realizadas.filter(c => new Date(c.fechaHora) >= semanaPasada).reduce((acc, c) => acc + c.monto, 0);
+            const mes = realizadas.filter(c => new Date(c.fechaHora).getMonth() === mesActual).reduce((acc, c) => acc + c.monto, 0);
+            const anio = realizadas.filter(c => new Date(c.fechaHora).getFullYear() === anioActual).reduce((acc, c) => acc + c.monto, 0);
+
+            document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
+            document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
+            document.getElementById('gananciaAnual').innerText = `$${anio.toFixed(2)} MXN`;
+            document.getElementById('totalIngresos').innerText = `$${totalIngresos.toFixed(2)} MXN`;
+            document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
+            document.getElementById('gananciaNeta').innerText = `$${(totalIngresos - totalGastos).toFixed(2)} MXN`;
+        }
+    </script>
+</body>
+</html>
