@@ -93,12 +93,12 @@
                     <input type="hidden" id="pubHoraSeleccionada" required>
                 </div>
 
-                <!-- LEYENDA Y BOTÓN DE CITA NOCTURNA -->
-                <div class="p-3 bg-rose-50/70 border border-rose-200 rounded-xl text-left space-y-2">
+                <!-- LEYENDA Y BOTÓN DE CITA NOCTURNA DIRECTO A TU WHATSAPP -->
+                <div class="p-3 bg-rose-50/80 border border-rose-200 rounded-xl text-left space-y-2">
                     <p class="text-[11px] text-rose-800 font-medium leading-relaxed">
                         🌙 <strong>¿Necesitas una cita después de las 9:00 PM?</strong> Las citas nocturnas tienen un costo extra de +$30 MXN y están sujetas a disponibilidad.
                     </p>
-                    <a id="btnCitaNocturnaWa" href="https://wa.me/?text=Hola,%20quisiera%20consultar%20disponibilidad%20para%20una%20cita%20nocturna%20(después%20de%20las%209%20pm)." target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">
+                    <a href="https://api.whatsapp.com/message/POTWPXJFGZIEK1?autoload=1&app_absent=0" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-sm">
                         📲 Consultar Cita Nocturna por WhatsApp
                     </a>
                 </div>
@@ -247,7 +247,7 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) -->
+            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) CON DETECCIÓN DE DOBLE RESERVA -->
             <section id="seccion-agendar" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
                     <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
@@ -336,14 +336,17 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS AVANZADAS -->
+            <!-- 6. SECCIÓN FINANZAS AVANZADAS INDEPENDIENTES DE CITAS -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
                         <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad de Saldos Personales</h3>
                         <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y tandas frente a las clientas.</p>
                     </div>
-                    <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
+                    <div class="flex gap-2">
+                        <button onclick="reiniciarGananciasPeriodo()" class="bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Reiniciar Ganancias</button>
+                        <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -357,7 +360,6 @@
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                         <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
                         <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
-                            <!-- Fila 1: Tipo de Flujo -->
                             <div class="grid grid-cols-2 gap-2">
                                 <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-emerald-50 text-emerald-800">
                                     <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
@@ -366,10 +368,10 @@
                                     <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
                                 </label>
                             </div>
-                            <!-- Fila 2: Categoría -->
                             <div>
                                 <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector Destino</label>
                                 <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
+                                    <option value="Ingreso Cita/Servicio">Ingreso por Cita / Servicio</option>
                                     <option value="Gasto/Insumos">Gasto / Insumos</option>
                                     <option value="Tarjetas">Tarjetas Bancarias</option>
                                     <option value="Ahorros">Ahorros</option>
@@ -377,7 +379,7 @@
                                     <option value="Otros">Otros</option>
                                 </select>
                             </div>
-                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Pago Tanda / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
@@ -427,7 +429,7 @@
         </main>
     </div>
 
-    <!-- SCRIPT FIREBASE Y LÓGICA -->
+    <!-- SCRIPT FIREBASE Y LÓGICA COMPLETA -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCpJ6_-esNJVhtznPhidO60O0yrrPJLjs0",
@@ -464,7 +466,6 @@
             calcularFinanzas();
         }
 
-        // Detectar si entra en modo reserva
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('modo') === 'reserva') {
             document.getElementById('vistaPublica').classList.remove('hidden');
@@ -574,15 +575,12 @@
             });
         }
 
-        // CARGA INTELIGENTE DE ANTECEDENTES EN NUEVA FICHA
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
-                // Ordenar por fecha más reciente
                 encontrada.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
                 const ultima = encontrada[0];
 
-                // Autocompletar checks según el tipo de servicio
                 if(ultima.servicioTipo === 'Extensión de Pestañas' && ultima.detalles && ultima.detalles.checks) {
                     document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
                     toggleServicio();
@@ -629,7 +627,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // GENERADOR DE HORARIOS INTELIGENTE (LIBERA 6PM Y 7PM)
+        // GENERADOR DE HORARIOS CADA 30 MINUTOS (INCLUYE 1:30 PM Y SERVICIOS CORTOS)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -643,9 +641,10 @@
                 tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             }
 
+            // Horarios de 30 en 30 min desde las 8:00 AM
             const horasBase = modoDiciembre 
-                ? ["08:00", "11:00", "14:00", "17:00", "18:00", "19:00", "21:00", "23:00", "01:00"]
-                : ["08:00", "11:00", "14:00", "17:00", "18:00", "19:00"];
+                ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
+                : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
             
             cont.innerHTML = '';
 
@@ -655,10 +654,8 @@
                 const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
                 const margenMs = tiempoRequeridoMin * 60 * 1000;
 
-                // Verificar excepción de día libre
                 const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
 
-                // Verificar citas existentes
                 const ocupadoCita = citas.some(c => {
                     if(c.estado === 'Cancelada') return false;
                     const timeCita = new Date(c.fechaHora).getTime();
@@ -666,7 +663,6 @@
                     return (timestampDeseado < timeCita + duracionCitaMs) && (timestampDeseado + margenMs > timeCita);
                 });
 
-                // Verificar bloqueos recurrentes o de fecha
                 let ocupadoBloqueo = false;
                 if(!esExcepcionLibre) {
                     ocupadoBloqueo = bloqueos.some(b => {
@@ -743,6 +739,7 @@
             calcularResumenPublico();
         }
 
+        // GUARDADO DE FICHA CON MAPPING Y CANVAS EN FIREBASE
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -799,6 +796,7 @@
             document.getElementById('historialClientaActual').classList.add('hidden');
         }
 
+        // VALIDACIÓN DE CITAS EMPALMADAS EN PANEL PRIVADO
         async function agendarCita(e) {
             e.preventDefault();
             const editId = document.getElementById('citaEditId').value;
@@ -808,6 +806,21 @@
             const servicio = document.getElementById('citaServicio').value;
             const duracionMin = parseInt(document.getElementById('citaDuracion').value);
             const monto = parseFloat(document.getElementById('citaMonto').value);
+
+            const timestampNuevo = new Date(fechaHora).getTime();
+            const margenMsNuevo = duracionMin * 60 * 1000;
+
+            const conflictoCita = citas.find(c => {
+                if(c.estado === 'Cancelada' || (editId && c.id == editId)) return false;
+                const timestampExistente = new Date(c.fechaHora).getTime();
+                const margenMsExistente = (c.duracionMin || 180) * 60 * 1000;
+                return (timestampNuevo < timestampExistente + margenMsExistente) && (timestampNuevo + margenMsNuevo > timestampExistente);
+            });
+
+            if(conflictoCita) {
+                alert(`⚠️ ¡ATENCIÓN! Ya existe una cita agendada en este horario con ${conflictoCita.nombre}. Por favor elige otro horario para evitar empalmes.`);
+                return;
+            }
 
             const dataCita = {
                 id: editId ? Number(editId) : Date.now(),
@@ -833,6 +846,7 @@
             cambiarTab('agenda');
         }
 
+        // AGENDA CON ALERTA VISUAL DE EMPALMES Y REGISTRO FINANCIERO INDEPENDIENTE
         function renderCitas() {
             const cont = document.getElementById('contenedorListaCitas');
             document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
@@ -852,9 +866,20 @@
 
                 const nombreLimpio = c.nombre.split('(')[0].trim();
 
+                // Detección visual de empalme
+                const timestampSelf = start.getTime();
+                const margenMsSelf = (c.duracionMin || 180) * 60 * 1000;
+                const estaEmpalmada = citas.some(otra => {
+                    if(otra.id === c.id || otra.estado === 'Cancelada') return false;
+                    const timeOtra = new Date(otra.fechaHora).getTime();
+                    const durOtra = (otra.duracionMin || 180) * 60 * 1000;
+                    return (timestampSelf < timeOtra + durOtra) && (timestampSelf + margenMsSelf > timeOtra);
+                });
+
                 return `
-                    <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
+                    <div class="p-4 ${estaEmpalmada ? 'bg-amber-100/80 border-amber-300' : 'bg-rose-50/50 border-rose-100'} rounded-xl border flex flex-wrap justify-between items-center gap-3">
                         <div>
+                            ${estaEmpalmada ? `<span class="bg-rose-600 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase mb-1 inline-block">⚠️ ¡Horario Empalmado!</span>` : ''}
                             <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
                             <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} (${c.duracionMin || 180} min) | 💵 $${c.monto.toFixed(2)} MXN</p>
                             <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : c.estado === 'Cancelada' ? 'bg-rose-200 text-rose-800' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
@@ -863,13 +888,30 @@
                             ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">💬 WhatsApp</a>` : ''}
                             <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">📅 Google Cal</a>
                             <button onclick="crearFichaDesdeCita('${nombreLimpio}', '${c.fechaHora.split('T')[0]}', '${c.servicio}')" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">📋 Crear Ficha Técnica</button>
-                            <button onclick="actualizarEstadoCita('${c.idDoc}', 'Realizada')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                            <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
                             <button onclick="editarCita(${c.id})" class="bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">Editar</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        // MARCAR CITA REALIZADA Y FIJAR INGRESO EN HISTORIAL
+        async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
+            await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
+            
+            // Registrar ingreso independiente en historial financiero
+            const fechaHoy = new Date().toISOString().split('T')[0];
+            await db.collection("movimientosFinancieros").add({
+                tipoFlujo: 'Entrada',
+                categoria: 'Ingreso Cita/Servicio',
+                desc: `Cita: ${nombreClienta} (${servicio})`,
+                monto: parseFloat(monto),
+                fecha: fechaHoy
+            });
+
+            alert('✨ Cita realizada. El ingreso se fijó en tus finanzas.');
         }
 
         function crearFichaDesdeCita(nombre, fecha, servicio) {
@@ -898,12 +940,10 @@
             cambiarTab('agendar');
         }
 
-        async function actualizarEstadoCita(idDoc, estado) {
-            await db.collection("citas").doc(idDoc).update({ estado });
-        }
-
         async function eliminarCita(idDoc) {
-            if(confirm('¿Eliminar cita?')) await db.collection("citas").doc(idDoc).delete();
+            if(confirm('¿Eliminar cita de la agenda? Esto NO borrará los ingresos ya cobrados en tus finanzas.')) {
+                await db.collection("citas").doc(idDoc).delete();
+            }
         }
 
         async function guardarBloqueo(e) {
@@ -1035,18 +1075,32 @@
             }
         }
 
+        async function reiniciarGananciasPeriodo() {
+            if(confirm('¿Deseas vaciar el historial de movimientos financieros para iniciar un nuevo periodo? (Tus expedientes y citas no se borrarán)')) {
+                const batch = db.batch();
+                movimientosFinancieros.forEach(m => {
+                    const docRef = db.collection("movimientosFinancieros").doc(m.idDoc);
+                    batch.delete(docRef);
+                });
+                await batch.commit();
+                alert('✨ Ganancias e historial de finanzas reiniciados.');
+            }
+        }
+
         function calcularFinanzas() {
             if(!document.getElementById('gananciaSemanal')) return;
-            
-            const realizadas = citas.filter(c => c.estado === 'Realizada');
-            const totalIngresosServicios = realizadas.reduce((acc, c) => acc + c.monto, 0);
 
+            let totalIngresosServicios = 0;
             let totalGastos = 0;
             let totalAhorros = 0;
             let totalTarjetas = 0;
             let totalTandas = 0;
 
             movimientosFinancieros.forEach(m => {
+                if(m.categoria === 'Ingreso Cita/Servicio') {
+                    if(m.tipoFlujo === 'Entrada') totalIngresosServicios += m.monto;
+                    else totalIngresosServicios -= m.monto;
+                }
                 if(m.categoria === 'Gasto/Insumos') {
                     if(m.tipoFlujo === 'Entrada') totalGastos -= m.monto;
                     else totalGastos += m.monto;
@@ -1070,9 +1124,9 @@
             const mesActual = ahora.getMonth();
             const anioActual = ahora.getFullYear();
 
-            const sem = realizadas.filter(c => new Date(c.fechaHora) >= semanaPasada).reduce((acc, c) => acc + c.monto, 0);
-            const mes = realizadas.filter(c => new Date(c.fechaHora).getMonth() === mesActual).reduce((acc, c) => acc + c.monto, 0);
-            const anio = realizadas.filter(c => new Date(c.fechaHora).getFullYear() === anioActual).reduce((acc, c) => acc + c.monto, 0);
+            const sem = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha) >= semanaPasada).reduce((acc, m) => acc + m.monto, 0);
+            const mes = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha).getMonth() === mesActual).reduce((acc, m) => acc + m.monto, 0);
+            const anio = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha).getFullYear() === anioActual).reduce((acc, m) => acc + m.monto, 0);
 
             document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
             document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
@@ -1137,6 +1191,19 @@
             document.getElementById('notasFicha').value = f.notas || '';
             document.getElementById('proximaCitaFicha').value = f.proximaCita || '';
             cargarAntecedentesClienta(f.nombre);
+
+            // Cargar canvas guardado
+            if(f.detalles && f.detalles.imgIzq) {
+                const imgI = new Image();
+                imgI.onload = () => document.getElementById('canvasIzq').getContext('2d').drawImage(imgI, 0, 0);
+                imgI.src = f.detalles.imgIzq;
+            }
+            if(f.detalles && f.detalles.imgDer) {
+                const imgD = new Image();
+                imgD.onload = () => document.getElementById('canvasDer').getContext('2d').drawImage(imgD, 0, 0);
+                imgD.src = f.detalles.imgDer;
+            }
+
             cambiarTab('ficha');
         }
 
