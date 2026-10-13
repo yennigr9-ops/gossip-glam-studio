@@ -197,9 +197,11 @@
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Diseño / Efecto</label><input type="text" id="disenoPestanas" placeholder="Ej. Cat Eye" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                                <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Izquierdo</label><canvas id="canvasIzq" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasIzq')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
-                                <div class="text-center"><label class="block text-xs font-bold text-rose-700 mb-1">Ojo Derecho</label><canvas id="canvasDer" width="300" height="150" class="w-full cursor-crosshair"></canvas><button type="button" onclick="limpiarCanvas('canvasDer')" class="mt-1 text-xs text-rose-500">Limpiar</button></div>
+                            <!-- UN SOLO LIENZO (CANVAS) PARA MAPPING -->
+                            <div class="pt-2 max-w-md mx-auto text-center">
+                                <label class="block text-xs font-bold text-rose-700 mb-1">Lienzo de Mapping y Diseño</label>
+                                <canvas id="canvasMapping" width="400" height="180" class="w-full cursor-crosshair"></canvas>
+                                <button type="button" onclick="limpiarCanvas('canvasMapping')" class="mt-1 text-xs text-rose-500 font-semibold">Limpiar</button>
                             </div>
                         </div>
 
@@ -240,9 +242,10 @@
                         </div>
                     </form>
 
+                    <!-- HISTORIAL DINÁMICO DE LA CLIENTA (ABRIR EXPEDIENTES ANTERIORES) -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
                         <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
-                        <div id="listaHistorialClienta" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                        <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
                     </div>
                 </div>
             </section>
@@ -509,8 +512,7 @@
             renderExcepciones();
         });
 
-        setupCanvas('canvasIzq');
-        setupCanvas('canvasDer');
+        setupCanvas('canvasMapping');
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
@@ -535,7 +537,7 @@
 
         function limpiarCanvas(id) {
             const canvas = document.getElementById(id);
-            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+            if(canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         }
 
         function cambiarTab(tab) {
@@ -599,12 +601,23 @@
                 }
 
                 document.getElementById('nombreClientaTitulo').innerText = nombre;
-                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => `
-                    <div class="p-2.5 bg-rose-50 rounded-xl text-xs flex justify-between items-center">
-                        <div><strong>${f.fecha}</strong> - ${f.servicioTipo}</div>
-                        <div class="text-rose-600">${f.notas || 'Sin notas'}</div>
-                    </div>
-                `).join('');
+                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => {
+                    let detalleExtra = '';
+                    if(f.servicioTipo === 'Extensión de Pestañas') {
+                        detalleExtra = `Efecto: ${f.detalles?.diseno || 'N/A'} | Mapping: ${f.detalles?.mapping || 'N/A'}`;
+                    } else {
+                        detalleExtra = `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
+                    }
+                    return `
+                        <div class="p-3 bg-rose-50 rounded-xl text-xs flex justify-between items-center gap-2 border border-rose-100">
+                            <div>
+                                <strong>📅 ${f.fecha}</strong> - <span class="text-rose-700 font-semibold">${f.servicioTipo}</span>
+                                <p class="text-[11px] text-slate-500 mt-0.5">${detalleExtra}</p>
+                            </div>
+                            <button type="button" onclick="cargarFichaEnFormulario(${f.id})" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">Abrir ficha</button>
+                        </div>
+                    `;
+                }).join('');
                 document.getElementById('historialClientaActual').classList.remove('hidden');
             } else {
                 document.getElementById('historialClientaActual').classList.add('hidden');
@@ -627,7 +640,6 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // GENERADOR DE HORARIOS CADA 30 MINUTOS (INCLUYE 1:30 PM Y SERVICIOS CORTOS)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -641,19 +653,16 @@
                 tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             }
 
-            // Horarios de 30 en 30 min desde las 8:00 AM
             const horasBase = modoDiciembre 
                 ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
                 : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
             
             cont.innerHTML = '';
-
             const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay();
 
             horasBase.forEach(hora => {
                 const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
                 const margenMs = tiempoRequeridoMin * 60 * 1000;
-
                 const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
 
                 const ocupadoCita = citas.some(c => {
@@ -668,7 +677,6 @@
                     ocupadoBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
-
                         if(b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
                             return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
                         }
@@ -680,7 +688,6 @@
                 }
 
                 const estaBloqueado = ocupadoCita || ocupadoBloqueo;
-
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = `p-2 rounded-xl text-xs font-bold border ${estaBloqueado ? 'bg-gray-200 text-gray-400 border-gray-300 line-through cursor-not-allowed' : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'}`;
@@ -696,7 +703,6 @@
                         document.getElementById('pubHoraSeleccionada').value = hora;
                     };
                 }
-
                 cont.appendChild(btn);
             });
         }
@@ -739,7 +745,7 @@
             calcularResumenPublico();
         }
 
-        // GUARDADO DE FICHA CON MAPPING Y CANVAS EN FIREBASE
+        // GUARDADO DE FICHA SIN SOBRESCRIBIR (CREA UN NUEVO EXPEDIENTE HISTÓRICO)
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -753,8 +759,7 @@
                 tec: document.getElementById('tecPestanas').value,
                 diseno: document.getElementById('disenoPestanas').value,
                 mapping: document.getElementById('mappingPestanas').value,
-                imgIzq: document.getElementById('canvasIzq').toDataURL(),
-                imgDer: document.getElementById('canvasDer').toDataURL()
+                imgMapping: document.getElementById('canvasMapping').toDataURL()
             } : {
                 tipo: 'Micropigmentación',
                 checks: Array.from(document.querySelectorAll('input[name="checkMicro"]:checked')).map(c => c.value),
@@ -777,13 +782,20 @@
             };
 
             if(editId) {
+                // Si estás editando explícitamente un registro abierto
                 const docRef = fichas.find(f => f.id == editId);
-                if(docRef) await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
+                if(docRef) {
+                    await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
+                } else {
+                    await db.collection("fichas").add(dataFicha);
+                }
             } else {
+                // Si es nueva visita, crea un ID completamente nuevo para conservar el historial intacto
+                dataFicha.id = Date.now();
                 await db.collection("fichas").add(dataFicha);
             }
 
-            alert('✨ ¡Ficha técnica guardada con éxito!');
+            alert('✨ ¡Ficha técnica guardada con éxito en el historial!');
             limpiarFicha();
         }
 
@@ -791,12 +803,10 @@
             document.getElementById('formFicha').reset();
             document.getElementById('fichaEditId').value = '';
             document.getElementById('fechaFicha').valueAsDate = new Date();
-            limpiarCanvas('canvasIzq');
-            limpiarCanvas('canvasDer');
+            limpiarCanvas('canvasMapping');
             document.getElementById('historialClientaActual').classList.add('hidden');
         }
 
-        // VALIDACIÓN DE CITAS EMPALMADAS EN PANEL PRIVADO
         async function agendarCita(e) {
             e.preventDefault();
             const editId = document.getElementById('citaEditId').value;
@@ -846,7 +856,6 @@
             cambiarTab('agenda');
         }
 
-        // AGENDA CON ALERTA VISUAL DE EMPALMES Y REGISTRO FINANCIERO INDEPENDIENTE
         function renderCitas() {
             const cont = document.getElementById('contenedorListaCitas');
             document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
@@ -863,10 +872,8 @@
                 const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
                 const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita programada para el ${new Date(c.fechaHora).toLocaleString()} para el servicio de: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
                 const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
-
                 const nombreLimpio = c.nombre.split('(')[0].trim();
 
-                // Detección visual de empalme
                 const timestampSelf = start.getTime();
                 const margenMsSelf = (c.duracionMin || 180) * 60 * 1000;
                 const estaEmpalmada = citas.some(otra => {
@@ -897,11 +904,8 @@
             }).join('');
         }
 
-        // MARCAR CITA REALIZADA Y FIJAR INGRESO EN HISTORIAL
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
-            
-            // Registrar ingreso independiente en historial financiero
             const fechaHoy = new Date().toISOString().split('T')[0];
             await db.collection("movimientosFinancieros").add({
                 tipoFlujo: 'Entrada',
@@ -910,7 +914,6 @@
                 monto: parseFloat(monto),
                 fecha: fechaHoy
             });
-
             alert('✨ Cita realizada. El ingreso se fijó en tus finanzas.');
         }
 
@@ -954,16 +957,13 @@
             const horaInicio = document.getElementById('bloqueoHoraInicio').value;
             const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
-
             const dataBloqueo = { diasRecurrentes, fecha, horaInicio, horaFin, motivo };
 
             if(editId) {
-                const docRef = bloqueos.find(b => b.idDoc === editId);
-                if(docRef) await db.collection("bloqueos").doc(editId).update(dataBloqueo);
+                await db.collection("bloqueos").doc(editId).update(dataBloqueo);
             } else {
                 await db.collection("bloqueos").add(dataBloqueo);
             }
-
             alert('🔒 Bloqueo guardado correctamente');
             document.getElementById('bloqueoEditId').value = '';
             e.target.reset();
@@ -1079,8 +1079,7 @@
             if(confirm('¿Deseas vaciar el historial de movimientos financieros para iniciar un nuevo periodo? (Tus expedientes y citas no se borrarán)')) {
                 const batch = db.batch();
                 movimientosFinancieros.forEach(m => {
-                    const docRef = db.collection("movimientosFinancieros").doc(m.idDoc);
-                    batch.delete(docRef);
+                    batch.delete(db.collection("movimientosFinancieros").doc(m.idDoc));
                 });
                 await batch.commit();
                 alert('✨ Ganancias e historial de finanzas reiniciados.');
@@ -1089,34 +1088,14 @@
 
         function calcularFinanzas() {
             if(!document.getElementById('gananciaSemanal')) return;
-
-            let totalIngresosServicios = 0;
-            let totalGastos = 0;
-            let totalAhorros = 0;
-            let totalTarjetas = 0;
-            let totalTandas = 0;
+            let totalIngresosServicios = 0, totalGastos = 0, totalAhorros = 0, totalTarjetas = 0, totalTandas = 0;
 
             movimientosFinancieros.forEach(m => {
-                if(m.categoria === 'Ingreso Cita/Servicio') {
-                    if(m.tipoFlujo === 'Entrada') totalIngresosServicios += m.monto;
-                    else totalIngresosServicios -= m.monto;
-                }
-                if(m.categoria === 'Gasto/Insumos') {
-                    if(m.tipoFlujo === 'Entrada') totalGastos -= m.monto;
-                    else totalGastos += m.monto;
-                }
-                if(m.categoria === 'Ahorros') {
-                    if(m.tipoFlujo === 'Entrada') totalAhorros += m.monto;
-                    else totalAhorros -= m.monto;
-                }
-                if(m.categoria === 'Tarjetas') {
-                    if(m.tipoFlujo === 'Entrada') totalTarjetas += m.monto;
-                    else totalTarjetas -= m.monto;
-                }
-                if(m.categoria === 'Tandas') {
-                    if(m.tipoFlujo === 'Entrada') totalTandas += m.monto;
-                    else totalTandas -= m.monto;
-                }
+                if(m.categoria === 'Ingreso Cita/Servicio') totalIngresosServicios += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                if(m.categoria === 'Gasto/Insumos') totalGastos += (m.tipoFlujo === 'Salida' ? m.monto : -m.monto);
+                if(m.categoria === 'Ahorros') totalAhorros += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                if(m.categoria === 'Tarjetas') totalTarjetas += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                if(m.categoria === 'Tandas') totalTandas += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
             });
 
             const ahora = new Date();
@@ -1143,7 +1122,6 @@
                 document.getElementById('totalTarjetas').innerText = `$${totalTarjetas.toFixed(2)} MXN`;
                 document.getElementById('totalTandas').innerText = `$${totalTandas.toFixed(2)} MXN`;
             }
-
             document.getElementById('gananciaNeta').innerText = `$${(totalIngresosServicios - totalGastos).toFixed(2)} MXN`;
         }
 
@@ -1164,22 +1142,29 @@
                 return;
             }
 
-            grid.innerHTML = filtrados.map(f => `
-                <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
-                    <div class="flex justify-between items-start">
-                        <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
-                        <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
+            grid.innerHTML = filtrados.map(f => {
+                let detalleInfo = f.servicioTipo === 'Extensión de Pestañas' 
+                    ? `Efecto: ${f.detalles?.diseno || 'N/A'}` 
+                    : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
+
+                return `
+                    <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
+                            <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
+                        </div>
+                        <div class="text-xs space-y-1 text-slate-600">
+                            <p><strong>Fecha Visita:</strong> ${f.fecha}</p>
+                            <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
+                            <p><strong>Detalle:</strong> ${detalleInfo}</p>
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir ficha</button>
+                            <button onclick="eliminarExpediente('${f.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">Borrar</button>
+                        </div>
                     </div>
-                    <div class="text-xs space-y-1 text-slate-600">
-                        <p><strong>Última Visita:</strong> ${f.fecha}</p>
-                        <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
-                    </div>
-                    <div class="flex gap-2 pt-1">
-                        <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir ficha</button>
-                        <button onclick="eliminarExpediente('${f.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">Borrar</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function cargarFichaEnFormulario(id) {
@@ -1192,16 +1177,39 @@
             document.getElementById('proximaCitaFicha').value = f.proximaCita || '';
             cargarAntecedentesClienta(f.nombre);
 
-            // Cargar canvas guardado
-            if(f.detalles && f.detalles.imgIzq) {
-                const imgI = new Image();
-                imgI.onload = () => document.getElementById('canvasIzq').getContext('2d').drawImage(imgI, 0, 0);
-                imgI.src = f.detalles.imgIzq;
+            if(f.servicioTipo === 'Extensión de Pestañas') {
+                document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
+                toggleServicio();
+                if(f.detalles && f.detalles.checks) {
+                    document.querySelectorAll('input[name="checkPestanas"]').forEach(chk => {
+                        chk.checked = f.detalles.checks.includes(chk.value);
+                    });
+                }
+                document.getElementById('tecPestanas').value = f.detalles?.tec || '';
+                document.getElementById('disenoPestanas').value = f.detalles?.diseno || '';
+                document.getElementById('mappingPestanas').value = f.detalles?.mapping || '';
+            } else {
+                document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
+                toggleServicio();
+                if(f.detalles && f.detalles.checks) {
+                    document.querySelectorAll('input[name="checkMicro"]').forEach(chk => {
+                        chk.checked = f.detalles.checks.includes(chk.value);
+                    });
+                }
+                document.getElementById('microZona').value = f.detalles?.zona || 'Cejas';
+                document.getElementById('microPigmentos').value = f.detalles?.pigmentos || '';
+                document.getElementById('microTecnica').value = f.detalles?.tec || '';
+                document.getElementById('microCartucho').value = f.detalles?.cartucho || '';
+                document.getElementById('microVoltaje').value = f.detalles?.voltaje || '';
+                document.getElementById('microNeutralizacion').value = f.detalles?.neutralizacion || '';
             }
-            if(f.detalles && f.detalles.imgDer) {
-                const imgD = new Image();
-                imgD.onload = () => document.getElementById('canvasDer').getContext('2d').drawImage(imgD, 0, 0);
-                imgD.src = f.detalles.imgDer;
+
+            if(f.detalles && f.detalles.imgMapping) {
+                const imgM = new Image();
+                imgM.onload = () => document.getElementById('canvasMapping').getContext('2d').drawImage(imgM, 0, 0);
+                imgM.src = f.detalles.imgMapping;
+            } else {
+                limpiarCanvas('canvasMapping');
             }
 
             cambiarTab('ficha');
