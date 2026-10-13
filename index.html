@@ -93,7 +93,6 @@
                     <input type="hidden" id="pubHoraSeleccionada" required>
                 </div>
 
-                <!-- LEYENDA Y BOTÓN DE CITA NOCTURNA DIRECTO A TU WHATSAPP -->
                 <div class="p-3 bg-rose-50/80 border border-rose-200 rounded-xl text-left space-y-2">
                     <p class="text-[11px] text-rose-800 font-medium leading-relaxed">
                         🌙 <strong>¿Necesitas una cita después de las 9:00 PM?</strong> Las citas nocturnas tienen un costo extra de +$30 MXN y están sujetas a disponibilidad.
@@ -242,7 +241,7 @@
                         </div>
                     </form>
 
-                    <!-- HISTORIAL DINÁMICO DE LA CLIENTA (ABRIR EXPEDIENTES ANTERIORES) -->
+                    <!-- HISTORIAL DE CLIENTA (SE REMOVIÓ EL BOTÓN "ABRIR FICHA" Y SE MUESTRA TÉCNICA) -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
                         <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
                         <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
@@ -250,7 +249,7 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) CON DETECCIÓN DE DOBLE RESERVA -->
+            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) -->
             <section id="seccion-agendar" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
                     <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
@@ -320,7 +319,6 @@
                         <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo</button>
                     </form>
 
-                    <!-- APARTADO DE LIBERAR DÍA EXCEPCIONAL -->
                     <div class="mt-6 pt-4 border-t border-rose-100 space-y-3">
                         <h3 class="font-bold text-rose-700 text-sm">🔓 Liberar Día Específico (Excepción)</h3>
                         <p class="text-xs text-slate-500">Si un día recurrente (ej. martes) estás libre, agrega la fecha aquí para saltarte el bloqueo.</p>
@@ -339,7 +337,7 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS AVANZADAS INDEPENDIENTES DE CITAS -->
+            <!-- 6. SECCIÓN FINANZAS (SOLO CALCULA CITAS/SERVICIOS) -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -352,14 +350,15 @@
                     </div>
                 </div>
 
+                <!-- CARDS DE GANANCIAS DE CITAS -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- FORMULARIO DOBLE DE MOVIMIENTOS -->
+                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                         <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
                         <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
@@ -389,18 +388,18 @@
                         </form>
                     </div>
 
-                    <!-- BALANCE NETO GENERAL -->
+                    <!-- BALANCE NETO EN SALÓN -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
                         <div>
                             <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>Total Ingresos por Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Ingresos por Citas/Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
                                 <div class="flex justify-between"><span>Total Gastos / Insumos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
                                 <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600 saldo-personal">$0.00 MXN</strong></div>
                                 <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600 saldo-personal">$0.00 MXN</strong></div>
                                 <div class="flex justify-between"><span>Total Tandas:</span> <strong id="totalTandas" class="text-amber-600 saldo-personal">$0.00 MXN</strong></div>
                                 <hr class="my-2 border-rose-100">
-                                <div class="flex justify-between text-base"><span>Ganancia Neta Final:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
+                                <div class="flex justify-between text-base"><span>Ganancia Neta Citas:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
                             </div>
                         </div>
                     </div>
@@ -577,6 +576,7 @@
             });
         }
 
+        // CARGA EL HISTORIAL ABAJO MOSTRANDO "TÉCNICA" Y SIN EL BOTÓN
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -604,17 +604,16 @@
                 document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => {
                     let detalleExtra = '';
                     if(f.servicioTipo === 'Extensión de Pestañas') {
-                        detalleExtra = `Efecto: ${f.detalles?.diseno || 'N/A'} | Mapping: ${f.detalles?.mapping || 'N/A'}`;
+                        detalleExtra = `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'} | Mapping: ${f.detalles?.mapping || 'N/A'}`;
                     } else {
                         detalleExtra = `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
                     }
                     return `
-                        <div class="p-3 bg-rose-50 rounded-xl text-xs flex justify-between items-center gap-2 border border-rose-100">
+                        <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100">
                             <div>
                                 <strong>📅 ${f.fecha}</strong> - <span class="text-rose-700 font-semibold">${f.servicioTipo}</span>
                                 <p class="text-[11px] text-slate-500 mt-0.5">${detalleExtra}</p>
                             </div>
-                            <button type="button" onclick="cargarFichaEnFormulario(${f.id})" class="bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">Abrir ficha</button>
                         </div>
                     `;
                 }).join('');
@@ -745,7 +744,6 @@
             calcularResumenPublico();
         }
 
-        // GUARDADO DE FICHA SIN SOBRESCRIBIR (CREA UN NUEVO EXPEDIENTE HISTÓRICO)
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -782,7 +780,6 @@
             };
 
             if(editId) {
-                // Si estás editando explícitamente un registro abierto
                 const docRef = fichas.find(f => f.id == editId);
                 if(docRef) {
                     await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
@@ -790,12 +787,11 @@
                     await db.collection("fichas").add(dataFicha);
                 }
             } else {
-                // Si es nueva visita, crea un ID completamente nuevo para conservar el historial intacto
                 dataFicha.id = Date.now();
                 await db.collection("fichas").add(dataFicha);
             }
 
-            alert('✨ ¡Ficha técnica guardada con éxito en el historial!');
+            alert('✨ ¡Ficha técnica guardada con éxito!');
             limpiarFicha();
         }
 
@@ -1086,6 +1082,7 @@
             }
         }
 
+        // CÁLCULO EXCLUSIVO DE CITAS / SERVICIOS
         function calcularFinanzas() {
             if(!document.getElementById('gananciaSemanal')) return;
             let totalIngresosServicios = 0, totalGastos = 0, totalAhorros = 0, totalTarjetas = 0, totalTandas = 0;
@@ -1103,9 +1100,10 @@
             const mesActual = ahora.getMonth();
             const anioActual = ahora.getFullYear();
 
-            const sem = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha) >= semanaPasada).reduce((acc, m) => acc + m.monto, 0);
-            const mes = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha).getMonth() === mesActual).reduce((acc, m) => acc + m.monto, 0);
-            const anio = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && new Date(m.fecha).getFullYear() === anioActual).reduce((acc, m) => acc + m.monto, 0);
+            // SÓLO SUMA ENTRADAS DE CITAS Y SERVICIOS
+            const sem = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha) >= semanaPasada).reduce((acc, m) => acc + m.monto, 0);
+            const mes = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha).getMonth() === mesActual).reduce((acc, m) => acc + m.monto, 0);
+            const anio = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha).getFullYear() === anioActual).reduce((acc, m) => acc + m.monto, 0);
 
             document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
             document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
@@ -1144,7 +1142,7 @@
 
             grid.innerHTML = filtrados.map(f => {
                 let detalleInfo = f.servicioTipo === 'Extensión de Pestañas' 
-                    ? `Efecto: ${f.detalles?.diseno || 'N/A'}` 
+                    ? `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'}` 
                     : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
 
                 return `
