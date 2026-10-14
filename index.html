@@ -196,7 +196,6 @@
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Diseño / Efecto</label><input type="text" id="disenoPestanas" placeholder="Ej. Cat Eye" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                             </div>
-                            <!-- UN SOLO LIENZO (CANVAS) PARA MAPPING -->
                             <div class="pt-2 max-w-md mx-auto text-center">
                                 <label class="block text-xs font-bold text-rose-700 mb-1">Lienzo de Mapping y Diseño</label>
                                 <canvas id="canvasMapping" width="400" height="180" class="w-full cursor-crosshair"></canvas>
@@ -241,7 +240,7 @@
                         </div>
                     </form>
 
-                    <!-- HISTORIAL DE CLIENTA (SE REMOVIÓ EL BOTÓN "ABRIR FICHA" Y SE MUESTRA TÉCNICA) -->
+                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
                         <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
                         <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
@@ -293,12 +292,25 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS RECURRENTE Y EXCEPCIONES -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
                     <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
                     <form onsubmit="guardarBloqueo(event)" class="space-y-4">
                         <input type="hidden" id="bloqueoEditId">
+                        
+                        <!-- RANGO DE FECHAS DE BLOQUEO -->
+                        <div class="grid grid-cols-2 gap-3 bg-rose-50/50 p-3 rounded-xl border border-rose-100">
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha Inicio Bloqueo *</label>
+                                <input type="date" id="bloqueoFechaInicio" required class="w-full p-2 border border-rose-200 rounded-xl text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha Fin Bloqueo *</label>
+                                <input type="date" id="bloqueoFechaFin" required class="w-full p-2 border border-rose-200 rounded-xl text-sm bg-white">
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Repetir en Días de la Semana:</label>
                             <div class="flex flex-wrap gap-2 text-xs">
@@ -310,18 +322,17 @@
                                 <label class="flex items-center gap-1 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200"><input type="checkbox" name="diasBloqueo" value="6"> Sáb</label>
                             </div>
                         </div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">O Fecha Específica (Opcional)</label><input type="date" id="bloqueoFecha" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Inicio</label><input type="time" id="bloqueoHoraInicio" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Fin</label><input type="time" id="bloqueoHoraFin" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         </div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Escuela niños" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo</button>
+                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo por Rango</button>
                     </form>
 
                     <div class="mt-6 pt-4 border-t border-rose-100 space-y-3">
                         <h3 class="font-bold text-rose-700 text-sm">🔓 Liberar Día Específico (Excepción)</h3>
-                        <p class="text-xs text-slate-500">Si un día recurrente (ej. martes) estás libre, agrega la fecha aquí para saltarte el bloqueo.</p>
+                        <p class="text-xs text-slate-500">Si un día recurrente estás libre, agrega la fecha aquí para saltarte el bloqueo.</p>
                         <form onsubmit="guardarExcepcion(event)" class="space-y-3">
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha a Liberar</label><input type="date" id="excepcionFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo</label><input type="text" id="excepcionMotivo" required placeholder="Ej. No hay clases / Libre" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
@@ -337,12 +348,12 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS (SOLO CALCULA CITAS/SERVICIOS) -->
+            <!-- 6. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
                         <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad de Saldos Personales</h3>
-                        <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y tandas frente a las clientas.</p>
+                        <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y cuentas frente a las clientas.</p>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="reiniciarGananciasPeriodo()" class="bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Reiniciar Ganancias</button>
@@ -350,11 +361,20 @@
                     </div>
                 </div>
 
-                <!-- CARDS DE GANANCIAS DE CITAS -->
+                <!-- CARDS DE GANANCIAS DE CITAS PERSISTENTES -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                </div>
+
+                <!-- ADMINISTRADOR Y EDITOR DE CATEGORÍAS -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-rose-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 text-sm">🏷️ Gestionar Categorías / Sectores</h3>
+                        <button onclick="agregarCategoriaNueva()" class="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-bold">+ Agregar Categoría</button>
+                    </div>
+                    <div id="contenedorGestionCategorias" class="flex flex-wrap gap-2 text-xs pt-1"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -372,14 +392,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector Destino</label>
-                                <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                                    <option value="Ingreso Cita/Servicio">Ingreso por Cita / Servicio</option>
-                                    <option value="Gasto/Insumos">Gasto / Insumos</option>
-                                    <option value="Tarjetas">Tarjetas Bancarias</option>
-                                    <option value="Ahorros">Ahorros</option>
-                                    <option value="Tandas">Tandas</option>
-                                    <option value="Otros">Otros</option>
-                                </select>
+                                <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"></select>
                             </div>
                             <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
@@ -388,16 +401,14 @@
                         </form>
                     </div>
 
-                    <!-- BALANCE NETO EN SALÓN -->
+                    <!-- BALANCE NETO GENERAL -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
                         <div>
                             <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
                             <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>Total Ingresos por Citas/Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
+                                <div class="flex justify-between"><span>Total Ingresos Citas / Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
                                 <div class="flex justify-between"><span>Total Gastos / Insumos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Ahorros:</span> <strong id="totalAhorros" class="text-purple-600 saldo-personal">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Tarjetas Bancarias:</span> <strong id="totalTarjetas" class="text-blue-600 saldo-personal">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Tandas:</span> <strong id="totalTandas" class="text-amber-600 saldo-personal">$0.00 MXN</strong></div>
+                                <div id="listaBalancesCategoriasExtra" class="space-y-1 pt-1 border-t border-rose-50"></div>
                                 <hr class="my-2 border-rose-100">
                                 <div class="flex justify-between text-base"><span>Ganancia Neta Citas:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
                             </div>
@@ -482,6 +493,8 @@
         let movimientosFinancieros = [];
         let bloqueos = [];
         let excepciones = [];
+        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Extra", "Tarjetas", "Ahorros"];
+        let acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
 
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
@@ -509,6 +522,16 @@
         db.collection("excepciones").onSnapshot(snapshot => {
             excepciones = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
             renderExcepciones();
+        });
+
+        db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
+            if(doc.exists) {
+                const data = doc.data();
+                if(data.categorias) categoriasFinanzas = data.categorias;
+                if(data.acumulados) acumuladosFinanzas = data.acumulados;
+            }
+            renderCategoriasFinanzas();
+            calcularFinanzas();
         });
 
         setupCanvas('canvasMapping');
@@ -576,7 +599,7 @@
             });
         }
 
-        // CARGA EL HISTORIAL ABAJO MOSTRANDO "TÉCNICA" Y SIN EL BOTÓN
+        // MOSTRAR HISTORIAL COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -604,16 +627,17 @@
                 document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => {
                     let detalleExtra = '';
                     if(f.servicioTipo === 'Extensión de Pestañas') {
-                        detalleExtra = `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'} | Mapping: ${f.detalles?.mapping || 'N/A'}`;
+                        detalleExtra = `✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 📐 <strong>Diseño:</strong> ${f.detalles?.diseno || 'N/A'} | 🗺️ <strong>Mapping:</strong> ${f.detalles?.mapping || 'N/A'}`;
                     } else {
-                        detalleExtra = `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
+                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | ✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 🎨 <strong>Pigmentos:</strong> ${f.detalles?.pigmentos || 'N/A'}`;
                     }
                     return `
-                        <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100">
-                            <div>
-                                <strong>📅 ${f.fecha}</strong> - <span class="text-rose-700 font-semibold">${f.servicioTipo}</span>
-                                <p class="text-[11px] text-slate-500 mt-0.5">${detalleExtra}</p>
+                        <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100 space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
                             </div>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">${detalleExtra}</p>
+                            ${f.notas ? `<p class="text-[10px] text-rose-500 italic">Notas: ${f.notas}</p>` : ''}
                         </div>
                     `;
                 }).join('');
@@ -639,6 +663,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
+        // CARGA HORARIOS CON EVALUACIÓN DE RANGO FECHA INICIO Y FECHA FIN EN BLOQUEOS
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -676,10 +701,11 @@
                     ocupadoBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
-                        if(b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
-                            return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
-                        }
-                        if(b.fecha === fechaSel) {
+
+                        // Verificar si la fecha cae dentro del rango de fechaInicio y fechaFin
+                        const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
+
+                        if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
                             return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
                         }
                         return false;
@@ -900,17 +926,27 @@
             }).join('');
         }
 
+        // MARCAR REALIZADA Y ACUMULAR GANANCIA PERSISTENTE
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
+            const valMonto = parseFloat(monto);
+
             await db.collection("movimientosFinancieros").add({
                 tipoFlujo: 'Entrada',
                 categoria: 'Ingreso Cita/Servicio',
                 desc: `Cita: ${nombreClienta} (${servicio})`,
-                monto: parseFloat(monto),
+                monto: valMonto,
                 fecha: fechaHoy
             });
-            alert('✨ Cita realizada. El ingreso se fijó en tus finanzas.');
+
+            // Acumular de forma persistente en Firebase
+            acumuladosFinanzas.sem += valMonto;
+            acumuladosFinanzas.mes += valMonto;
+            acumuladosFinanzas.anio += valMonto;
+            await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas, categorias: categoriasFinanzas }, { merge: true });
+
+            alert('✨ Cita realizada. El ingreso se fijó en tus ganancias.');
         }
 
         function crearFichaDesdeCita(nombre, fecha, servicio) {
@@ -945,22 +981,30 @@
             }
         }
 
+        // GUARDAR BLOQUEO CON FECHA INICIO Y FECHA FIN
         async function guardarBloqueo(e) {
             e.preventDefault();
             const editId = document.getElementById('bloqueoEditId').value;
+            const fechaInicio = document.getElementById('bloqueoFechaInicio').value;
+            const fechaFin = document.getElementById('bloqueoFechaFin').value;
             const diasRecurrentes = Array.from(document.querySelectorAll('input[name="diasBloqueo"]:checked')).map(c => c.value);
-            const fecha = document.getElementById('bloqueoFecha').value;
             const horaInicio = document.getElementById('bloqueoHoraInicio').value;
             const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
-            const dataBloqueo = { diasRecurrentes, fecha, horaInicio, horaFin, motivo };
+
+            if(fechaFin < fechaInicio) {
+                alert('⚠️ La Fecha Fin debe ser posterior a la Fecha Inicio.');
+                return;
+            }
+
+            const dataBloqueo = { fechaInicio, fechaFin, diasRecurrentes, horaInicio, horaFin, motivo };
 
             if(editId) {
                 await db.collection("bloqueos").doc(editId).update(dataBloqueo);
             } else {
                 await db.collection("bloqueos").add(dataBloqueo);
             }
-            alert('🔒 Bloqueo guardado correctamente');
+            alert('🔒 Bloqueo por rango de fechas guardado correctamente');
             document.getElementById('bloqueoEditId').value = '';
             e.target.reset();
         }
@@ -969,10 +1013,11 @@
             const b = bloqueos.find(item => item.idDoc === idDoc);
             if(!b) return;
             document.getElementById('bloqueoEditId').value = b.idDoc;
+            document.getElementById('bloqueoFechaInicio').value = b.fechaInicio || '';
+            document.getElementById('bloqueoFechaFin').value = b.fechaFin || '';
             document.querySelectorAll('input[name="diasBloqueo"]').forEach(chk => {
                 chk.checked = b.diasRecurrentes && b.diasRecurrentes.includes(chk.value);
             });
-            document.getElementById('bloqueoFecha').value = b.fecha || '';
             document.getElementById('bloqueoHoraInicio').value = b.horaInicio;
             document.getElementById('bloqueoHoraFin').value = b.horaFin;
             document.getElementById('bloqueoMotivo').value = b.motivo;
@@ -987,10 +1032,14 @@
             }
             const nombresDias = { "1": "Lun", "2": "Mar", "3": "Mié", "4": "Jue", "5": "Vie", "6": "Sáb" };
             cont.innerHTML = bloqueos.map(b => {
-                const diasTxt = b.diasRecurrentes && b.diasRecurrentes.length > 0 ? b.diasRecurrentes.map(d => nombresDias[d]).join(', ') : b.fecha;
+                const diasTxt = b.diasRecurrentes && b.diasRecurrentes.length > 0 ? b.diasRecurrentes.map(d => nombresDias[d]).join(', ') : 'Días seleccionados';
+                const rangoTxt = (b.fechaInicio && b.fechaFin) ? `Del ${b.fechaInicio} al ${b.fechaFin}` : 'Indefinido';
                 return `
-                    <div class="flex justify-between items-center p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                        <div><strong>${diasTxt}</strong> (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</div>
+                    <div class="flex justify-between items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <div>
+                            <strong class="text-rose-700">${rangoTxt}</strong>
+                            <p class="text-[11px] text-slate-600">Días: ${diasTxt} (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</p>
+                        </div>
                         <div class="flex gap-2">
                             <button onclick="editarBloqueo('${b.idDoc}')" class="text-amber-600 font-bold text-xs">Editar</button>
                             <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
@@ -1032,6 +1081,50 @@
             await db.collection("excepciones").doc(idDoc).delete();
         }
 
+        // AGREGAR Y EDITAR CATEGORÍAS EN FINANZAS
+        function renderCategoriasFinanzas() {
+            const sel = document.getElementById('finCategoria');
+            const contCat = document.getElementById('contenedorGestionCategorias');
+            if(!sel || !contCat) return;
+
+            sel.innerHTML = categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            contCat.innerHTML = categoriasFinanzas.map((c, index) => `
+                <span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 text-rose-800 px-2.5 py-1 rounded-lg font-medium">
+                    ${c}
+                    <button onclick="renombrarCategoria(${index})" title="Editar" class="text-amber-600 font-bold ml-1">✏️</button>
+                    ${categoriasFinanzas.length > 1 ? `<button onclick="eliminarCategoria(${index})" title="Eliminar" class="text-rose-600 font-bold">✕</button>` : ''}
+                </span>
+            `).join('');
+        }
+
+        async function agregarCategoriaNueva() {
+            const nombre = prompt('Escribe el nombre del nuevo sector o categoría (Ej. Dinero Extra, Cursos, etc.):');
+            if(nombre && nombre.trim() !== '') {
+                const nombreLimpio = nombre.trim();
+                if(!categoriasFinanzas.includes(nombreLimpio)) {
+                    categoriasFinanzas.push(nombreLimpio);
+                    await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
+                }
+            }
+        }
+
+        async function renombrarCategoria(index) {
+            const actual = categoriasFinanzas[index];
+            const nuevo = prompt(`Editar nombre de la categoría "${actual}":`, actual);
+            if(nuevo && nuevo.trim() !== '' && nuevo.trim() !== actual) {
+                categoriasFinanzas[index] = nuevo.trim();
+                await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
+            }
+        }
+
+        async function eliminarCategoria(index) {
+            if(confirm(`¿Eliminar la categoría "${categoriasFinanzas[index]}"?`)) {
+                categoriasFinanzas.splice(index, 1);
+                await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
+            }
+        }
+
         async function agregarMovimientoFinanciero(e) {
             e.preventDefault();
             const tipoFlujo = document.querySelector('input[name="tipoFlujo"]:checked').value;
@@ -1041,6 +1134,15 @@
             const fecha = document.getElementById('finFecha').value;
 
             await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
+
+            // Si es un ingreso manual de cita, también suma al acumulado
+            if(categoria === 'Ingreso Cita/Servicio' && tipoFlujo === 'Entrada') {
+                acumuladosFinanzas.sem += monto;
+                acumuladosFinanzas.mes += monto;
+                acumuladosFinanzas.anio += monto;
+                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
+            }
+
             alert('✨ Movimiento guardado correctamente');
             e.target.reset();
             document.getElementById('finFecha').valueAsDate = new Date();
@@ -1066,60 +1168,52 @@
         }
 
         async function eliminarMovimientoFinanciero(idDoc) {
-            if(confirm('¿Eliminar este registro del historial?')) {
+            if(confirm('¿Eliminar este registro del historial? (Tus tarjetas de ganancia semanal, mensual y anual NO se modificarán)')) {
                 await db.collection("movimientosFinancieros").doc(idDoc).delete();
             }
         }
 
+        // BOTÓN EXPLICITO DE REINICIAR GANANCIAS
         async function reiniciarGananciasPeriodo() {
-            if(confirm('¿Deseas vaciar el historial de movimientos financieros para iniciar un nuevo periodo? (Tus expedientes y citas no se borrarán)')) {
-                const batch = db.batch();
-                movimientosFinancieros.forEach(m => {
-                    batch.delete(db.collection("movimientosFinancieros").doc(m.idDoc));
-                });
-                await batch.commit();
-                alert('✨ Ganancias e historial de finanzas reiniciados.');
+            if(confirm('¿Deseas reiniciar los contadores de ganancia semanal, mensual y anual a $0.00 MXN?')) {
+                acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
+                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
+                alert('✨ Ganancias de citas reiniciadas a $0.00 MXN.');
             }
         }
 
-        // CÁLCULO EXCLUSIVO DE CITAS / SERVICIOS
         function calcularFinanzas() {
             if(!document.getElementById('gananciaSemanal')) return;
-            let totalIngresosServicios = 0, totalGastos = 0, totalAhorros = 0, totalTarjetas = 0, totalTandas = 0;
+            let totalIngresosServicios = 0, totalGastos = 0;
+            let balancesExtra = {};
 
             movimientosFinancieros.forEach(m => {
                 if(m.categoria === 'Ingreso Cita/Servicio') totalIngresosServicios += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                if(m.categoria === 'Gasto/Insumos') totalGastos += (m.tipoFlujo === 'Salida' ? m.monto : -m.monto);
-                if(m.categoria === 'Ahorros') totalAhorros += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                if(m.categoria === 'Tarjetas') totalTarjetas += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                if(m.categoria === 'Tandas') totalTandas += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                else if(m.categoria === 'Gasto/Insumos') totalGastos += (m.tipoFlujo === 'Salida' ? m.monto : -m.monto);
+                else {
+                    if(!balancesExtra[m.categoria]) balancesExtra[m.categoria] = 0;
+                    balancesExtra[m.categoria] += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                }
             });
 
-            const ahora = new Date();
-            const semanaPasada = new Date(ahora.getTime() - 7*24*60*60*1000);
-            const mesActual = ahora.getMonth();
-            const anioActual = ahora.getFullYear();
+            // MOSTRAR GANANCIAS ACUMULADAS PERSISTENTES DE CITAS
+            document.getElementById('gananciaSemanal').innerText = `$${(acumuladosFinanzas.sem || 0).toFixed(2)} MXN`;
+            document.getElementById('gananciaMensual').innerText = `$${(acumuladosFinanzas.mes || 0).toFixed(2)} MXN`;
+            document.getElementById('gananciaAnual').innerText = `$${(acumuladosFinanzas.anio || 0).toFixed(2)} MXN`;
 
-            // SÓLO SUMA ENTRADAS DE CITAS Y SERVICIOS
-            const sem = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha) >= semanaPasada).reduce((acc, m) => acc + m.monto, 0);
-            const mes = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha).getMonth() === mesActual).reduce((acc, m) => acc + m.monto, 0);
-            const anio = movimientosFinancieros.filter(m => m.categoria === 'Ingreso Cita/Servicio' && m.tipoFlujo === 'Entrada' && new Date(m.fecha).getFullYear() === anioActual).reduce((acc, m) => acc + m.monto, 0);
-
-            document.getElementById('gananciaSemanal').innerText = `$${sem.toFixed(2)} MXN`;
-            document.getElementById('gananciaMensual').innerText = `$${mes.toFixed(2)} MXN`;
-            document.getElementById('gananciaAnual').innerText = `$${anio.toFixed(2)} MXN`;
             document.getElementById('totalIngresos').innerText = `$${totalIngresosServicios.toFixed(2)} MXN`;
             document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
 
-            if(ocultarSaldosPersonal) {
-                document.getElementById('totalAhorros').innerText = `$**** MXN`;
-                document.getElementById('totalTarjetas').innerText = `$**** MXN`;
-                document.getElementById('totalTandas').innerText = `$**** MXN`;
-            } else {
-                document.getElementById('totalAhorros').innerText = `$${totalAhorros.toFixed(2)} MXN`;
-                document.getElementById('totalTarjetas').innerText = `$${totalTarjetas.toFixed(2)} MXN`;
-                document.getElementById('totalTandas').innerText = `$${totalTandas.toFixed(2)} MXN`;
+            const divExtra = document.getElementById('listaBalancesCategoriasExtra');
+            if(divExtra) {
+                divExtra.innerHTML = Object.keys(balancesExtra).map(cat => `
+                    <div class="flex justify-between text-xs text-slate-600">
+                        <span>Total ${cat}:</span>
+                        <strong class="text-purple-600">${ocultarSaldosPersonal ? '$**** MXN' : '$' + balancesExtra[cat].toFixed(2) + ' MXN'}</strong>
+                    </div>
+                `).join('');
             }
+
             document.getElementById('gananciaNeta').innerText = `$${(totalIngresosServicios - totalGastos).toFixed(2)} MXN`;
         }
 
