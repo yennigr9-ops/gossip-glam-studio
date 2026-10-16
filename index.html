@@ -37,7 +37,7 @@
                     <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
                 
-                <!-- CATÁLOGO COMPLETO CON MULTI-SELECCIÓN -->
+                <!-- CATÁLOGO COMPLETO -->
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Selecciona Servicio(s) Deseado(s) *</label>
                     <div class="max-h-48 overflow-y-auto border border-rose-200 rounded-xl p-3 bg-rose-50/30 space-y-2 text-xs">
@@ -131,9 +131,10 @@
                 </div>
             </div>
 
-            <!-- Pestañas de Navegación -->
+            <!-- PESTAÑAS DE NAVEGACIÓN -->
             <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
                 <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
+                <button onclick="cambiarTab('visagismo')" id="tab-visagismo" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📐 Visagismo Cejas</button>
                 <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
                 <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
                 <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
@@ -240,7 +241,7 @@
                         </div>
                     </form>
 
-                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING -->
+                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
                         <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
                         <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
@@ -248,7 +249,58 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) -->
+            <!-- 2. SECCIÓN VISAGISMO Y TRAZO DE CEJAS (PUNTOS 4, 5 Y 6) -->
+            <section id="seccion-visagismo" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-2xl mx-auto space-y-4">
+                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">📐 Guía y Cálculo de Visagismo (Puntos 4, 5 y 6)</h2>
+                    <p class="text-xs text-slate-500">Calcula automáticamente las proporciones de la ceja (cuerpo, arco y cola de 2cm) y dibuja las líneas maestras de guía.</p>
+
+                    <div class="grid grid-cols-2 gap-4 bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Longitud Total de la Ceja (cm)</label>
+                            <select id="visTotalCm" onchange="calcularVisagismoCejas()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
+                                <option value="5">5.0 cm (Corta / Estándar)</option>
+                                <option value="5.5" selected>5.5 cm (Proporción Ideal)</option>
+                                <option value="6">6.0 cm (Larga / Expresiva)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Medida de la Cola (Puntos 5 al 6)</label>
+                            <input type="text" value="2.0 cm (Fijo)" disabled class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-gray-100 text-slate-500 font-bold">
+                        </div>
+                    </div>
+
+                    <!-- DESGLOSE DE MEDIDAS CALCULADAS -->
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-rose-50 p-3 rounded-xl border border-rose-200">
+                            <span class="text-[10px] font-bold text-rose-400 uppercase block">Inicio a Cuerpo (1-4)</span>
+                            <span id="medidaCuerpo" class="text-base font-extrabold text-rose-700">2.6 cm</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
+                            <span class="text-[10px] font-bold text-purple-400 uppercase block">Arco / Transición (4-5)</span>
+                            <span id="medidaArco" class="text-base font-extrabold text-purple-700">0.9 cm</span>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                            <span class="text-[10px] font-bold text-emerald-400 uppercase block">Cola (5-6)</span>
+                            <span id="medidaCola" class="text-base font-extrabold text-emerald-700">2.0 cm</span>
+                        </div>
+                    </div>
+
+                    <!-- LIENZO INTERACTIVO -->
+                    <div class="space-y-2 pt-2 text-center">
+                        <label class="block text-xs font-bold text-rose-700">Lienzo Guía con Líneas Verticales (Puntos 4, 5 y 6)</label>
+                        <div class="relative inline-block w-full">
+                            <canvas id="canvasVisagismo" width="500" height="200" class="w-full cursor-crosshair border-2 border-rose-200 rounded-xl bg-white shadow-inner"></canvas>
+                        </div>
+                        <div class="flex justify-center gap-2 pt-1">
+                            <button onclick="dibujarLineasGuiaVisagismo()" class="bg-rose-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Generar Líneas Guía (4, 5, 6)</button>
+                            <button onclick="limpiarCanvas('canvasVisagismo'); dibujarLineasGuiaVisagismo();" class="bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold">Limpiar Trazos</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. SECCIÓN AGENDAR CITA (ADMIN) -->
             <section id="seccion-agendar" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
                     <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
@@ -265,7 +317,7 @@
                 </div>
             </section>
 
-            <!-- 3. SECCIÓN AGENDA Y CITAS -->
+            <!-- 4. SECCIÓN AGENDA Y CITAS -->
             <section id="seccion-agenda" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
@@ -276,7 +328,7 @@
                 </div>
             </section>
 
-            <!-- 4. SECCIÓN EXPEDIENTES -->
+            <!-- 5. SECCIÓN EXPEDIENTES -->
             <section id="seccion-expedientes" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
@@ -292,7 +344,7 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
+            <!-- 6. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
                     <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
@@ -348,7 +400,7 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
+            <!-- 7. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -535,6 +587,7 @@
         });
 
         setupCanvas('canvasMapping');
+        setupCanvas('canvasVisagismo');
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
@@ -570,6 +623,56 @@
             if(tab === 'agenda') renderCitas();
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
+            if(tab === 'visagismo') calcularVisagismoCejas();
+        }
+
+        // LÓGICA DE CÁLCULO Y DIBUJO DE VISAGISMO
+        function calcularVisagismoCejas() {
+            const total = parseFloat(document.getElementById('visTotalCm').value);
+            const cola = 2.0;
+            const cuerpoEArco = total - cola;
+            const cuerpo = +(cuerpoEArco * 0.75).toFixed(1);
+            const arco = +(cuerpoEArco * 0.25).toFixed(1);
+
+            document.getElementById('medidaCuerpo').innerText = `${cuerpo} cm`;
+            document.getElementById('medidaArco').innerText = `${arco} cm`;
+            document.getElementById('medidaCola').innerText = `${cola} cm`;
+
+            dibujarLineasGuiaVisagismo();
+        }
+
+        function dibujarLineasGuiaVisagismo() {
+            const canvas = document.getElementById('canvasVisagismo');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Ceja base dibujada
+            ctx.beginPath();
+            ctx.moveTo(50, 130);
+            ctx.bezierCurveTo(150, 130, 250, 70, 450, 150);
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Líneas verticales de referencia (Puntos 3, 4, 5 y 6)
+            const posicionesX = [80, 180, 290, 420];
+            const nombresPuntos = ["Punto 1-3", "Punto 4", "Punto 5 (Arco)", "Punto 6 (Cola)"];
+
+            posicionesX.forEach((x, idx) => {
+                ctx.beginPath();
+                ctx.moveTo(x, 30);
+                ctx.lineTo(x, 170);
+                ctx.strokeStyle = idx === 2 ? '#9333ea' : '#e11d48';
+                ctx.lineWidth = idx === 2 ? 2 : 1.5;
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = idx === 2 ? '#9333ea' : '#e11d48';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.fillText(nombresPuntos[idx], x - 25, 22);
+            });
         }
 
         function toggleServicio() {
@@ -599,7 +702,6 @@
             });
         }
 
-        // MOSTRAR HISTORIAL COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -663,7 +765,6 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // CARGA HORARIOS CON EVALUACIÓN DE RANGO FECHA INICIO Y FECHA FIN EN BLOQUEOS
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -701,8 +802,6 @@
                     ocupadoBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
-
-                        // Verificar si la fecha cae dentro del rango de fechaInicio y fechaFin
                         const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
 
                         if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
@@ -926,7 +1025,6 @@
             }).join('');
         }
 
-        // MARCAR REALIZADA Y ACUMULAR GANANCIA PERSISTENTE
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
@@ -940,7 +1038,6 @@
                 fecha: fechaHoy
             });
 
-            // Acumular de forma persistente en Firebase
             acumuladosFinanzas.sem += valMonto;
             acumuladosFinanzas.mes += valMonto;
             acumuladosFinanzas.anio += valMonto;
@@ -981,7 +1078,6 @@
             }
         }
 
-        // GUARDAR BLOQUEO CON FECHA INICIO Y FECHA FIN
         async function guardarBloqueo(e) {
             e.preventDefault();
             const editId = document.getElementById('bloqueoEditId').value;
@@ -1081,7 +1177,6 @@
             await db.collection("excepciones").doc(idDoc).delete();
         }
 
-        // AGREGAR Y EDITAR CATEGORÍAS EN FINANZAS
         function renderCategoriasFinanzas() {
             const sel = document.getElementById('finCategoria');
             const contCat = document.getElementById('contenedorGestionCategorias');
@@ -1135,7 +1230,6 @@
 
             await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
 
-            // Si es un ingreso manual de cita, también suma al acumulado
             if(categoria === 'Ingreso Cita/Servicio' && tipoFlujo === 'Entrada') {
                 acumuladosFinanzas.sem += monto;
                 acumuladosFinanzas.mes += monto;
@@ -1173,7 +1267,6 @@
             }
         }
 
-        // BOTÓN EXPLICITO DE REINICIAR GANANCIAS
         async function reiniciarGananciasPeriodo() {
             if(confirm('¿Deseas reiniciar los contadores de ganancia semanal, mensual y anual a $0.00 MXN?')) {
                 acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
@@ -1196,7 +1289,6 @@
                 }
             });
 
-            // MOSTRAR GANANCIAS ACUMULADAS PERSISTENTES DE CITAS
             document.getElementById('gananciaSemanal').innerText = `$${(acumuladosFinanzas.sem || 0).toFixed(2)} MXN`;
             document.getElementById('gananciaMensual').innerText = `$${(acumuladosFinanzas.mes || 0).toFixed(2)} MXN`;
             document.getElementById('gananciaAnual').innerText = `$${(acumuladosFinanzas.anio || 0).toFixed(2)} MXN`;
