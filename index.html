@@ -630,25 +630,41 @@
         let streamCamara = null;
 
         async function iniciarCamaraVisagismo() {
-            const video = document.getElementById('videoCamara');
-            const indicador = document.getElementById('indicadorCamara');
-            
-            try {
-                streamCamara = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
-                    audio: false
-                });
-                video.srcObject = streamCamara;
-                if(indicador) indicador.classList.add('hidden');
-                
-                video.onloadedmetadata = () => {
-                    dibujarHilosVisagismoCamara();
-                };
-            } catch (err) {
-                alert("⚠️ No se pudo acceder a la cámara. Asegúrate de dar permisos de cámara a tu navegador en el celular.");
-                console.error(err);
-            }
+    const video = document.getElementById('videoCamara');
+    const indicador = document.getElementById('indicadorCamara');
+    
+    // Configurar atributos obligatorios para Safari en iPhone
+    video.setAttribute('playsinline', '');
+    video.setAttribute('muted', '');
+    video.autoplay = true;
+
+    try {
+        streamCamara = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+        });
+
+        video.srcObject = streamCamara;
+        await video.play();
+
+        if(indicador) indicador.classList.add('hidden');
+        
+        dibujarHilosVisagismoCamara();
+
+    } catch (err) {
+        // Fallback a cámara genérica si la frontal da problemas
+        try {
+            streamCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = streamCamara;
+            await video.play();
+            if(indicador) indicador.classList.add('hidden');
+            dibujarHilosVisagismoCamara();
+        } catch (e) {
+            alert("⚠️ No se pudo acceder a la cámara. Revisa los permisos de tu navegador.");
+            console.error(e);
         }
+    }
+}
 
         function detenerCamaraVisagismo() {
             if(streamCamara) {
