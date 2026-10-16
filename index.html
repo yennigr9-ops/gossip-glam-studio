@@ -134,7 +134,7 @@
             <!-- PESTAÑAS DE NAVEGACIÓN -->
             <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
                 <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
-                <button onclick="cambiarTab('visagismo')" id="tab-visagismo" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📐 Visagismo Cejas</button>
+                <button onclick="cambiarTab('visagismo')" id="tab-visagismo" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📸 Visagismo en Vivo</button>
                 <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
                 <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
                 <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
@@ -249,52 +249,49 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN VISAGISMO Y TRAZO DE CEJAS (PUNTOS 4, 5 Y 6) -->
+            <!-- 2. SECCIÓN CÁMARA DE VISAGISMO EN VIVO (HILOS CRUZADOS 6 PUNTOS) -->
             <section id="seccion-visagismo" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-2xl mx-auto space-y-4">
-                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">📐 Guía y Cálculo de Visagismo (Puntos 4, 5 y 6)</h2>
-                    <p class="text-xs text-slate-500">Calcula automáticamente las proporciones de la ceja (cuerpo, arco y cola de 2cm) y dibuja las líneas maestras de guía.</p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4 text-center">
+                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">📸 Visagismo en Vivo con Cámara</h2>
+                    <p class="text-xs text-slate-500">Apunta la cámara al rostro de la clienta para ver las líneas guía cruzadas (Puntos 1 al 6, respetando la cola de 2cm) sobre su cara en tiempo real.</p>
 
-                    <div class="grid grid-cols-2 gap-4 bg-rose-50/50 p-4 rounded-xl border border-rose-100">
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Longitud Total de la Ceja (cm)</label>
-                            <select id="visTotalCm" onchange="calcularVisagismoCejas()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white">
-                                <option value="5">5.0 cm (Corta / Estándar)</option>
-                                <option value="5.5" selected>5.5 cm (Proporción Ideal)</option>
-                                <option value="6">6.0 cm (Larga / Expresiva)</option>
+                    <!-- REPRODUCTOR DE CÁMARA CON SUPERPOSICIÓN DE HILOS ROSADOS -->
+                    <div class="relative w-full max-w-md mx-auto aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-lg border-2 border-rose-300">
+                        <!-- Video de la cámara del celular -->
+                        <video id="videoCamara" autoplay playsinline class="w-full h-full object-cover"></video>
+                        <!-- Lienzo donde se dibujan los hilos rosados sobre el rostro -->
+                        <canvas id="canvasCamaraHilos" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+                        
+                        <div id="indicadorCamara" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 text-white text-xs font-bold p-4 text-center space-y-2">
+                            <span class="text-2xl">📸</span>
+                            <p>Presiona "Iniciar Cámara" para activar los hilos cruzados de visagismo en vivo sobre el rostro.</p>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLES DE LA CÁMARA -->
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <button type="button" onclick="iniciarCamaraVisagismo()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-xs shadow-md">
+                            📸 Iniciar Cámara
+                        </button>
+                        <button type="button" onclick="detenerCamaraVisagismo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl text-xs shadow-md">
+                            🛑 Apagar Cámara
+                        </button>
+                    </div>
+
+                    <!-- AJUSTE DE MEDIDAS GUÍA -->
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100 text-left text-xs space-y-2 mt-2">
+                        <p class="font-bold text-rose-700">📏 Parámetros del Visagismo:</p>
+                        <div class="flex justify-between items-center">
+                            <span>Longitud Cola (Puntos 5 a 6):</span>
+                            <strong class="text-rose-600">2.0 cm (Fijo)</strong>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Grosor del Cuerpo (Puntos 4 a 5):</span>
+                            <select id="selGrosorCuerpo" class="border rounded p-1 text-xs bg-white">
+                                <option value="8">8 mm (Estándar)</option>
+                                <option value="9" selected>9 mm (Medio)</option>
+                                <option value="10">10 mm (Grueso / HD)</option>
                             </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Medida de la Cola (Puntos 5 al 6)</label>
-                            <input type="text" value="2.0 cm (Fijo)" disabled class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-gray-100 text-slate-500 font-bold">
-                        </div>
-                    </div>
-
-                    <!-- DESGLOSE DE MEDIDAS CALCULADAS -->
-                    <div class="grid grid-cols-3 gap-3 text-center">
-                        <div class="bg-rose-50 p-3 rounded-xl border border-rose-200">
-                            <span class="text-[10px] font-bold text-rose-400 uppercase block">Inicio a Cuerpo (1-4)</span>
-                            <span id="medidaCuerpo" class="text-base font-extrabold text-rose-700">2.6 cm</span>
-                        </div>
-                        <div class="bg-purple-50 p-3 rounded-xl border border-purple-200">
-                            <span class="text-[10px] font-bold text-purple-400 uppercase block">Arco / Transición (4-5)</span>
-                            <span id="medidaArco" class="text-base font-extrabold text-purple-700">0.9 cm</span>
-                        </div>
-                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                            <span class="text-[10px] font-bold text-emerald-400 uppercase block">Cola (5-6)</span>
-                            <span id="medidaCola" class="text-base font-extrabold text-emerald-700">2.0 cm</span>
-                        </div>
-                    </div>
-
-                    <!-- LIENZO INTERACTIVO -->
-                    <div class="space-y-2 pt-2 text-center">
-                        <label class="block text-xs font-bold text-rose-700">Lienzo Guía con Líneas Verticales (Puntos 4, 5 y 6)</label>
-                        <div class="relative inline-block w-full">
-                            <canvas id="canvasVisagismo" width="500" height="200" class="w-full cursor-crosshair border-2 border-rose-200 rounded-xl bg-white shadow-inner"></canvas>
-                        </div>
-                        <div class="flex justify-center gap-2 pt-1">
-                            <button onclick="dibujarLineasGuiaVisagismo()" class="bg-rose-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Generar Líneas Guía (4, 5, 6)</button>
-                            <button onclick="limpiarCanvas('canvasVisagismo'); dibujarLineasGuiaVisagismo();" class="bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold">Limpiar Trazos</button>
                         </div>
                     </div>
                 </div>
@@ -587,7 +584,6 @@
         });
 
         setupCanvas('canvasMapping');
-        setupCanvas('canvasVisagismo');
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
@@ -623,56 +619,97 @@
             if(tab === 'agenda') renderCitas();
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
-            if(tab === 'visagismo') calcularVisagismoCejas();
+            if(tab === 'visagismo') {
+                // Si sale de la pestaña de cámara la apagamos para ahorrar batería
+            } else {
+                detenerCamaraVisagismo();
+            }
         }
 
-        // LÓGICA DE CÁLCULO Y DIBUJO DE VISAGISMO
-        function calcularVisagismoCejas() {
-            const total = parseFloat(document.getElementById('visTotalCm').value);
-            const cola = 2.0;
-            const cuerpoEArco = total - cola;
-            const cuerpo = +(cuerpoEArco * 0.75).toFixed(1);
-            const arco = +(cuerpoEArco * 0.25).toFixed(1);
+        // LÓGICA DE CÁMARA EN VIVO PARA VISAGISMO (HILOS Y 6 PUNTOS)
+        let streamCamara = null;
 
-            document.getElementById('medidaCuerpo').innerText = `${cuerpo} cm`;
-            document.getElementById('medidaArco').innerText = `${arco} cm`;
-            document.getElementById('medidaCola').innerText = `${cola} cm`;
-
-            dibujarLineasGuiaVisagismo();
+        async function iniciarCamaraVisagismo() {
+            const video = document.getElementById('videoCamara');
+            const indicador = document.getElementById('indicadorCamara');
+            
+            try {
+                streamCamara = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+                    audio: false
+                });
+                video.srcObject = streamCamara;
+                if(indicador) indicador.classList.add('hidden');
+                
+                video.onloadedmetadata = () => {
+                    dibujarHilosVisagismoCamara();
+                };
+            } catch (err) {
+                alert("⚠️ No se pudo acceder a la cámara. Asegúrate de dar permisos de cámara a tu navegador en el celular.");
+                console.error(err);
+            }
         }
 
-        function dibujarLineasGuiaVisagismo() {
-            const canvas = document.getElementById('canvasVisagismo');
-            if(!canvas) return;
+        function detenerCamaraVisagismo() {
+            if(streamCamara) {
+                streamCamara.getTracks().forEach(track => track.stop());
+                streamCamara = null;
+            }
+            const indicador = document.getElementById('indicadorCamara');
+            if(indicador) indicador.classList.remove('hidden');
+        }
+
+        function dibujarHilosVisagismoCamara() {
+            const canvas = document.getElementById('canvasCamaraHilos');
+            const video = document.getElementById('videoCamara');
+            if(!canvas || !video) return;
+
+            canvas.width = video.clientWidth;
+            canvas.height = video.clientHeight;
             const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Ceja base dibujada
-            ctx.beginPath();
-            ctx.moveTo(50, 130);
-            ctx.bezierCurveTo(150, 130, 250, 70, 450, 150);
-            ctx.strokeStyle = '#f43f5e';
-            ctx.lineWidth = 3;
-            ctx.stroke();
+            function renderFrame() {
+                if (!streamCamara || video.paused || video.ended) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Líneas verticales de referencia (Puntos 3, 4, 5 y 6)
-            const posicionesX = [80, 180, 290, 420];
-            const nombresPuntos = ["Punto 1-3", "Punto 4", "Punto 5 (Arco)", "Punto 6 (Cola)"];
+                const w = canvas.width;
+                const h = canvas.height;
+                const centroX = w / 2;
+                const narizY = h * 0.68; // Eje base en la nariz
 
-            posicionesX.forEach((x, idx) => {
+                ctx.strokeStyle = '#ec4899'; // Hilo Rosa Neón
+                ctx.lineWidth = 2;
+
+                // 1. Línea Central Vertical (Eje Nasal)
                 ctx.beginPath();
-                ctx.moveTo(x, 30);
-                ctx.lineTo(x, 170);
-                ctx.strokeStyle = idx === 2 ? '#9333ea' : '#e11d48';
-                ctx.lineWidth = idx === 2 ? 2 : 1.5;
-                ctx.setLineDash([4, 4]);
+                ctx.moveTo(centroX, h * 0.1);
+                ctx.lineTo(centroX, h * 0.9);
                 ctx.stroke();
-                ctx.setLineDash([]);
 
-                ctx.fillStyle = idx === 2 ? '#9333ea' : '#e11d48';
-                ctx.font = 'bold 11px sans-serif';
-                ctx.fillText(nombresPuntos[idx], x - 25, 22);
-            });
+                // 2. Líneas Horizontales Paralelas (Altura de Arco y Base)
+                ctx.beginPath();
+                ctx.moveTo(w * 0.08, h * 0.35); ctx.lineTo(w * 0.92, h * 0.35); // Altura Arco (Puntos 2 y 5)
+                ctx.moveTo(w * 0.08, h * 0.43); ctx.lineTo(w * 0.92, h * 0.43); // Altura Base (Puntos 1 y 4)
+                ctx.stroke();
+
+                // 3. Líneas Diagonales Cruzadas desde la Nariz (Puntos 1 a 6)
+                // Lado Izquierdo
+                ctx.beginPath();
+                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 55, h * 0.1);  // Puntos 1 y 4 (Inicio)
+                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 115, h * 0.1); // Puntos 2 y 5 (Arco)
+                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 170, h * 0.1); // Puntos 3 y 6 (Cola - límite de 2cm)
+                ctx.stroke();
+
+                // Lado Derecho
+                ctx.beginPath();
+                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 55, h * 0.1);  // Puntos 1 y 4 (Inicio)
+                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 115, h * 0.1); // Puntos 2 y 5 (Arco)
+                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 170, h * 0.1); // Puntos 3 y 6 (Cola - límite de 2cm)
+                ctx.stroke();
+
+                requestAnimationFrame(renderFrame);
+            }
+            renderFrame();
         }
 
         function toggleServicio() {
