@@ -660,57 +660,77 @@
         }
 
         function dibujarHilosVisagismoCamara() {
-            const canvas = document.getElementById('canvasCamaraHilos');
-            const video = document.getElementById('videoCamara');
-            if(!canvas || !video) return;
+    const canvas = document.getElementById('canvasCamaraHilos');
+    const video = document.getElementById('videoCamara');
+    if(!canvas || !video) return;
 
-            canvas.width = video.clientWidth;
-            canvas.height = video.clientHeight;
-            const ctx = canvas.getContext('2d');
+    canvas.width = video.clientWidth;
+    canvas.height = video.clientHeight;
+    const ctx = canvas.getContext('2d');
 
-            function renderFrame() {
-                if (!streamCamara || video.paused || video.ended) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function renderFrame() {
+        if (!streamCamara || video.paused || video.ended) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                const w = canvas.width;
-                const h = canvas.height;
-                const centroX = w / 2;
-                const narizY = h * 0.68; // Eje base en la nariz
+        const w = canvas.width;
+        const h = canvas.height;
+        const centroX = w / 2;
+        const baseY = h * 0.70; // Base inferior (nariz / punto de abanico)
 
-                ctx.strokeStyle = '#ec4899'; // Hilo Rosa Neón
-                ctx.lineWidth = 2;
+        ctx.strokeStyle = '#ec4899'; // Rosa neón visible sobre la piel
+        ctx.lineWidth = 1.5;
 
-                // 1. Línea Central Vertical (Eje Nasal)
-                ctx.beginPath();
-                ctx.moveTo(centroX, h * 0.1);
-                ctx.lineTo(centroX, h * 0.9);
-                ctx.stroke();
+        // 1. Ejes Centrales Verticales (Simetría de Entrecejo y Nariz)
+        ctx.beginPath();
+        ctx.moveTo(centroX, h * 0.05); ctx.lineTo(centroX, h * 0.95); // Eje central principal
+        ctx.moveTo(centroX - 12, h * 0.15); ctx.lineTo(centroX - 12, h * 0.6); // Auxiliar interno izq
+        ctx.moveTo(centroX + 12, h * 0.15); ctx.lineTo(centroX + 12, h * 0.6); // Auxiliar interno der
+        ctx.stroke();
 
-                // 2. Líneas Horizontales Paralelas (Altura de Arco y Base)
-                ctx.beginPath();
-                ctx.moveTo(w * 0.08, h * 0.35); ctx.lineTo(w * 0.92, h * 0.35); // Altura Arco (Puntos 2 y 5)
-                ctx.moveTo(w * 0.08, h * 0.43); ctx.lineTo(w * 0.92, h * 0.43); // Altura Base (Puntos 1 y 4)
-                ctx.stroke();
+        // 2. Líneas Horizontales de Referencia y Altura (Cejas / Arcos)
+        ctx.beginPath();
+        ctx.moveTo(w * 0.1, h * 0.32); ctx.lineTo(w * 0.9, h * 0.32); // Altura superior de arcos
+        ctx.moveTo(w * 0.1, h * 0.40); ctx.lineTo(w * 0.9, h * 0.40); // Altura base inferior de cejas
+        ctx.stroke();
 
-                // 3. Líneas Diagonales Cruzadas desde la Nariz (Puntos 1 a 6)
-                // Lado Izquierdo
-                ctx.beginPath();
-                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 55, h * 0.1);  // Puntos 1 y 4 (Inicio)
-                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 115, h * 0.1); // Puntos 2 y 5 (Arco)
-                ctx.moveTo(centroX - 15, narizY); ctx.lineTo(centroX - 170, h * 0.1); // Puntos 3 y 6 (Cola - límite de 2cm)
-                ctx.stroke();
+        // 3. Abanico de Visagismo Geométrico Estilo Phi (Líneas desde la nariz hacia los 6 puntos)
+        // Lado Izquierdo
+        ctx.beginPath();
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.20, h * 0.18); // Inicio de ceja (Punto 1)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.32, h * 0.15); // Cuerpo / Transición (Punto 4)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.42, h * 0.22); // Punto alto / Ápex (Punto 2 / 5)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.12, h * 0.35); // Apertura externa
+        ctx.stroke();
 
-                // Lado Derecho
-                ctx.beginPath();
-                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 55, h * 0.1);  // Puntos 1 y 4 (Inicio)
-                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 115, h * 0.1); // Puntos 2 y 5 (Arco)
-                ctx.moveTo(centroX + 15, narizY); ctx.lineTo(centroX + 170, h * 0.1); // Puntos 3 y 6 (Cola - límite de 2cm)
-                ctx.stroke();
+        // Lado Derecho
+        ctx.beginPath();
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.80, h * 0.18); // Inicio de ceja (Punto 1)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.68, h * 0.15); // Cuerpo / Transición (Punto 4)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.58, h * 0.22); // Punto alto / Ápex (Punto 2 / 5)
+        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.88, h * 0.35); // Apertura externa
+        ctx.stroke();
 
-                requestAnimationFrame(renderFrame);
-            }
-            renderFrame();
-        }
+        // 4. Curvas de Diseño Proyectadas sobre las Cejas (Simulando la forma final)
+        ctx.strokeStyle = '#ffffff'; // Línea blanca de guía para el trazo real
+        ctx.lineWidth = 2;
+        
+        // Arco Izquierdo Proyectado
+        ctx.beginPath();
+        ctx.moveTo(w * 0.22, h * 0.38);
+        ctx.quadraticCurveTo(w * 0.35, h * 0.25, w * 0.44, h * 0.36);
+        ctx.stroke();
+
+        // Arco Derecho Proyectado
+        ctx.beginPath();
+        ctx.moveTo(w * 0.78, h * 0.38);
+        ctx.quadraticCurveTo(w * 0.65, h * 0.25, w * 0.56, h * 0.36);
+        ctx.stroke();
+
+        requestAnimationFrame(renderFrame);
+    }
+    renderFrame();
+}
+
 
         function toggleServicio() {
             const tipo = document.querySelector('input[name="tipoServicio"]:checked').value;
