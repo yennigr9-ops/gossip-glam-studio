@@ -37,7 +37,7 @@
                     <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
                 
-                <!-- CATÁLOGO COMPLETO -->
+                <!-- CATÁLOGO COMPLETO CON MULTI-SELECCIÓN -->
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Selecciona Servicio(s) Deseado(s) *</label>
                     <div class="max-h-48 overflow-y-auto border border-rose-200 rounded-xl p-3 bg-rose-50/30 space-y-2 text-xs">
@@ -131,10 +131,9 @@
                 </div>
             </div>
 
-            <!-- PESTAÑAS DE NAVEGACIÓN -->
+            <!-- Pestañas de Navegación -->
             <nav class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-1 border-t border-rose-50">
                 <button onclick="cambiarTab('ficha')" id="tab-ficha" class="nav-tab active px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📋 Ficha Técnica</button>
-                <button onclick="cambiarTab('visagismo')" id="tab-visagismo" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📸 Visagismo en Vivo</button>
                 <button onclick="cambiarTab('agendar')" id="tab-agendar" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🗓️ Agendar Cita</button>
                 <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
                 <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
@@ -241,7 +240,7 @@
                         </div>
                     </form>
 
-                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO -->
+                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
                         <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
                         <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
@@ -249,55 +248,7 @@
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN CÁMARA DE VISAGISMO EN VIVO (HILOS CRUZADOS 6 PUNTOS) -->
-            <section id="seccion-visagismo" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4 text-center">
-                    <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">📸 Visagismo en Vivo con Cámara</h2>
-                    <p class="text-xs text-slate-500">Apunta la cámara al rostro de la clienta para ver las líneas guía cruzadas (Puntos 1 al 6, respetando la cola de 2cm) sobre su cara en tiempo real.</p>
-
-                    <!-- REPRODUCTOR DE CÁMARA CON SUPERPOSICIÓN DE HILOS ROSADOS -->
-                    <div class="relative w-full max-w-md mx-auto aspect-[3/4] bg-black rounded-2xl overflow-hidden shadow-lg border-2 border-rose-300">
-                        <!-- Video de la cámara del celular -->
-                        <video id="videoCamara" autoplay playsinline class="w-full h-full object-cover"></video>
-                        <!-- Lienzo donde se dibujan los hilos rosados sobre el rostro -->
-                        <canvas id="canvasCamaraHilos" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
-                        
-                        <div id="indicadorCamara" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 text-white text-xs font-bold p-4 text-center space-y-2">
-                            <span class="text-2xl">📸</span>
-                            <p>Presiona "Iniciar Cámara" para activar los hilos cruzados de visagismo en vivo sobre el rostro.</p>
-                        </div>
-                    </div>
-
-                    <!-- CONTROLES DE LA CÁMARA -->
-                    <div class="grid grid-cols-2 gap-3 pt-2">
-                        <button type="button" onclick="iniciarCamaraVisagismo()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-xs shadow-md">
-                            📸 Iniciar Cámara
-                        </button>
-                        <button type="button" onclick="detenerCamaraVisagismo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl text-xs shadow-md">
-                            🛑 Apagar Cámara
-                        </button>
-                    </div>
-
-                    <!-- AJUSTE DE MEDIDAS GUÍA -->
-                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100 text-left text-xs space-y-2 mt-2">
-                        <p class="font-bold text-rose-700">📏 Parámetros del Visagismo:</p>
-                        <div class="flex justify-between items-center">
-                            <span>Longitud Cola (Puntos 5 a 6):</span>
-                            <strong class="text-rose-600">2.0 cm (Fijo)</strong>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Grosor del Cuerpo (Puntos 4 a 5):</span>
-                            <select id="selGrosorCuerpo" class="border rounded p-1 text-xs bg-white">
-                                <option value="8">8 mm (Estándar)</option>
-                                <option value="9" selected>9 mm (Medio)</option>
-                                <option value="10">10 mm (Grueso / HD)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. SECCIÓN AGENDAR CITA (ADMIN) -->
+            <!-- 2. SECCIÓN AGENDAR CITA (ADMIN) -->
             <section id="seccion-agendar" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto">
                     <h2 class="text-lg font-bold text-rose-700 mb-4 pb-2 border-b border-rose-100">🗓️ Agendar Nueva Cita</h2>
@@ -314,7 +265,7 @@
                 </div>
             </section>
 
-            <!-- 4. SECCIÓN AGENDA Y CITAS -->
+            <!-- 3. SECCIÓN AGENDA Y CITAS -->
             <section id="seccion-agenda" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
@@ -325,7 +276,7 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN EXPEDIENTES -->
+            <!-- 4. SECCIÓN EXPEDIENTES -->
             <section id="seccion-expedientes" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
@@ -341,7 +292,7 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
                     <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
@@ -397,7 +348,7 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
+            <!-- 6. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -619,134 +570,7 @@
             if(tab === 'agenda') renderCitas();
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
-            if(tab === 'visagismo') {
-                // Si sale de la pestaña de cámara la apagamos para ahorrar batería
-            } else {
-                detenerCamaraVisagismo();
-            }
         }
-
-        // LÓGICA DE CÁMARA EN VIVO PARA VISAGISMO (HILOS Y 6 PUNTOS)
-        let streamCamara = null;
-
-        async function iniciarCamaraVisagismo() {
-    const video = document.getElementById('videoCamara');
-    const indicador = document.getElementById('indicadorCamara');
-    
-    // Configurar atributos obligatorios para Safari en iPhone
-    video.setAttribute('playsinline', '');
-    video.setAttribute('muted', '');
-    video.autoplay = true;
-
-    try {
-        streamCamara = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
-            audio: false
-        });
-
-        video.srcObject = streamCamara;
-        await video.play();
-
-        if(indicador) indicador.classList.add('hidden');
-        
-        dibujarHilosVisagismoCamara();
-
-    } catch (err) {
-        // Fallback a cámara genérica si la frontal da problemas
-        try {
-            streamCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-            video.srcObject = streamCamara;
-            await video.play();
-            if(indicador) indicador.classList.add('hidden');
-            dibujarHilosVisagismoCamara();
-        } catch (e) {
-            alert("⚠️ No se pudo acceder a la cámara. Revisa los permisos de tu navegador.");
-            console.error(e);
-        }
-    }
-}
-
-        function detenerCamaraVisagismo() {
-            if(streamCamara) {
-                streamCamara.getTracks().forEach(track => track.stop());
-                streamCamara = null;
-            }
-            const indicador = document.getElementById('indicadorCamara');
-            if(indicador) indicador.classList.remove('hidden');
-        }
-
-        function dibujarHilosVisagismoCamara() {
-    const canvas = document.getElementById('canvasCamaraHilos');
-    const video = document.getElementById('videoCamara');
-    if(!canvas || !video) return;
-
-    canvas.width = video.clientWidth;
-    canvas.height = video.clientHeight;
-    const ctx = canvas.getContext('2d');
-
-    function renderFrame() {
-        if (!streamCamara || video.paused || video.ended) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const w = canvas.width;
-        const h = canvas.height;
-        const centroX = w / 2;
-        const baseY = h * 0.70; // Base inferior (nariz / punto de abanico)
-
-        ctx.strokeStyle = '#ec4899'; // Rosa neón visible sobre la piel
-        ctx.lineWidth = 1.5;
-
-        // 1. Ejes Centrales Verticales (Simetría de Entrecejo y Nariz)
-        ctx.beginPath();
-        ctx.moveTo(centroX, h * 0.05); ctx.lineTo(centroX, h * 0.95); // Eje central principal
-        ctx.moveTo(centroX - 12, h * 0.15); ctx.lineTo(centroX - 12, h * 0.6); // Auxiliar interno izq
-        ctx.moveTo(centroX + 12, h * 0.15); ctx.lineTo(centroX + 12, h * 0.6); // Auxiliar interno der
-        ctx.stroke();
-
-        // 2. Líneas Horizontales de Referencia y Altura (Cejas / Arcos)
-        ctx.beginPath();
-        ctx.moveTo(w * 0.1, h * 0.32); ctx.lineTo(w * 0.9, h * 0.32); // Altura superior de arcos
-        ctx.moveTo(w * 0.1, h * 0.40); ctx.lineTo(w * 0.9, h * 0.40); // Altura base inferior de cejas
-        ctx.stroke();
-
-        // 3. Abanico de Visagismo Geométrico Estilo Phi (Líneas desde la nariz hacia los 6 puntos)
-        // Lado Izquierdo
-        ctx.beginPath();
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.20, h * 0.18); // Inicio de ceja (Punto 1)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.32, h * 0.15); // Cuerpo / Transición (Punto 4)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.42, h * 0.22); // Punto alto / Ápex (Punto 2 / 5)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.12, h * 0.35); // Apertura externa
-        ctx.stroke();
-
-        // Lado Derecho
-        ctx.beginPath();
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.80, h * 0.18); // Inicio de ceja (Punto 1)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.68, h * 0.15); // Cuerpo / Transición (Punto 4)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.58, h * 0.22); // Punto alto / Ápex (Punto 2 / 5)
-        ctx.moveTo(centroX, baseY); ctx.lineTo(w * 0.88, h * 0.35); // Apertura externa
-        ctx.stroke();
-
-        // 4. Curvas de Diseño Proyectadas sobre las Cejas (Simulando la forma final)
-        ctx.strokeStyle = '#ffffff'; // Línea blanca de guía para el trazo real
-        ctx.lineWidth = 2;
-        
-        // Arco Izquierdo Proyectado
-        ctx.beginPath();
-        ctx.moveTo(w * 0.22, h * 0.38);
-        ctx.quadraticCurveTo(w * 0.35, h * 0.25, w * 0.44, h * 0.36);
-        ctx.stroke();
-
-        // Arco Derecho Proyectado
-        ctx.beginPath();
-        ctx.moveTo(w * 0.78, h * 0.38);
-        ctx.quadraticCurveTo(w * 0.65, h * 0.25, w * 0.56, h * 0.36);
-        ctx.stroke();
-
-        requestAnimationFrame(renderFrame);
-    }
-    renderFrame();
-}
-
 
         function toggleServicio() {
             const tipo = document.querySelector('input[name="tipoServicio"]:checked').value;
@@ -775,6 +599,7 @@
             });
         }
 
+        // MOSTRAR HISTORIAL COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -838,6 +663,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
+        // CARGA HORARIOS CON EVALUACIÓN DE RANGO FECHA INICIO Y FECHA FIN EN BLOQUEOS
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -875,6 +701,8 @@
                     ocupadoBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
+
+                        // Verificar si la fecha cae dentro del rango de fechaInicio y fechaFin
                         const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
 
                         if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
@@ -1098,6 +926,7 @@
             }).join('');
         }
 
+        // MARCAR REALIZADA Y ACUMULAR GANANCIA PERSISTENTE
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
@@ -1111,6 +940,7 @@
                 fecha: fechaHoy
             });
 
+            // Acumular de forma persistente en Firebase
             acumuladosFinanzas.sem += valMonto;
             acumuladosFinanzas.mes += valMonto;
             acumuladosFinanzas.anio += valMonto;
@@ -1151,6 +981,7 @@
             }
         }
 
+        // GUARDAR BLOQUEO CON FECHA INICIO Y FECHA FIN
         async function guardarBloqueo(e) {
             e.preventDefault();
             const editId = document.getElementById('bloqueoEditId').value;
@@ -1250,6 +1081,7 @@
             await db.collection("excepciones").doc(idDoc).delete();
         }
 
+        // AGREGAR Y EDITAR CATEGORÍAS EN FINANZAS
         function renderCategoriasFinanzas() {
             const sel = document.getElementById('finCategoria');
             const contCat = document.getElementById('contenedorGestionCategorias');
@@ -1303,6 +1135,7 @@
 
             await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
 
+            // Si es un ingreso manual de cita, también suma al acumulado
             if(categoria === 'Ingreso Cita/Servicio' && tipoFlujo === 'Entrada') {
                 acumuladosFinanzas.sem += monto;
                 acumuladosFinanzas.mes += monto;
@@ -1340,6 +1173,7 @@
             }
         }
 
+        // BOTÓN EXPLICITO DE REINICIAR GANANCIAS
         async function reiniciarGananciasPeriodo() {
             if(confirm('¿Deseas reiniciar los contadores de ganancia semanal, mensual y anual a $0.00 MXN?')) {
                 acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
@@ -1362,6 +1196,7 @@
                 }
             });
 
+            // MOSTRAR GANANCIAS ACUMULADAS PERSISTENTES DE CITAS
             document.getElementById('gananciaSemanal').innerText = `$${(acumuladosFinanzas.sem || 0).toFixed(2)} MXN`;
             document.getElementById('gananciaMensual').innerText = `$${(acumuladosFinanzas.mes || 0).toFixed(2)} MXN`;
             document.getElementById('gananciaAnual').innerText = `$${(acumuladosFinanzas.anio || 0).toFixed(2)} MXN`;
