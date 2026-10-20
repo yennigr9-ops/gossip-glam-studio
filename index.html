@@ -451,7 +451,7 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN FINANZAS - BALANCE DESGLOSADO POR SECTOR (SIN GASTOS E INSUMOS) -->
+            <!-- 7. SECCIÓN FINANZAS - BALANCE DESGLOSADO POR SECTOR (UNIFICADO) -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -632,7 +632,9 @@
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
             if(doc.exists) {
                 const data = doc.data();
-                if(data.categorias) categoriasFinanzas = data.categorias;
+                if(data.categorias) {
+                    categoriasFinanzas = [...new Set(data.categorias.map(c => c === 'Ingreso Cita/Servicio' ? 'Ingresos Citas / Servicios' : c))];
+                }
             }
             renderCategoriasFinanzas();
             calcularFinanzas();
@@ -716,7 +718,7 @@
                 { nombre: "Cocoa Bean (#E58 Standard Color)", marca: "Eternal Ink", zona: "Cejas", subtono: "Frío", cas: "7732-18-5, 6505-28-8, 147-14-8, 2786-76-7, 1309-37-1, 1333-86-4", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", uso: "Base cejas oscuras Eternal" },
                 { nombre: "Dark Brown Eternal", marca: "Eternal Ink", zona: "Cejas", subtono: "Frío", cas: "7732-18-5, 1333-86-4, 1309-37-1", ci: "CI-77499, CI-77491", uso: "Base para cejas con pigmento profundo" },
                 { nombre: "Warm Brown / Amber Eternal", marca: "Eternal Ink", zona: "Cejas", subtono: "Cálido", cas: "7732-18-5, 1309-37-1", ci: "CI-77491, CI-77492", uso: "Base cejas cálidas y neutralización gris" },
-                { nombre: "Bright Orange / Neutralizer Eternal", marca: "Eternal Ink", zona: "Cejas", subtono: "Modulador", cas: "7732-18-5, 6505-28-8", ci: "CI-21160", uso: "Neutralizador de virajes fríos y azuleados" },
+                { nombre: "Bright Orange / Neutralizer Eternal", marca: "Eternal Ink", zona: "Cejas", subtono: "Modulador", cas: "7732-18-5, 6505-28-8", ci: "CI-21160", uso: "Neutralizador de virajes fríos sin cargas de negro imprevistas" },
                 { nombre: "Pink Rose / Blossom Eternal", marca: "Eternal Ink", zona: "Labios", subtono: "Frío", cas: "7732-18-5, 2786-76-7", ci: "CI-12475, CI-77891", uso: "Color labios tono rosa natural" },
                 { nombre: "Warm Coral / Sunset Eternal", marca: "Eternal Ink", zona: "Labios", subtono: "Cálido", cas: "7732-18-5, 6505-28-8, 1309-37-1", ci: "CI-21160, CI-77491", uso: "Neutralización de labios oscuros" },
                 { nombre: "OuO Mixing Solution (Diluyente)", marca: "OuO", zona: "Universal", subtono: "Diluyente", cas: "7732-18-5", ci: "Agua Destilada / Diluyente", uso: "Diluir pigmentos Eternal Ink" }
@@ -725,10 +727,10 @@
             for (let t of tintasEternal) {
                 await db.collection("tintas").add(t);
             }
-            alert("✨ Tintas Eternal Ink y diluyente OuO cargadas correctamente con sus componentes CI y CAS.");
+            alert("✨ Tintas Eternal Ink y diluyente OuO cargadas correctamente.");
         }
 
-        // CÁLCULO CROMÁTICO CON TUS TINTAS ETERNAL INK
+        // CÁLCULO CROMÁTICO CON TUS TINTAS ETERNAL INK Y ANÁLISIS DE CI REAL
         function calcularMezclaOptima() {
             const zona = document.getElementById('microZonaSel').value;
             const subtono = document.getElementById('microSubtono').value;
@@ -745,13 +747,13 @@
 
             if (zona === "Labios") {
                 if (estado === "OscuroLabios" || fitz === "V-VI" || subtono === "Frio") {
-                    sugerencia = `💋 <strong>FÓRMULA ETERNAL INK LABIOS OSCUROS / FRÍOS:</strong><br>• <strong>Paso 1 (Neutralización):</strong> 5 gotas de <strong>Warm Coral / Sunset Eternal</strong> (CI-21160).<br>• <strong>Paso 2 (Tono Final):</strong> 3 gotas de <strong>Pink Rose Eternal</strong> (CI-12475) + 2 gotas de <strong>Warm Coral</strong>.`;
+                    sugerencia = `💋 <strong>FÓRMULA ETERNAL INK LABIOS OSCUROS / HIPERPIGMENTADOS:</strong><br>• <strong>Paso 1 (Neutralización Naranja Puro - CI-21160 sin negro CI-77266):</strong> 5 gotas de <strong>Warm Coral / Sunset Eternal</strong>.<br>• <strong>Paso 2 (Tono Final):</strong> 3 gotas de <strong>Pink Rose Eternal</strong> (CI-12475) + 2 gotas de <strong>Warm Coral</strong>.`;
                 } else {
                     sugerencia = `💋 <strong>FÓRMULA ETERNAL INK LABIOS (AQUARELLE):</strong><br>• 4 gotas de <strong>Pink Rose / Blossom Eternal</strong> + 1 gota de <strong>Warm Coral</strong>.`;
                 }
             } else if (zona === "Cejas") {
                 if (estado === "ViradoGris") {
-                    sugerencia = `👁️ <strong>NEUTRALIZACIÓN ETERNAL INK CEJAS GRISES:</strong><br>• 3 gotas de <strong>Bright Orange Neutralizer Eternal</strong> (CI-21160) + 4 gotas de <strong>Cocoa Bean (#E58)</strong>.`;
+                    sugerencia = `👁️ <strong>NEUTRALIZACIÓN ETERNAL INK CEJAS GRISES/VERDOSAS:</strong><br>• 3 gotas de <strong>Bright Orange Neutralizer Eternal</strong> (CI-21160 libre de negro) + 4 gotas de <strong>Cocoa Bean (#E58)</strong>.`;
                 } else if (subtono === "Frio") {
                     sugerencia = `👁️ <strong>FÓRMULA ETERNAL INK CEJAS (SUBTONO FRÍO):</strong><br>• 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Warm Brown / Amber Eternal</strong> (CI-77491).`;
                 } else {
@@ -1314,6 +1316,7 @@
             document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? "$**** MXN" : `$${totalNeta.toFixed(2)} MXN`;
         }
 
+        // RENDERIZADO COMPLETO RESTAURADO DE EXPEDIENTES (CON HISTORIAL Y DETALLES)
         function renderExpedientes() {
             const grid = document.getElementById('gridExpedientes');
             if(!grid) return;
@@ -1333,8 +1336,8 @@
 
             grid.innerHTML = filtrados.map(f => {
                 let detalleInfo = f.servicioTipo === 'Extensión de Pestañas' 
-                    ? `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'}` 
-                    : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
+                    ? `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'} | Mapping: ${f.detalles?.mapping || 'N/A'}` 
+                    : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'} | Cartucho: ${f.detalles?.cartucho || 'N/A'}`;
 
                 return `
                     <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
@@ -1346,6 +1349,7 @@
                             <p><strong>Fecha Visita:</strong> ${f.fecha}</p>
                             <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
                             <p><strong>Detalle:</strong> ${detalleInfo}</p>
+                            ${f.notas ? `<p class="text-[11px] text-slate-500 italic">" ${f.notas} "</p>` : ''}
                         </div>
                         <div class="flex gap-2 pt-1">
                             <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir Ficha</button>
