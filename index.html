@@ -226,7 +226,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                                     <div>
                                         <label class="block font-semibold text-purple-700 mb-1">Zona a Tratar *</label>
-                                        <select id="microZona" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                        <select id="microZona" onchange="toggleOpcionesZona(); evaluarCalculoColor();" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="Cejas">👁️ Cejas</option>
                                             <option value="Labios">💋 Labios</option>
                                             <option value="Delineado">👁️ Delineado de Ojos</option>
@@ -263,7 +263,16 @@
                                     </div>
                                 </div>
 
+                                <!-- OPCIONES DINÁMICAS SEGÚN ZONA (LABIOS / DELINEADO) -->
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                                    <div id="boxHiperpigmentacionLabios" class="hidden">
+                                        <label class="block font-semibold text-purple-700 mb-1">Hiperpigmentación / Melánica en Labios</label>
+                                        <select id="diagHiperLabios" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Ninguna">Sin Hiperpigmentación (Labio rosado / natural)</option>
+                                            <option value="Leve">Hiperpigmentación Leve (Manchas frías o bordes oscuros)</option>
+                                            <option value="Severa">Hiperpigmentación Severa / Labio Oscuro (Morado / Café)</option>
+                                        </select>
+                                    </div>
                                     <div>
                                         <label class="block font-semibold text-purple-700 mb-1">Color de Cabello Clienta</label>
                                         <select id="diagCabello" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
@@ -288,6 +297,13 @@
                                             <option value="Rojizo/Naranja">🔴 Rojizo / Anaranjado / Rosa</option>
                                             <option value="Verdoso">🟢 Verdoso / Olivo</option>
                                             <option value="Oscuro/Saturado">🖤 Oscuro / Saturado / Hiperpigmentado</option>
+                                        </select>
+                                    </div>
+                                    <div id="boxObjetivoDelineado" class="hidden">
+                                        <label class="block font-semibold text-purple-700 mb-1">Tono Objetivo para Delineado</label>
+                                        <select id="diagObjetivoDelineado" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Negro">🖤 Negro Intenso / Retoque</option>
+                                            <option value="Cafe">🤎 Marrón / Café Cálido (Cambio de Tono)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -439,7 +455,10 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
                         <h2 class="text-lg font-bold text-rose-700">🎨 Catalogo e Inventario de Tintas & Color Index (CI)</h2>
-                        <button onclick="abrirModalTinta()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Nueva Tinta</button>
+                        <div class="flex gap-2">
+                            <button onclick="cargarCatalogoCompletoTintas()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold">🔄 Cargar Catálogo Completo</button>
+                            <button onclick="abrirModalTinta()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Nueva Tinta</button>
+                        </div>
                     </div>
 
                     <!-- FORMULARIO TINTAS -->
@@ -521,7 +540,7 @@
                             <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General (Dinámico)</h3>
                             <div id="listaBalanceDinamicoCategorias" class="space-y-2 text-sm"></div>
                             <hr class="my-3 border-rose-100">
-                            <div class="flex justify-between text-base"><span>Ganancia Neta Citas / Servicios:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
+                            <div class="flex justify-between text-base"><span>Balance Total Neto General:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
                         </div>
                     </div>
                 </div>
@@ -612,7 +631,7 @@
         let bloqueos = [];
         let excepciones = [];
         let tintas = [];
-        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Ahorros"];
+        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
         // BASE DE DATOS INICIAL DE TINTAS
         const tintasPredeterminadas = [
@@ -655,10 +674,6 @@
 
         db.collection("tintas").onSnapshot(snapshot => {
             tintas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
-            if(tintas.length === 0) {
-                // Cargar iniciales si está vacío
-                tintasPredeterminadas.forEach(t => db.collection("tintas").add(t));
-            }
             renderTintas();
         });
 
@@ -726,6 +741,7 @@
             } else {
                 document.getElementById('bloquePestanas').classList.add('hidden');
                 document.getElementById('bloqueMicro').classList.remove('hidden');
+                toggleOpcionesZona();
                 evaluarCalculoColor();
             }
         }
@@ -746,6 +762,25 @@
             });
         }
 
+        function toggleOpcionesZona() {
+            const zona = document.getElementById('microZona').value;
+            if(zona === 'Labios') {
+                document.getElementById('boxHiperpigmentacionLabios').classList.remove('hidden');
+                document.getElementById('boxObjetivoDelineado').classList.add('hidden');
+            } else if(zona === 'Delineado') {
+                document.getElementById('boxHiperpigmentacionLabios').classList.add('hidden');
+                const tieneTrabajo = document.getElementById('diagTrabajoPrevio').value === 'Si';
+                if(tieneTrabajo) {
+                    document.getElementById('boxObjetivoDelineado').classList.remove('hidden');
+                } else {
+                    document.getElementById('boxObjetivoDelineado').classList.add('hidden');
+                }
+            } else {
+                document.getElementById('boxHiperpigmentacionLabios').classList.add('hidden');
+                document.getElementById('boxObjetivoDelineado').classList.add('hidden');
+            }
+        }
+
         function toggleTrabajoPrevio() {
             const trab = document.getElementById('diagTrabajoPrevio').value;
             if(trab === 'Si') {
@@ -753,6 +788,7 @@
             } else {
                 document.getElementById('boxVirajeResidual').classList.add('hidden');
             }
+            toggleOpcionesZona();
         }
 
         // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS POR COLOR INDEX (CI) Y TRABAJO PREVIO
@@ -764,15 +800,32 @@
             const cabello = document.getElementById('diagCabello').value;
             const tieneTrabajoPrevio = document.getElementById('diagTrabajoPrevio').value === 'Si';
             const viraje = document.getElementById('diagViraje').value;
+            const hiperLabios = document.getElementById('diagHiperLabios').value;
+            const objetivoDelineado = document.getElementById('diagObjetivoDelineado').value;
 
             let formula = "";
             let notasTecnicas = "";
 
-            if(zona === 'Labios') {
-                // SEPARACIÓN ESTRICTA: NO USAR TONOS DE CEJAS (COCOA) EN LABIOS
-                if(tieneTrabajoPrevio && (viraje === 'Gris/Azul' || viraje === 'Oscuro/Saturado')) {
+            if(zona === 'Delineado') {
+                if(tieneTrabajoPrevio) {
+                    if(objetivoDelineado === 'Cafe') {
+                        formula = "Paso 1 (Neutralización): 3 gotas Bright Orange (#E08 - CI-21160) para cancelar la carga de negro carbono (CI-77266) o azul residual.\nPaso 2 (Tono Café Objetivo): 5 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40).";
+                        notasTecnicas = "Inactivar la base fría/negra con naranja cálido antes de depositar el tono café para evitar que se vea opaco o gris.";
+                    } else {
+                        formula = "5 gotas Triple Black (#E02 - CI-77266) + 1 gota Bright Orange (#E08).";
+                        notasTecnicas = "Refuerzo de tono negro. El toque de naranja equilibra virajes azules previos.";
+                    }
+                } else {
+                    formula = "5 gotas Triple Black (#E02 - CI-77266) puro de Eternal Ink.";
+                    notasTecnicas = "Negro carbón puro de máxima intensidad y fijación para piel virgen en párpados.";
+                }
+            } else if(zona === 'Labios') {
+                if(hiperLabios === 'Severa' || (tieneTrabajoPrevio && (viraje === 'Gris/Azul' || viraje === 'Oscuro/Saturado'))) {
                     formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08 - CI-21160) + 1 gota White (#E31 - CI-77891) para hiperpigmentación.\nPaso 2 (Tono Objetivo): 5 gotas Lipstick Red (#E41 - CI-12475).";
                     notasTecnicas = "Aplicar pasadas suaves en Paso 1 sin saturar hasta cambiar matriz a tono cálido. Luego depositar el color deseado.";
+                } else if(hiperLabios === 'Leve') {
+                    formula = "Paso 1: 3 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40).\nPaso 2: 4 gotas Lipstick Red (#E41).";
+                    notasTecnicas = "Aclarado previo de bordes/manchas frías leves antes de aportar pigmento cromo rojo.";
                 } else if(subtono === 'Frío') {
                     formula = "4 gotas Lipstick Red (#E41) + 2 gotas Bright Orange (#E08 - CI-21160).";
                     notasTecnicas = "El modificador Bright Orange evita que los labios cicatricen en tonos morados o fríos.";
@@ -781,7 +834,7 @@
                     notasTecnicas = "Efecto Aquarelle o Full Lips. Piel responde de forma estable al pigmento cromo.";
                 }
             } else {
-                // CEJAS O DELINEADO (BASADO EN INVENTARIO ETERNAL INK)
+                // CEJAS (BASADO EN INVENTARIO ETERNAL INK)
                 if(tieneTrabajoPrevio) {
                     if(viraje === 'Gris/Azul') {
                         formula = "Paso 1: 3 gotas Bright Orange (#E08 - CI-21160 - Cálido) puro para neutralizar frío.\nPaso 2: 5 gotas Cocoa Bean (#E58) + 1 gota Lightning Yellow (#E40).";
@@ -809,7 +862,7 @@
 
             document.getElementById('resFormulaTxt').innerText = `🏆 Mezcla Sugerida:\n${formula}\n\n💡 Nota Técnica: ${notasTecnicas}`;
             document.getElementById('microPigmentos').value = formula.replace(/\n/g, ' ');
-            document.getElementById('microNeutralizacion').value = tieneTrabajoPrevio ? `Neutralización para viraje ${viraje}` : 'Sin neutralización requerida';
+            document.getElementById('microNeutralizacion').value = (tieneTrabajoPrevio || hiperLabios !== 'Ninguna') ? `Neutralización para ${zona}` : 'Sin neutralización requerida';
         }
 
         // CARGAR HISTORIAL ACUMULADO (ARRAY DE REGISTROS DE LA CLIENTA)
@@ -1185,6 +1238,16 @@
             document.getElementById('boxFormTinta').classList.add('hidden');
         }
 
+        async function cargarCatalogoCompletoTintas() {
+            for (const t of tintasPredeterminadas) {
+                const existe = tintas.some(item => item.nombre.toLowerCase().includes(t.nombre.split('(')[0].trim().toLowerCase()));
+                if (!existe) {
+                    await db.collection("tintas").add(t);
+                }
+            }
+            alert("✨ Catálogo de tintas cargado y actualizado.");
+        }
+
         async function guardarTinta(e) {
             e.preventDefault();
             const editId = document.getElementById('tintaEditId').value;
@@ -1208,7 +1271,7 @@
         function renderTintas() {
             const grid = document.getElementById('gridTintas');
             if(!grid) return;
-            if(tintas.length === 0) { grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay tintas.</p>`; return; }
+            if(tintas.length === 0) { grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay tintas en inventario. Haz clic en "Cargar Catálogo Completo".</p>`; return; }
 
             grid.innerHTML = tintas.map(t => `
                 <div class="p-4 bg-purple-50/40 rounded-2xl border border-purple-100 space-y-2 text-xs">
@@ -1363,17 +1426,21 @@
             }
         }
 
-        // DESGLOSE DINÁMICO DE CATEGORÍAS EN BALANCE NETO GENERAL (UNIFICADO)
+        // DESGLOSE DINÁMICO DE CATEGORÍAS EN BALANCE NETO GENERAL (SUMA TOTAL ACUMULADA)
         function calcularFinanzas() {
             const contenedorBalance = document.getElementById('listaBalanceDinamicoCategorias');
             if(!contenedorBalance) return;
 
             let netoPorCategoria = {};
+            let totalGeneralAcumulado = 0;
+
             categoriasFinanzas.forEach(c => netoPorCategoria[c] = 0);
 
             movimientosFinancieros.forEach(m => {
                 if(netoPorCategoria[m.categoria] === undefined) netoPorCategoria[m.categoria] = 0;
-                netoPorCategoria[m.categoria] += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                const valor = (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                netoPorCategoria[m.categoria] += valor;
+                totalGeneralAcumulado += valor;
             });
 
             contenedorBalance.innerHTML = Object.keys(netoPorCategoria).map(cat => {
@@ -1388,11 +1455,7 @@
                 `;
             }).join('');
 
-            const gananciaServicios = netoPorCategoria['Ingreso Cita/Servicio'] || 0;
-            const gastosServicios = netoPorCategoria['Gasto/Insumos'] || 0;
-            const netoFinal = gananciaServicios + gastosServicios;
-
-            document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${netoFinal.toFixed(2)} MXN`;
+            document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${totalGeneralAcumulado.toFixed(2)} MXN`;
         }
 
         function renderExpedientes() {
