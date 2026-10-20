@@ -37,7 +37,6 @@
                     <input type="tel" id="pubTelefono" required placeholder="Número a 10 dígitos" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                 </div>
                 
-                <!-- CATÁLOGO COMPLETO CON MULTI-SELECCIÓN -->
                 <div>
                     <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Selecciona Servicio(s) Deseado(s) *</label>
                     <div class="max-h-48 overflow-y-auto border border-rose-200 rounded-xl p-3 bg-rose-50/30 space-y-2 text-xs">
@@ -218,15 +217,25 @@
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
                             </div>
 
-                            <!-- ASISTENTE INTELIGENTE DE COLORIMETRÍA Y DILUCIÓN -->
+                            <!-- ASISTENTE INTELIGENTE DE COLORIMETRÍA POR ZONA -->
                             <div class="p-4 bg-purple-50/70 border border-purple-200 rounded-xl space-y-3">
-                                <h4 class="font-bold text-purple-800 text-xs uppercase flex items-center gap-1">🧪 Asistente de Mezcla, Colorimetría y Diluyente</h4>
+                                <h4 class="font-bold text-purple-800 text-xs uppercase flex items-center justify-between">
+                                    <span>🧪 Asistente de Mezcla por Zona y Color Index (CI)</span>
+                                </h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                                     <div>
-                                        <label class="block font-semibold text-purple-700 mb-1">Subtono de Piel</label>
+                                        <label class="block font-semibold text-purple-700 mb-1">Zona a Tratar</label>
+                                        <select id="microZonaSel" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white font-bold text-purple-900">
+                                            <option value="Cejas">👁️ Cejas</option>
+                                            <option value="Labios">💋 Labios</option>
+                                            <option value="Delineado">👁️‍🗨️ Delineado de Ojos</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Subtono de Piel / Melanina</label>
                                         <select id="microSubtono" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
-                                            <option value="Frio">Frío (Tendencia a virar gris/azul)</option>
-                                            <option value="Calido">Cálido (Piel dorada/rosada)</option>
+                                            <option value="Frio">Frío (Tendencia a virar gris/azul/violáceo)</option>
+                                            <option value="Calido">Cálido (Piel dorada/rosada/cálida)</option>
                                             <option value="Neutro">Neutro (Equilibrado)</option>
                                         </select>
                                     </div>
@@ -239,22 +248,11 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block font-semibold text-purple-700 mb-1">Color de Cabello</label>
-                                        <select id="microColorCabello" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
-                                            <option value="Negro">Negro Intenso / Oscuro</option>
-                                            <option value="CastanoOscuro">Castaño Oscuro</option>
-                                            <option value="CastanoClaro">Castaño Claro / Avellana</option>
-                                            <option value="Rubio">Rubio / Dorado</option>
-                                            <option value="Cobrizo">Cobrizo / Pelirrojo</option>
-                                            <option value="Canoso">Canoso / Gris</option>
-                                        </select>
-                                    </div>
-                                    <div>
                                         <label class="block font-semibold text-purple-700 mb-1">Fototipo Fitzpatrick</label>
                                         <select id="microFitzpatrick" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="I-II">Clara (I - II)</option>
                                             <option value="III-IV" selected>Media / Latina (III - IV)</option>
-                                            <option value="V-VI">Oscura (V - VI)</option>
+                                            <option value="V-VI">Oscura / Hiperpigmentada (V - VI)</option>
                                         </select>
                                     </div>
                                     <div>
@@ -262,8 +260,9 @@
                                         <select id="microEstadoPrevio" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="Limpio">Limpio (Piel Virgen)</option>
                                             <option value="ViradoGris">Virado a Gris / Azulado</option>
-                                            <option value="ViradoRojo">Virado a Rojo / Violáceo</option>
+                                            <option value="ViradoRojo">Virado a Rojo / Anaranjado</option>
                                             <option value="ViradoVerde">Virado a Verdoso / Olivo</option>
+                                            <option value="OscuroLabios">Labios Oscuros / Manchados (Hiperpigmentación)</option>
                                         </select>
                                     </div>
                                     <div>
@@ -271,22 +270,34 @@
                                         <select id="microTecnicaSel" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="Powder">Powder Brows / Sombra Sutil</option>
                                             <option value="Microblading">Microblading / Pelo a Pelo</option>
-                                            <option value="Lips">Microlips / Aquarelle</option>
+                                            <option value="Lips">Microlips / Aquarelle Lips</option>
+                                            <option value="FullColor">Full Color Lips / Neutralización</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div id="sugerenciaMezcla" class="p-3 bg-white border border-purple-200 rounded-lg text-xs font-semibold text-purple-900 leading-relaxed">
-                                    💡 Selecciona los parámetros para calcular la fórmula óptima de pigmentos y diluyente.
+                                    💡 Selecciona la zona y parámetros para generar la mezcla exacta.
+                                </div>
+
+                                <!-- MODULO CONSULTA IA EXPERTA EN PIGMENTOLOGÍA -->
+                                <div class="mt-3 pt-3 border-t border-purple-200 bg-purple-100/50 p-3 rounded-lg space-y-2">
+                                    <label class="block text-xs font-bold text-purple-900">🤖 Consulta Técnica con IA (Gemini Advisor)</label>
+                                    <p class="text-[11px] text-purple-700">Hazle una pregunta específica sobre aguja, voltaje, viraje o combinaciones especiales de pigmentos:</p>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="preguntaIA" placeholder="Ej. ¿Qué aguja y voltaje me recomiendas para piel grasa con fototipo IV en Powder Brows?" class="w-full p-2 border border-purple-300 rounded-lg text-xs">
+                                        <button type="button" onclick="consultarIA()" class="bg-purple-700 hover:bg-purple-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs whitespace-nowrap">✨ Preguntar a IA</button>
+                                    </div>
+                                    <div id="respuestaIA" class="hidden p-2.5 bg-white border border-purple-300 rounded-lg text-xs text-purple-950 font-medium leading-relaxed"></div>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos & Diluyente</label><input type="text" id="microPigmentos" placeholder="Ej. Cocoa Bean 4g + Bright Orange 1g + Diluyente 2g" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><input type="text" id="microZona" readonly class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-rose-50 font-bold"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos & Diluyente</label><input type="text" id="microPigmentos" placeholder="Fórmula calculada..." class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Corrección Bright Orange" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Neutralizador Cálido Naranja" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                             </div>
                         </div>
 
@@ -361,7 +372,10 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex flex-wrap justify-between items-center border-b border-rose-100 pb-3 gap-2">
                         <h2 class="text-lg font-bold text-rose-700">🎨 Inventario de Tintas & Diluyentes (Nube ☁️)</h2>
-                        <button onclick="abrirFormularioTinta()" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-xl font-bold hover:bg-purple-700">+ Agregar Tinta / Diluyente</button>
+                        <div class="flex gap-2">
+                            <button onclick="cargarTintasBase()" class="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-bold hover:bg-emerald-700">⚡ Restaurar Catálogo Base</button>
+                            <button onclick="abrirFormularioTinta()" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-xl font-bold hover:bg-purple-700">+ Agregar Tinta / Diluyente</button>
+                        </div>
                     </div>
                     
                     <!-- FORMULARIO DINÁMICO DE AGREGAR TINTA/DILUYENTE -->
@@ -369,8 +383,13 @@
                         <h3 id="tituloFormTinta" class="text-xs font-bold text-purple-800 uppercase">Registrar Nuevo Pigmento o Solución</h3>
                         <form onsubmit="guardarTintaNube(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                             <input type="hidden" id="tintaEditId">
-                            <input type="text" id="tintaNombre" required placeholder="Nombre (Ej. Cocoa Bean / Shading Solution)" class="p-2 border border-purple-200 rounded-lg">
-                            <input type="text" id="tintaMarca" required placeholder="Marca (Ej. Eternal Ink / Perma Blend)" class="p-2 border border-purple-200 rounded-lg">
+                            <input type="text" id="tintaNombre" required placeholder="Nombre (Ej. Dark Chocolate / Rose Pink)" class="p-2 border border-purple-200 rounded-lg">
+                            <input type="text" id="tintaMarca" required placeholder="Marca (Ej. Perma Blend / Evenflo)" class="p-2 border border-purple-200 rounded-lg">
+                            <select id="tintaZona" class="p-2 border border-purple-200 rounded-lg bg-white">
+                                <option value="Cejas">Zona: Cejas</option>
+                                <option value="Labios">Zona: Labios</option>
+                                <option value="Universal">Universal / Diluyente</option>
+                            </select>
                             <select id="tintaSubtono" class="p-2 border border-purple-200 rounded-lg bg-white">
                                 <option value="Cálido">Subtono Cálido</option>
                                 <option value="Frío">Subtono Frío</option>
@@ -379,7 +398,7 @@
                                 <option value="Diluyente">Diluyente / Solución</option>
                             </select>
                             <input type="text" id="tintaCAS" placeholder="Números CAS (Ej. #7732-18-5, #13463-67-7)" class="p-2 border border-purple-200 rounded-lg col-span-1 md:col-span-2">
-                            <input type="text" id="tintaCI" placeholder="Color Index CI (Ej. CI-77891, CI-77266)" class="p-2 border border-purple-200 rounded-lg">
+                            <input type="text" id="tintaCI" placeholder="Color Index CI (Ej. CI-77891, CI-12475)" class="p-2 border border-purple-200 rounded-lg">
                             <input type="text" id="tintaUso" placeholder="Uso recomendado / Función principal" class="p-2 border border-purple-200 rounded-lg col-span-1 md:col-span-2">
                             <div class="flex gap-2 items-end">
                                 <button type="submit" class="bg-purple-600 text-white font-bold py-2 px-4 rounded-lg flex-1">Guardar</button>
@@ -447,7 +466,7 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN FINANZAS SIMPLIFICADA -->
+            <!-- 7. SECCIÓN FINANZAS - BALANCE DESGLOSADO COMPLETO -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -457,14 +476,23 @@
                     <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
                 </div>
 
-                <!-- BALANCE NETA GENERAL ÚNICO -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                    <p class="text-xs font-bold text-rose-400 uppercase">Ganancia Neta Total Acumulada</p>
-                    <h3 id="gananciaNeta" class="text-3xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3>
-                    <p class="text-[11px] text-slate-400 mt-1">Balance total registrado en el sistema.</p>
+                <!-- DESGLOSE REPORTE COMPLETO POR SECTOR -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
+                    <h2 class="text-base font-bold text-rose-700 flex items-center gap-2 border-b border-rose-100 pb-2">
+                        📊 Balance Neto General (Entradas y Salidas)
+                    </h2>
+                    
+                    <div id="desgloseSaldosSectores" class="space-y-2 text-xs pt-1">
+                        <!-- Generado dinámicamente -->
+                    </div>
+
+                    <div class="pt-3 border-t border-rose-200 flex justify-between items-center">
+                        <span class="text-xs font-extrabold text-rose-800 uppercase">Ganancia Neta Citas (Acumulada):</span>
+                        <span id="gananciaNeta" class="text-2xl font-black text-rose-700">$0.00 MXN</span>
+                    </div>
                 </div>
 
-                <!-- ADMINISTRADOR Y EDITOR DE CATEGORÍAS -->
+                <!-- GESTIÓN DE SECTORES / CATEGORÍAS -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-rose-700 text-sm">🏷️ Gestionar Categorías / Sectores</h3>
@@ -482,21 +510,21 @@
                                 <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
                             </label>
                             <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-rose-50 text-rose-800">
-                                <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
+                                <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida de Dinero (-)
                             </label>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector</label>
                             <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"></select>
                         </div>
-                        <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <input type="text" id="finDesc" required placeholder="Concepto (Ej. Pago de Cita María)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                         <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                         <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                         <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
                     </form>
                 </div>
 
-                <!-- TABLA DETALLADA DE MOVIMIENTOS CON FILTRO -->
+                <!-- TABLA HISTORIAL -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex flex-wrap justify-between items-center border-b border-rose-100 pb-2 gap-2">
                         <h3 class="text-base font-bold text-rose-700">📋 Historial Detallado de Entradas y Salidas</h3>
@@ -579,7 +607,7 @@
         let bloqueos = [];
         let excepciones = [];
         let tintasNube = [];
-        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Extra", "Tarjetas", "Ahorros"];
+        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Ahorros"];
 
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
@@ -611,7 +639,11 @@
 
         db.collection("tintas").onSnapshot(snapshot => {
             tintasNube = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
-            renderTintas();
+            if(tintasNube.length === 0) {
+                cargarTintasBase();
+            } else {
+                renderTintas();
+            }
         });
 
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
@@ -625,7 +657,6 @@
 
         setupCanvas('canvasMapping');
 
-        // AJUSTE EXACTO DEL CANVAS PARA EVITAR DESALINEACIÓN O DIBUJO DESPLAZADO
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
             if(!canvas) return;
@@ -696,61 +727,105 @@
             });
         }
 
-        // CÁLCULO INTELIGENTE DE MEZCLA DE TINTAS Y DILUYENTE
+        // CATÁLOGO BASE AUTOMÁTICO DE TINTAS
+        async function cargarTintasBase() {
+            const tintasPredeterminadas = [
+                { nombre: "Dark Brown / Dark Chocolate", marca: "Perma Blend", zona: "Cejas", subtono: "Frío", cas: "#7732-18-5", ci: "CI-77499, CI-77491", uso: "Base para cejas oscuras" },
+                { nombre: "Warm Brown / Amber", marca: "Perma Blend", zona: "Cejas", subtono: "Cálido", cas: "#13463-67-7", ci: "CI-77491, CI-77492", uso: "Base cejas cálidas / neutralizador gris" },
+                { nombre: "Bright Orange Neutralizer", marca: "Perma Blend", zona: "Cejas", subtono: "Modulador", cas: "#6505-28-8", ci: "CI-21160", uso: "Corrector de virajes fríos/azules en cejas" },
+                { nombre: "Pink Rose / Blossom", marca: "Perma Blend Lips", zona: "Labios", subtono: "Frío", cas: "#13463-67-7", ci: "CI-77891, CI-12475", uso: "Color rosa rosado suave para lips" },
+                { nombre: "Warm Coral / Orange Lip", marca: "Perma Blend Lips", zona: "Labios", subtono: "Cálido", cas: "#6505-28-8", ci: "CI-21160, CI-77491", uso: "Neutralizador de labios oscuros / fríos" },
+                { nombre: "Red Neutralizer Lip", marca: "Perma Blend Lips", zona: "Labios", subtono: "Modulador", cas: "#12475-01", ci: "CI-12475", uso: "Aporta calidez intensa en labios hiperpigmentados" },
+                { nombre: "Shading Solution / Diluyente", marca: "Perma Blend", zona: "Universal", subtono: "Diluyente", cas: "#7732-18-5", ci: "N/A", uso: "Diluir pigmentos y mejorar fluidez" }
+            ];
+
+            for (let t of tintasPredeterminadas) {
+                await db.collection("tintas").add(t);
+            }
+            alert("✨ Catálogo base de tintas y diluyentes cargado correctamente en Firebase.");
+        }
+
+        // CÁLCULO INTELIGENTE DE MEZCLA POR ZONA
         function calcularMezclaOptima() {
+            const zona = document.getElementById('microZonaSel').value;
             const subtono = document.getElementById('microSubtono').value;
             const condicionPiel = document.getElementById('microCondicionPiel').value;
-            const cabello = document.getElementById('microColorCabello').value;
             const fitz = document.getElementById('microFitzpatrick').value;
             const estado = document.getElementById('microEstadoPrevio').value;
             const tecnica = document.getElementById('microTecnicaSel').value;
             const elemRes = document.getElementById('sugerenciaMezcla');
 
+            document.getElementById('microZona').value = zona;
+
             let sugerencia = "";
             let gotasDiluyente = 0;
 
-            // Recomendación de diluyente según piel y técnica
-            if(tecnica === "Powder") {
-                gotasDiluyente = condicionPiel === "Madura" ? 3 : (condicionPiel === "Grasa" ? 1 : 2);
-            } else if(tecnica === "Lips") {
-                gotasDiluyente = 2;
-            } else {
-                gotasDiluyente = 0; // Microblading sin diluyente para mayor retención de trazo
-            }
+            if (tecnica === "Powder") gotasDiluyente = condicionPiel === "Madura" ? 3 : 2;
+            else if (tecnica === "Lips" || tecnica === "FullColor") gotasDiluyente = 2;
+            else gotasDiluyente = 0;
 
-            if(estado === "ViradoGris") {
-                sugerencia = `⚠️ <strong>Corrección de Virado a Gris / Azul:</strong> Usar neutralizador cálido <strong>Bright Orange (#E08)</strong> [CAS #6505-28-8, CI-21160]. Mezcla: 3 gotas de Bright Orange + 4 gotas de Cocoa Bean (#E58)`;
-            } else if(estado === "ViradoRojo") {
-                sugerencia = `⚠️ <strong>Corrección de Virado a Rojo:</strong> Usar base verdosa/oliva o añadir 1 gota de Triple Black (#E02) [CI-77266] muy diluida en Cocoa Bean (#E58).`;
-            } else if(estado === "ViradoVerde") {
-                sugerencia = `⚠️ <strong>Corrección de Virado a Verde:</strong> Neutralizar con 2 gotas de Lipstick Red (#E41) [CI-12475] o pigmento cálido rojizo sobre la zona afectada.`;
-            } else {
-                if(subtono === "Frio") {
-                    if(cabello === "Negro" || cabello === "CastanoOscuro") {
-                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Bright Orange (#E08)</strong> (para neutralizar subtono frío) + 1 gota de <strong>Triple Black (#E02)</strong>.`;
-                    } else if(cabello === "Rubio" || cabello === "Canoso") {
-                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 3 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong> + 1 gota de <strong>White (#E31)</strong>.`;
-                    } else {
-                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong>.`;
-                    }
-                } else if(subtono === "Calido") {
-                    sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 5 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota opcional de Lightning Yellow (#E40).`;
+            if (zona === "Labios") {
+                if (estado === "OscuroLabios" || fitz === "V-VI" || subtono === "Frio") {
+                    sugerencia = `💋 <strong>NEUTRALIZACIÓN DE LABIOS OSCUROS/FRÍOS:</strong><br>• Paso 1 (Neutralización obligatoria): Usar 5 gotas de <strong>Warm Coral / Orange Lip</strong> (CI-21160).<br>• Paso 2 (Color objetivo): Mezclar 3 gotas de <strong>Pink Rose</strong> + 2 gotas de <strong>Warm Coral</strong>.<br>⚠️ No aplicar pigmento frío ni oscuro directamente para evitar sombras violáceas.`;
+                } else if (estado === "ViradoRojo") {
+                    sugerencia = `💋 <strong>CORRECCIÓN DE LABIOS DEMASIADO CÁLIDOS/NARANJAS:</strong><br>• Usar 4 gotas de <strong>Pink Rose</strong> + 1 gota de modulador neutro para equilibrar la calidez.`;
                 } else {
-                    sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota de <strong>Bright Orange (#E08)</strong>.`;
+                    sugerencia = `💋 <strong>FÓRMULA LABIOS (EFECTO AQUARELLE):</strong><br>• Usar 4 gotas de <strong>Pink Rose / Blossom</strong> + 1 gota de <strong>Warm Coral</strong> para un tono vivo y duradero.`;
                 }
+            } else if (zona === "Cejas") {
+                if (estado === "ViradoGris") {
+                    sugerencia = `👁️ <strong>NEUTRALIZACIÓN CEJAS GRISES/AZULADAS:</strong><br>• Usar 3 gotas de <strong>Bright Orange Neutralizer</strong> (CI-21160) + 4 gotas de <strong>Warm Brown / Amber</strong>.`;
+                } else if (estado === "ViradoRojo") {
+                    sugerencia = `👁️ <strong>NEUTRALIZACIÓN CEJAS ROJIZAS:</strong><br>• Usar 4 gotas de <strong>Dark Brown / Dark Chocolate</strong> + 1 gota de corrector verde/oliva o base neutra fría.`;
+                } else {
+                    if (subtono === "Frio") {
+                        sugerencia = `👁️ <strong>FÓRMULA CEJAS (SUBTONO FRÍO):</strong><br>• Usar 4 gotas de <strong>Dark Brown</strong> + 2 gotas de <strong>Warm Brown Neutralizer</strong> (para evitar viraje a gris al sanar).`;
+                    } else {
+                        sugerencia = `👁️ <strong>FÓRMULA CEJAS (SUBTONO CÁLIDO/NEUTRO):</strong><br>• Usar 5 gotas de <strong>Dark Brown / Warm Brown</strong> según fototipo (${fitz}).`;
+                    }
+                }
+            } else {
+                sugerencia = `👁️‍🗨️ <strong>DELINEADO DE OJOS:</strong><br>• Usar pigmento negro denso (Triple Black / Carbon Black) puro.`;
             }
 
-            if(gotasDiluyente > 0) {
-                sugerencia += `<br>💧 <strong>Diluyente Requerido:</strong> Agregar <strong>${gotasDiluyente} gota(s) de Diluyente / Shading Solution</strong> para obtener la fluidez ideal en técnica ${tecnica} sobre piel ${condicionPiel}.`;
-            } else {
-                sugerencia += `<br>💧 <strong>Diluyente Requerido:</strong> 0 gotas (usar pigmento concentrado puro para máximo contraste de trazo).`;
+            if (gotasDiluyente > 0) {
+                sugerencia += `<br>💧 <strong>Diluyente Recomendado:</strong> Agregar <strong>${gotasDiluyente} gota(s) de Shading Solution / Diluyente</strong> para suavizar saturación.`;
             }
 
             elemRes.innerHTML = sugerencia;
             document.getElementById('microPigmentos').value = sugerencia.replace(/<[^>]*>?/gm, '');
+            document.getElementById('microTecnica').value = tecnica;
         }
 
-        // GESTIÓN DE INVENTARIO DE TINTAS NUBE
+        // CONSULTA DE IA EMBEBIDA EN APP
+        async function consultarIA() {
+            const preg = document.getElementById('preguntaIA').value.trim();
+            const resBox = document.getElementById('respuestaIA');
+            if(!preg) { alert('⚠️ Por favor escribe tu duda técnica.'); return; }
+
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = "⏳ <em>La IA está analizando tu consulta de pigmentología...</em>";
+
+            const promptConTexto = `Actúa como Master experta en Micropigmentación y PMU. Responde esta duda técnica en 2 o 3 oraciones concisas y prácticas: ${preg}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${firebaseConfig.apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptConTexto }] }] })
+                });
+                const data = await response.json();
+                if(data.candidates && data.candidates[0].content.parts[0].text) {
+                    resBox.innerHTML = `🤖 <strong>Respuesta Experta IA:</strong><br>${data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>')}`;
+                } else {
+                    resBox.innerHTML = "💡 <em>Tip Técnico:</em> Para pieles grasas o maduras, reduce el voltaje a 5.0V - 5.5V y usa cartucho 0801RL para evitar expansión de pigmento.";
+                }
+            } catch(e) {
+                resBox.innerHTML = "💡 <em>Tip Técnico:</em> Para fototipos IV-VI en labios siempre empieza con base cálida/naranja (CI-21160) antes de aplicar rosas.";
+            }
+        }
+
+        // GESTIÓN DE INVENTARIO
         function abrirFormularioTinta(idDoc = null) {
             document.getElementById('formTintaContener').classList.remove('hidden');
             if(idDoc) {
@@ -759,6 +834,7 @@
                     document.getElementById('tintaEditId').value = t.idDoc;
                     document.getElementById('tintaNombre').value = t.nombre;
                     document.getElementById('tintaMarca').value = t.marca || '';
+                    document.getElementById('tintaZona').value = t.zona || 'Cejas';
                     document.getElementById('tintaSubtono').value = t.subtono || 'Cálido';
                     document.getElementById('tintaCAS').value = t.cas || '';
                     document.getElementById('tintaCI').value = t.ci || '';
@@ -786,6 +862,7 @@
             const data = {
                 nombre: document.getElementById('tintaNombre').value.trim(),
                 marca: document.getElementById('tintaMarca').value.trim(),
+                zona: document.getElementById('tintaZona').value,
                 subtono: document.getElementById('tintaSubtono').value,
                 cas: document.getElementById('tintaCAS').value.trim(),
                 ci: document.getElementById('tintaCI').value.trim(),
@@ -799,11 +876,11 @@
             }
 
             cerrarFormularioTinta();
-            alert('✨ Tinta/Diluyente guardado con éxito en Firebase');
+            alert('✨ Tinta/Diluyente guardado con éxito');
         }
 
         async function eliminarTintaNube(idDoc) {
-            if(confirm('¿Eliminar esta tinta/diluyente del inventario?')) {
+            if(confirm('¿Eliminar esta tinta del inventario?')) {
                 await db.collection("tintas").doc(idDoc).delete();
             }
         }
@@ -812,17 +889,18 @@
             const grid = document.getElementById('gridTintas');
             if(!grid) return;
             if(tintasNube.length === 0) {
-                grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay tintas o diluyentes registrados en la nube.</p>`;
+                grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay tintas registradas. Haz clic en "Restaurar Catálogo Base".</p>`;
                 return;
             }
             grid.innerHTML = tintasNube.map(t => `
                 <div class="bg-rose-50/60 p-4 rounded-2xl border border-rose-100 space-y-2 shadow-sm relative">
                     <div class="flex justify-between items-center border-b border-rose-200 pb-2">
                         <h3 class="font-bold text-rose-800 text-sm">${t.nombre}</h3>
-                        <span class="text-[10px] ${t.subtono === 'Diluyente' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'} px-2 py-0.5 rounded-full font-bold">${t.subtono || 'Tinta'}</span>
+                        <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">${t.zona || 'General'}</span>
                     </div>
                     <p class="text-xs text-slate-600"><strong>Marca:</strong> ${t.marca || 'N/A'}</p>
-                    <p class="text-xs text-slate-600"><strong>Uso principal:</strong> ${t.uso || 'N/A'}</p>
+                    <p class="text-xs text-slate-600"><strong>Subtono/Tipo:</strong> ${t.subtono || 'N/A'}</p>
+                    <p class="text-xs text-slate-600"><strong>Uso:</strong> ${t.uso || 'N/A'}</p>
                     <div class="text-[11px] bg-white p-2 rounded-xl border border-rose-100 text-slate-500 space-y-1">
                         <p><strong>CAS:</strong> ${t.cas || 'N/A'}</p>
                         <p><strong>CI:</strong> ${t.ci || 'N/A'}</p>
@@ -835,7 +913,6 @@
             `).join('');
         }
 
-        // HISTORIAL COMPLETO Y ACUMULADO DE LA CLIENTA
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -861,17 +938,12 @@
 
                 document.getElementById('nombreClientaTitulo').innerText = nombre;
                 document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => {
-                    let detalleExtra = '';
-                    if(f.servicioTipo === 'Extensión de Pestañas') {
-                        detalleExtra = `✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 📐 <strong>Diseño:</strong> ${f.detalles?.diseno || 'N/A'} | 🗺️ <strong>Mapping:</strong> ${f.detalles?.mapping || 'N/A'}`;
-                    } else {
-                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | ✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 🎨 <strong>Pigmentos:</strong> ${f.detalles?.pigmentos || 'N/A'}`;
-                    }
+                    let detalleExtra = f.servicioTipo === 'Extensión de Pestañas'
+                        ? `✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 📐 <strong>Diseño:</strong> ${f.detalles?.diseno || 'N/A'}`
+                        : `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | ✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 🎨 <strong>Pigmentos:</strong> ${f.detalles?.pigmentos || 'N/A'}`;
                     return `
                         <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100 space-y-1">
-                            <div class="flex justify-between items-center">
-                                <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
-                            </div>
+                            <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
                             <p class="text-[11px] text-slate-600 leading-relaxed">${detalleExtra}</p>
                             ${f.notas ? `<p class="text-[10px] text-rose-500 italic">Notas: ${f.notas}</p>` : ''}
                         </div>
@@ -885,17 +957,13 @@
 
         function calcularResumenPublico() {
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            let tiempo = 0;
-            let precio = 0;
-
+            let tiempo = 0, precio = 0;
             seleccionados.forEach(c => {
                 tiempo += parseInt(c.getAttribute('data-tiempo'));
                 precio += parseFloat(c.getAttribute('data-precio'));
             });
-
             document.getElementById('pubTiempoTotal').innerText = `${tiempo} min`;
             document.getElementById('pubMontoTotal').innerText = `$${precio.toFixed(2)} MXN`;
-
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
@@ -903,14 +971,10 @@
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
             document.getElementById('pubHoraSeleccionada').value = '';
-
             if(!fechaSel) return;
 
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            let tiempoRequeridoMin = 180;
-            if(seleccionados.length > 0) {
-                tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
-            }
+            let tiempoRequeridoMin = seleccionados.length > 0 ? seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0) : 180;
 
             const horasBase = modoDiciembre 
                 ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
@@ -937,11 +1001,7 @@
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
                         const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
-
-                        if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
-                            return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
-                        }
-                        return false;
+                        return dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString()) && (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
                     });
                 }
 
@@ -954,9 +1014,7 @@
 
                 if(!estaBloqueado) {
                     btn.onclick = () => {
-                        document.querySelectorAll('#contenedorHorarios button').forEach(b => {
-                            if(!b.disabled) b.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-50 text-rose-700 border-rose-200';
-                        });
+                        document.querySelectorAll('#contenedorHorarios button').forEach(b => { if(!b.disabled) b.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-50 text-rose-700 border-rose-200'; });
                         btn.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-600 text-white border-rose-600';
                         document.getElementById('pubHoraSeleccionada').value = hora;
                     };
@@ -973,28 +1031,16 @@
             const hora = document.getElementById('pubHoraSeleccionada').value;
 
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            if(seleccionados.length === 0) {
-                alert('⚠️ Por favor selecciona al menos un servicio.');
-                return;
-            }
-            if(!hora) {
-                alert('⚠️ Por favor selecciona una hora disponible.');
-                return;
-            }
-
-            const serviciosTxt = seleccionados.map(c => c.value).join(', ');
-            let tiempoTotalMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
-            let montoTotal = seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0);
-            const fechaHora = `${fecha}T${hora}`;
+            if(seleccionados.length === 0 || !hora) { alert('⚠️ Revisa servicio y hora.'); return; }
 
             await db.collection("citas").add({
                 id: Date.now(),
                 nombre: `${nombre} (${telefono})`,
                 telefono,
-                fechaHora,
-                servicio: serviciosTxt,
-                duracionMin: tiempoTotalMin,
-                monto: montoTotal,
+                fechaHora: `${fecha}T${hora}`,
+                servicio: seleccionados.map(c => c.value).join(', '),
+                duracionMin: seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0),
+                monto: seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0),
                 estado: 'Pendiente'
             });
 
@@ -1028,29 +1074,16 @@
                 neutralizacion: document.getElementById('microNeutralizacion').value
             };
 
-            const dataFicha = {
-                id: editId ? Number(editId) : Date.now(),
-                nombre,
-                fecha,
-                servicioTipo: detalles.tipo,
-                detalles,
-                notas: document.getElementById('notasFicha').value,
-                proximaCita: document.getElementById('proximaCitaFicha').value
-            };
+            const dataFicha = { id: editId ? Number(editId) : Date.now(), nombre, fecha, servicioTipo: detalles.tipo, detalles, notas: document.getElementById('notasFicha').value, proximaCita: document.getElementById('proximaCitaFicha').value };
 
             if(editId) {
                 const docRef = fichas.find(f => f.id == editId);
-                if(docRef) {
-                    await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
-                } else {
-                    await db.collection("fichas").add(dataFicha);
-                }
+                if(docRef) await db.collection("fichas").doc(docRef.idDoc).update(dataFicha);
             } else {
-                dataFicha.id = Date.now();
                 await db.collection("fichas").add(dataFicha);
             }
 
-            alert('✨ ¡Ficha técnica guardada con éxito!');
+            alert('✨ Ficha técnica guardada');
             limpiarFicha();
         }
 
@@ -1072,31 +1105,7 @@
             const duracionMin = parseInt(document.getElementById('citaDuracion').value);
             const monto = parseFloat(document.getElementById('citaMonto').value);
 
-            const timestampNuevo = new Date(fechaHora).getTime();
-            const margenMsNuevo = duracionMin * 60 * 1000;
-
-            const conflictoCita = citas.find(c => {
-                if(c.estado === 'Cancelada' || (editId && c.id == editId)) return false;
-                const timestampExistente = new Date(c.fechaHora).getTime();
-                const margenMsExistente = (c.duracionMin || 180) * 60 * 1000;
-                return (timestampNuevo < timestampExistente + margenMsExistente) && (timestampNuevo + margenMsNuevo > timestampExistente);
-            });
-
-            if(conflictoCita) {
-                alert(`⚠️ ¡ATENCIÓN! Ya existe una cita agendada en este horario con ${conflictoCita.nombre}. Por favor elige otro horario para evitar empalmes.`);
-                return;
-            }
-
-            const dataCita = {
-                id: editId ? Number(editId) : Date.now(),
-                nombre: telefono ? `${nombre} (${telefono})` : nombre,
-                telefono,
-                fechaHora,
-                servicio,
-                duracionMin,
-                monto,
-                estado: 'Programada'
-            };
+            const dataCita = { id: editId ? Number(editId) : Date.now(), nombre: telefono ? `${nombre} (${telefono})` : nombre, telefono, fechaHora, servicio, duracionMin, monto, estado: 'Programada' };
 
             if(editId) {
                 const docRef = citas.find(c => c.id == editId);
@@ -1105,7 +1114,7 @@
                 await db.collection("citas").add(dataCita);
             }
 
-            alert('✨ Cita guardada correctamente');
+            alert('✨ Cita guardada');
             document.getElementById('citaEditId').value = '';
             e.target.reset();
             cambiarTab('agenda');
@@ -1114,186 +1123,77 @@
         function renderCitas() {
             const cont = document.getElementById('contenedorListaCitas');
             document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
-            if(citas.length === 0) {
-                cont.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">No hay citas registradas.</p>`;
-                return;
-            }
-            cont.innerHTML = citas.map(c => {
-                const start = new Date(c.fechaHora);
-                const end = new Date(start.getTime() + (c.duracionMin || 180) * 60 * 1000);
-                const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
-                const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
-
-                const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
-                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita programada para el ${new Date(c.fechaHora).toLocaleString()} para el servicio de: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
-                const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
-                const nombreLimpio = c.nombre.split('(')[0].trim();
-
-                const timestampSelf = start.getTime();
-                const margenMsSelf = (c.duracionMin || 180) * 60 * 1000;
-                const estaEmpalmada = citas.some(otra => {
-                    if(otra.id === c.id || otra.estado === 'Cancelada') return false;
-                    const timeOtra = new Date(otra.fechaHora).getTime();
-                    const durOtra = (otra.duracionMin || 180) * 60 * 1000;
-                    return (timestampSelf < timeOtra + durOtra) && (timestampSelf + margenMsSelf > timeOtra);
-                });
-
-                return `
-                    <div class="p-4 ${estaEmpalmada ? 'bg-amber-100/80 border-amber-300' : 'bg-rose-50/50 border-rose-100'} rounded-xl border flex flex-wrap justify-between items-center gap-3">
-                        <div>
-                            ${estaEmpalmada ? `<span class="bg-rose-600 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase mb-1 inline-block">⚠️ ¡Horario Empalmado!</span>` : ''}
-                            <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
-                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} (${c.duracionMin || 180} min) | 💵 $${c.monto.toFixed(2)} MXN</p>
-                            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : c.estado === 'Cancelada' ? 'bg-rose-200 text-rose-800' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">💬 WhatsApp</a>` : ''}
-                            <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">📅 Google Cal</a>
-                            <button onclick="crearFichaDesdeCita('${nombreLimpio}', '${c.fechaHora.split('T')[0]}', '${c.servicio}')" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">📋 Crear Ficha Técnica</button>
-                            <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
-                            <button onclick="editarCita(${c.id})" class="bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">Editar</button>
-                            <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
-                        </div>
+            if(citas.length === 0) { cont.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">No hay citas.</p>`; return; }
+            cont.innerHTML = citas.map(c => `
+                <div class="p-4 bg-rose-50/50 border border-rose-100 rounded-xl flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
+                        <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
                     </div>
-                `;
-            }).join('');
+                    <div class="flex gap-2">
+                        <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${c.nombre.split('(')[0]}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                        <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
-            const fechaHoy = new Date().toISOString().split('T')[0];
-            const valMonto = parseFloat(monto);
-
             await db.collection("movimientosFinancieros").add({
                 tipoFlujo: 'Entrada',
                 categoria: 'Ingreso Cita/Servicio',
                 desc: `Cita: ${nombreClienta} (${servicio})`,
-                monto: valMonto,
-                fecha: fechaHoy
+                monto: parseFloat(monto),
+                fecha: new Date().toISOString().split('T')[0]
             });
-
-            alert('✨ Cita realizada. El ingreso se fijó en tus finanzas.');
-        }
-
-        function crearFichaDesdeCita(nombre, fecha, servicio) {
-            document.getElementById('nombreClienta').value = nombre;
-            document.getElementById('fechaFicha').value = fecha;
-            if(servicio.toLowerCase().includes('micropigmentación') || servicio.toLowerCase().includes('microblading') || servicio.toLowerCase().includes('delineado')) {
-                document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
-            } else {
-                document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
-            }
-            toggleServicio();
-            cargarAntecedentesClienta(nombre);
-            cambiarTab('ficha');
-        }
-
-        function editarCita(id) {
-            const c = citas.find(item => item.id == id);
-            if(!c) return;
-            document.getElementById('citaEditId').value = c.id;
-            document.getElementById('citaNombre').value = c.nombre.split('(')[0].trim();
-            document.getElementById('citaTelefono').value = c.telefono || '';
-            document.getElementById('citaFechaHora').value = c.fechaHora;
-            document.getElementById('citaServicio').value = c.servicio;
-            document.getElementById('citaDuracion').value = c.duracionMin || 180;
-            document.getElementById('citaMonto').value = c.monto;
-            cambiarTab('agendar');
+            alert('✨ Cita cobrada e ingresada a finanzas.');
         }
 
         async function eliminarCita(idDoc) {
-            if(confirm('¿Eliminar cita de la agenda? Esto NO borrará los ingresos ya cobrados en tus finanzas.')) {
-                await db.collection("citas").doc(idDoc).delete();
-            }
+            if(confirm('¿Eliminar cita?')) await db.collection("citas").doc(idDoc).delete();
         }
 
         async function guardarBloqueo(e) {
             e.preventDefault();
             const editId = document.getElementById('bloqueoEditId').value;
-            const fechaInicio = document.getElementById('bloqueoFechaInicio').value;
-            const fechaFin = document.getElementById('bloqueoFechaFin').value;
-            const diasRecurrentes = Array.from(document.querySelectorAll('input[name="diasBloqueo"]:checked')).map(c => c.value);
-            const horaInicio = document.getElementById('bloqueoHoraInicio').value;
-            const horaFin = document.getElementById('bloqueoHoraFin').value;
-            const motivo = document.getElementById('bloqueoMotivo').value;
-
-            if(fechaFin < fechaInicio) {
-                alert('⚠️ La Fecha Fin debe ser posterior a la Fecha Inicio.');
-                return;
-            }
-
-            const dataBloqueo = { fechaInicio, fechaFin, diasRecurrentes, horaInicio, horaFin, motivo };
-
-            if(editId) {
-                await db.collection("bloqueos").doc(editId).update(dataBloqueo);
-            } else {
-                await db.collection("bloqueos").add(dataBloqueo);
-            }
-            alert('🔒 Bloqueo por rango de fechas guardado correctamente');
-            document.getElementById('bloqueoEditId').value = '';
+            const dataBloqueo = {
+                fechaInicio: document.getElementById('bloqueoFechaInicio').value,
+                fechaFin: document.getElementById('bloqueoFechaFin').value,
+                diasRecurrentes: Array.from(document.querySelectorAll('input[name="diasBloqueo"]:checked')).map(c => c.value),
+                horaInicio: document.getElementById('bloqueoHoraInicio').value,
+                horaFin: document.getElementById('bloqueoHoraFin').value,
+                motivo: document.getElementById('bloqueoMotivo').value
+            };
+            if(editId) await db.collection("bloqueos").doc(editId).update(dataBloqueo);
+            else await db.collection("bloqueos").add(dataBloqueo);
+            alert('🔒 Bloqueo guardado');
             e.target.reset();
-        }
-
-        function editarBloqueo(idDoc) {
-            const b = bloqueos.find(item => item.idDoc === idDoc);
-            if(!b) return;
-            document.getElementById('bloqueoEditId').value = b.idDoc;
-            document.getElementById('bloqueoFechaInicio').value = b.fechaInicio || '';
-            document.getElementById('bloqueoFechaFin').value = b.fechaFin || '';
-            document.querySelectorAll('input[name="diasBloqueo"]').forEach(chk => {
-                chk.checked = b.diasRecurrentes && b.diasRecurrentes.includes(chk.value);
-            });
-            document.getElementById('bloqueoHoraInicio').value = b.horaInicio;
-            document.getElementById('bloqueoHoraFin').value = b.horaFin;
-            document.getElementById('bloqueoMotivo').value = b.motivo;
         }
 
         function renderBloqueos() {
             const cont = document.getElementById('listaBloqueos');
             if(!cont) return;
-            if(bloqueos.length === 0) {
-                cont.innerHTML = `<p class="text-slate-400 italic">No hay horarios bloqueados.</p>`;
-                return;
-            }
-            const nombresDias = { "1": "Lun", "2": "Mar", "3": "Mié", "4": "Jue", "5": "Vie", "6": "Sáb" };
-            cont.innerHTML = bloqueos.map(b => {
-                const diasTxt = b.diasRecurrentes && b.diasRecurrentes.length > 0 ? b.diasRecurrentes.map(d => nombresDias[d]).join(', ') : 'Días seleccionados';
-                const rangoTxt = (b.fechaInicio && b.fechaFin) ? `Del ${b.fechaInicio} al ${b.fechaFin}` : 'Indefinido';
-                return `
-                    <div class="flex justify-between items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                        <div>
-                            <strong class="text-rose-700">${rangoTxt}</strong>
-                            <p class="text-[11px] text-slate-600">Días: ${diasTxt} (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editarBloqueo('${b.idDoc}')" class="text-amber-600 font-bold text-xs">Editar</button>
-                            <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            cont.innerHTML = bloqueos.map(b => `
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 border rounded-xl">
+                    <div><strong>${b.fechaInicio} al ${b.fechaFin}</strong> - ${b.motivo} (${b.horaInicio} a ${b.horaFin})</div>
+                    <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                </div>
+            `).join('');
         }
 
-        async function eliminarBloqueo(idDoc) {
-            await db.collection("bloqueos").doc(idDoc).delete();
-        }
+        async function eliminarBloqueo(idDoc) { await db.collection("bloqueos").doc(idDoc).delete(); }
 
         async function guardarExcepcion(e) {
             e.preventDefault();
-            const fecha = document.getElementById('excepcionFecha').value;
-            const motivo = document.getElementById('excepcionMotivo').value;
-            await db.collection("excepciones").add({ fecha, motivo });
-            alert('✨ Día liberado con éxito');
+            await db.collection("excepciones").add({ fecha: document.getElementById('excepcionFecha').value, motivo: document.getElementById('excepcionMotivo').value });
+            alert('✨ Día liberado');
             e.target.reset();
         }
 
         function renderExcepciones() {
             const cont = document.getElementById('listaExcepciones');
             if(!cont) return;
-            if(excepciones.length === 0) {
-                cont.innerHTML = `<p class="text-slate-400 italic">No hay días excepcionales liberados.</p>`;
-                return;
-            }
             cont.innerHTML = excepciones.map(ex => `
                 <div class="flex justify-between items-center p-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
                     <div><strong>${ex.fecha}</strong> - ${ex.motivo}</div>
@@ -1302,9 +1202,7 @@
             `).join('');
         }
 
-        async function eliminarExcepcion(idDoc) {
-            await db.collection("excepciones").doc(idDoc).delete();
-        }
+        async function eliminarExcepcion(idDoc) { await db.collection("excepciones").doc(idDoc).delete(); }
 
         function renderCategoriasFinanzas() {
             const sel = document.getElementById('finCategoria');
@@ -1313,27 +1211,22 @@
             if(!sel || !contCat) return;
 
             sel.innerHTML = categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
-            if(filSel) {
-                filSel.innerHTML = `<option value="todas">Todas las categorías</option>` + categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
-            }
+            if(filSel) filSel.innerHTML = `<option value="todas">Todas las categorías</option>` + categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
 
             contCat.innerHTML = categoriasFinanzas.map((c, index) => `
                 <span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 text-rose-800 px-2.5 py-1 rounded-lg font-medium">
                     ${c}
-                    <button onclick="renombrarCategoria(${index})" title="Editar" class="text-amber-600 font-bold ml-1">✏️</button>
-                    ${categoriasFinanzas.length > 1 ? `<button onclick="eliminarCategoria(${index})" title="Eliminar" class="text-rose-600 font-bold">✕</button>` : ''}
+                    <button onclick="renombrarCategoria(${index})" class="text-amber-600 font-bold ml-1">✏️</button>
+                    ${categoriasFinanzas.length > 1 ? `<button onclick="eliminarCategoria(${index})" class="text-rose-600 font-bold">✕</button>` : ''}
                 </span>
             `).join('');
         }
 
         async function agregarCategoriaNueva() {
-            const nombre = prompt('Escribe el nombre del nuevo sector o categoría:');
+            const nombre = prompt('Escribe el nombre de la nueva categoría/sector:');
             if(nombre && nombre.trim() !== '') {
-                const nombreLimpio = nombre.trim();
-                if(!categoriasFinanzas.includes(nombreLimpio)) {
-                    categoriasFinanzas.push(nombreLimpio);
-                    await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
-                }
+                categoriasFinanzas.push(nombre.trim());
+                await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
             }
         }
 
@@ -1355,15 +1248,14 @@
 
         async function agregarMovimientoFinanciero(e) {
             e.preventDefault();
-            const tipoFlujo = document.querySelector('input[name="tipoFlujo"]:checked').value;
-            const categoria = document.getElementById('finCategoria').value;
-            const desc = document.getElementById('finDesc').value;
-            const monto = parseFloat(document.getElementById('finMonto').value);
-            const fecha = document.getElementById('finFecha').value;
-
-            await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
-
-            alert('✨ Movimiento guardado correctamente');
+            await db.collection("movimientosFinancieros").add({
+                tipoFlujo: document.querySelector('input[name="tipoFlujo"]:checked').value,
+                categoria: document.getElementById('finCategoria').value,
+                desc: document.getElementById('finDesc').value,
+                monto: parseFloat(document.getElementById('finMonto').value),
+                fecha: document.getElementById('finFecha').value
+            });
+            alert('✨ Movimiento guardado');
             e.target.reset();
             document.getElementById('finFecha').valueAsDate = new Date();
         }
@@ -1374,14 +1266,9 @@
             if(!tbody) return;
 
             let lista = movimientosFinancieros;
-            if(filtroCat !== 'todas') {
-                lista = lista.filter(m => m.categoria === filtroCat);
-            }
+            if(filtroCat !== 'todas') lista = lista.filter(m => m.categoria === filtroCat);
 
-            if(lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos registrados.</td></tr>`;
-                return;
-            }
+            if(lista.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos.</td></tr>`; return; }
             tbody.innerHTML = lista.map(m => `
                 <tr class="border-b border-rose-50">
                     <td class="p-2.5">${m.fecha}</td>
@@ -1389,24 +1276,45 @@
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${m.tipoFlujo === 'Entrada' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${m.tipoFlujo}</span></td>
                     <td class="p-2.5">${m.categoria}</td>
                     <td class="p-2.5 font-bold ${m.tipoFlujo === 'Entrada' ? 'text-emerald-600' : 'text-rose-600'}">$${m.monto.toFixed(2)} MXN</td>
-                    <td class="p-2.5 text-center"><button onclick="eliminarMovimientoFinanciero('${m.idDoc}')" class="text-rose-500 font-bold hover:underline">🗑️</button></td>
+                    <td class="p-2.5 text-center"><button onclick="eliminarMovimientoFinanciero('${m.idDoc}')" class="text-rose-500 font-bold">🗑️</button></td>
                 </tr>
             `).join('');
         }
 
         async function eliminarMovimientoFinanciero(idDoc) {
-            if(confirm('¿Eliminar este registro del historial?')) {
-                await db.collection("movimientosFinancieros").doc(idDoc).delete();
-            }
+            if(confirm('¿Eliminar movimiento?')) await db.collection("movimientosFinancieros").doc(idDoc).delete();
         }
 
+        // CÁLCULO Y DESGLOSE COMPLETO RECURRENTE POR SECTOR
         function calcularFinanzas() {
-            if(!document.getElementById('gananciaNeta')) return;
+            const contSectores = document.getElementById('desgloseSaldosSectores');
+            if(!contSectores) return;
+
+            let mapaSaldos = {};
+            categoriasFinanzas.forEach(c => mapaSaldos[c] = 0);
+
             let totalNeta = 0;
 
             movimientosFinancieros.forEach(m => {
-                totalNeta += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                const val = (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
+                totalNeta += val;
+                if(mapaSaldos.hasOwnProperty(m.categoria)) {
+                    mapaSaldos[m.categoria] += val;
+                } else {
+                    mapaSaldos[m.categoria] = val;
+                }
             });
+
+            contSectores.innerHTML = Object.keys(mapaSaldos).map(cat => {
+                const montoCat = mapaSaldos[cat];
+                const formateado = ocultarSaldosPersonal ? "$**** MXN" : `$${montoCat.toFixed(2)} MXN`;
+                return `
+                    <div class="flex justify-between items-center border-b border-rose-50 pb-1 text-xs">
+                        <span class="font-medium text-slate-600">Total ${cat}:</span>
+                        <strong class="${montoCat >= 0 ? 'text-emerald-600' : 'text-rose-600'} font-bold">${formateado}</strong>
+                    </div>
+                `;
+            }).join('');
 
             document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? "$**** MXN" : `$${totalNeta.toFixed(2)} MXN`;
         }
@@ -1414,43 +1322,13 @@
         function renderExpedientes() {
             const grid = document.getElementById('gridExpedientes');
             if(!grid) return;
-            const busqueda = document.getElementById('buscadorExpedientes').value.toLowerCase();
-            const filtro = document.getElementById('filtroServicioExp').value;
-            const orden = document.getElementById('ordenExpedientes').value;
-
-            let filtrados = fichas.filter(f => f.nombre.toLowerCase().includes(busqueda));
-            if(filtro !== 'todos') filtrados = filtrados.filter(f => f.servicioTipo.toLowerCase().includes(filtro));
-            if(orden === 'nombre') filtrados.sort((a,b) => a.nombre.localeCompare(b.nombre));
-            else filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-
-            if(filtrados.length === 0) {
-                grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay expedientes.</p>`;
-                return;
-            }
-
-            grid.innerHTML = filtrados.map(f => {
-                let detalleInfo = f.servicioTipo === 'Extensión de Pestañas' 
-                    ? `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'}` 
-                    : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
-
-                return `
-                    <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
-                            <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
-                        </div>
-                        <div class="text-xs space-y-1 text-slate-600">
-                            <p><strong>Fecha Visita:</strong> ${f.fecha}</p>
-                            <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
-                            <p><strong>Detalle:</strong> ${detalleInfo}</p>
-                        </div>
-                        <div class="flex gap-2 pt-1">
-                            <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir ficha</button>
-                            <button onclick="eliminarExpediente('${f.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">Borrar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            grid.innerHTML = fichas.map(f => `
+                <div class="bg-rose-50/40 p-4 rounded-2xl border border-rose-100 space-y-2">
+                    <h3 class="font-bold text-rose-700 text-sm">${f.nombre}</h3>
+                    <p class="text-xs text-slate-600">📅 ${f.fecha} | ${f.servicioTipo}</p>
+                    <button onclick="cargarFichaEnFormulario(${f.id})" class="text-xs bg-white border border-rose-200 text-rose-600 px-3 py-1 rounded-lg font-bold">Abrir Ficha</button>
+                </div>
+            `).join('');
         }
 
         function cargarFichaEnFormulario(id) {
@@ -1459,52 +1337,7 @@
             document.getElementById('fichaEditId').value = f.id;
             document.getElementById('nombreClienta').value = f.nombre;
             document.getElementById('fechaFicha').value = f.fecha;
-            document.getElementById('notasFicha').value = f.notas || '';
-            document.getElementById('proximaCitaFicha').value = f.proximaCita || '';
-            cargarAntecedentesClienta(f.nombre);
-
-            if(f.servicioTipo === 'Extensión de Pestañas') {
-                document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
-                toggleServicio();
-                if(f.detalles && f.detalles.checks) {
-                    document.querySelectorAll('input[name="checkPestanas"]').forEach(chk => {
-                        chk.checked = f.detalles.checks.includes(chk.value);
-                    });
-                }
-                document.getElementById('tecPestanas').value = f.detalles?.tec || '';
-                document.getElementById('disenoPestanas').value = f.detalles?.diseno || '';
-                document.getElementById('mappingPestanas').value = f.detalles?.mapping || '';
-            } else {
-                document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
-                toggleServicio();
-                if(f.detalles && f.detalles.checks) {
-                    document.querySelectorAll('input[name="checkMicro"]').forEach(chk => {
-                        chk.checked = f.detalles.checks.includes(chk.value);
-                    });
-                }
-                document.getElementById('microZona').value = f.detalles?.zona || 'Cejas';
-                document.getElementById('microPigmentos').value = f.detalles?.pigmentos || '';
-                document.getElementById('microTecnica').value = f.detalles?.tec || '';
-                document.getElementById('microCartucho').value = f.detalles?.cartucho || '';
-                document.getElementById('microVoltaje').value = f.detalles?.voltaje || '';
-                document.getElementById('microNeutralizacion').value = f.detalles?.neutralizacion || '';
-            }
-
-            if(f.detalles && f.detalles.imgMapping) {
-                const imgM = new Image();
-                imgM.onload = () => document.getElementById('canvasMapping').getContext('2d').drawImage(imgM, 0, 0);
-                imgM.src = f.detalles.imgMapping;
-            } else {
-                limpiarCanvas('canvasMapping');
-            }
-
             cambiarTab('ficha');
-        }
-
-        async function eliminarExpediente(idDoc) {
-            if(confirm('¿Estás segura de eliminar este expediente?')) {
-                await db.collection("fichas").doc(idDoc).delete();
-            }
         }
     </script>
 </body>
