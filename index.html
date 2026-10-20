@@ -218,16 +218,24 @@
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
                             </div>
 
-                            <!-- ASISTENTE INTELIGENTE DE COLORIMETRÍA -->
+                            <!-- ASISTENTE INTELIGENTE DE COLORIMETRÍA Y DILUCIÓN -->
                             <div class="p-4 bg-purple-50/70 border border-purple-200 rounded-xl space-y-3">
-                                <h4 class="font-bold text-purple-800 text-xs uppercase flex items-center gap-1">🧪 Asistente de Mezcla según Tono, Piel y Cabello</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                                <h4 class="font-bold text-purple-800 text-xs uppercase flex items-center gap-1">🧪 Asistente de Mezcla, Colorimetría y Diluyente</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                                     <div>
                                         <label class="block font-semibold text-purple-700 mb-1">Subtono de Piel</label>
                                         <select id="microSubtono" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="Frio">Frío (Tendencia a virar gris/azul)</option>
                                             <option value="Calido">Cálido (Piel dorada/rosada)</option>
                                             <option value="Neutro">Neutro (Equilibrado)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Tipo / Condición de Piel</label>
+                                        <select id="microCondicionPiel" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Normal">Normal / Seca</option>
+                                            <option value="Grasa">Grasa / Poros Dilatados</option>
+                                            <option value="Madura">Madura / Delgada</option>
                                         </select>
                                     </div>
                                     <div>
@@ -250,22 +258,31 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block font-semibold text-purple-700 mb-1">Estado / Trabajo Previo</label>
+                                        <label class="block font-semibold text-purple-700 mb-1">Estado / Viraje Previo</label>
                                         <select id="microEstadoPrevio" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                             <option value="Limpio">Limpio (Piel Virgen)</option>
                                             <option value="ViradoGris">Virado a Gris / Azulado</option>
                                             <option value="ViradoRojo">Virado a Rojo / Violáceo</option>
+                                            <option value="ViradoVerde">Virado a Verdoso / Olivo</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Técnica a Efectuar</label>
+                                        <select id="microTecnicaSel" onchange="calcularMezclaOptima()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Powder">Powder Brows / Sombra Sutil</option>
+                                            <option value="Microblading">Microblading / Pelo a Pelo</option>
+                                            <option value="Lips">Microlips / Aquarelle</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div id="sugerenciaMezcla" class="p-3 bg-white border border-purple-200 rounded-lg text-xs font-semibold text-purple-900 leading-relaxed">
-                                    💡 Selecciona los parámetros para ver la mezcla recomendada.
+                                    💡 Selecciona los parámetros para calcular la fórmula óptima de pigmentos y diluyente.
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos (Formula final)</label><input type="text" id="microPigmentos" placeholder="Ej. Cocoa Bean 4g + Bright Orange 1g" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos & Diluyente</label><input type="text" id="microPigmentos" placeholder="Ej. Cocoa Bean 4g + Bright Orange 1g + Diluyente 2g" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
@@ -339,14 +356,38 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN INVENTARIO Y TINTAS DE MICROPIGMENTACIÓN -->
+            <!-- 5. SECCIÓN INVENTARIO Y TINTAS + DILUYENTE -->
             <section id="seccion-tintas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">🎨 Catálogo e Inventario de Tintas (Eternal Ink)</h2>
-                        <span class="text-xs bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-bold">Fórmula Tinta con CAS y CI</span>
+                    <div class="flex flex-wrap justify-between items-center border-b border-rose-100 pb-3 gap-2">
+                        <h2 class="text-lg font-bold text-rose-700">🎨 Inventario de Tintas & Diluyentes (Nube ☁️)</h2>
+                        <button onclick="abrirFormularioTinta()" class="text-xs bg-purple-600 text-white px-3 py-1.5 rounded-xl font-bold hover:bg-purple-700">+ Agregar Tinta / Diluyente</button>
                     </div>
-                    <p class="text-xs text-slate-500">Registro detallado de componentes químicos para evitar reacciones o viraciones indeseadas.</p>
+                    
+                    <!-- FORMULARIO DINÁMICO DE AGREGAR TINTA/DILUYENTE -->
+                    <div id="formTintaContener" class="hidden bg-purple-50/50 p-4 rounded-xl border border-purple-200 space-y-3">
+                        <h3 id="tituloFormTinta" class="text-xs font-bold text-purple-800 uppercase">Registrar Nuevo Pigmento o Solución</h3>
+                        <form onsubmit="guardarTintaNube(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                            <input type="hidden" id="tintaEditId">
+                            <input type="text" id="tintaNombre" required placeholder="Nombre (Ej. Cocoa Bean / Shading Solution)" class="p-2 border border-purple-200 rounded-lg">
+                            <input type="text" id="tintaMarca" required placeholder="Marca (Ej. Eternal Ink / Perma Blend)" class="p-2 border border-purple-200 rounded-lg">
+                            <select id="tintaSubtono" class="p-2 border border-purple-200 rounded-lg bg-white">
+                                <option value="Cálido">Subtono Cálido</option>
+                                <option value="Frío">Subtono Frío</option>
+                                <option value="Neutro">Subtono Neutro</option>
+                                <option value="Modulador">Modulador / Corrector</option>
+                                <option value="Diluyente">Diluyente / Solución</option>
+                            </select>
+                            <input type="text" id="tintaCAS" placeholder="Números CAS (Ej. #7732-18-5, #13463-67-7)" class="p-2 border border-purple-200 rounded-lg col-span-1 md:col-span-2">
+                            <input type="text" id="tintaCI" placeholder="Color Index CI (Ej. CI-77891, CI-77266)" class="p-2 border border-purple-200 rounded-lg">
+                            <input type="text" id="tintaUso" placeholder="Uso recomendado / Función principal" class="p-2 border border-purple-200 rounded-lg col-span-1 md:col-span-2">
+                            <div class="flex gap-2 items-end">
+                                <button type="submit" class="bg-purple-600 text-white font-bold py-2 px-4 rounded-lg flex-1">Guardar</button>
+                                <button type="button" onclick="cerrarFormularioTinta()" class="bg-slate-200 text-slate-700 font-bold py-2 px-3 rounded-lg">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div id="gridTintas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
                 </div>
             </section>
@@ -406,24 +447,21 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN FINANZAS -->
+            <!-- 7. SECCIÓN FINANZAS SIMPLIFICADA -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
                         <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad de Saldos Personales</h3>
-                        <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y cuentas frente a las clientas.</p>
+                        <p class="text-xs text-slate-400">Oculta saldos y montos acumulados frente a clientas.</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="reiniciarGananciasPeriodo()" class="bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Reiniciar Ganancias</button>
-                        <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
-                    </div>
+                    <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
                 </div>
 
-                <!-- CARDS DE GANANCIAS DE CITAS PERSISTENTES -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                <!-- BALANCE NETA GENERAL ÚNICO -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                    <p class="text-xs font-bold text-rose-400 uppercase">Ganancia Neta Total Acumulada</p>
+                    <h3 id="gananciaNeta" class="text-3xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3>
+                    <p class="text-[11px] text-slate-400 mt-1">Balance total registrado en el sistema.</p>
                 </div>
 
                 <!-- ADMINISTRADOR Y EDITOR DE CATEGORÍAS -->
@@ -435,46 +473,30 @@
                     <div id="contenedorGestionCategorias" class="flex flex-wrap gap-2 text-xs pt-1"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
-                        <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-emerald-50 text-emerald-800">
-                                    <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
-                                </label>
-                                <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-rose-50 text-rose-800">
-                                    <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
-                                </label>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector Destino</label>
-                                <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"></select>
-                            </div>
-                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
-                        </form>
-                    </div>
-
-                    <!-- BALANCE NETO GENERAL TOTAL -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General (Entradas y Salidas)</h3>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>Total Ingresos Citas / Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Gastos / Insumos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
-                                <div id="listaBalancesCategoriasExtra" class="space-y-1 pt-1 border-t border-rose-50"></div>
-                                <hr class="my-2 border-rose-100">
-                                <div class="flex justify-between text-base"><span>Ganancia Neta Citas (Acumulada):</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
-                            </div>
+                <!-- FORMULARIO DE MOVIMIENTOS -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
+                    <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento</h3>
+                    <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3 max-w-lg">
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-emerald-50 text-emerald-800">
+                                <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
+                            </label>
+                            <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-rose-50 text-rose-800">
+                                <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
+                            </label>
                         </div>
-                    </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector</label>
+                            <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"></select>
+                        </div>
+                        <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
+                    </form>
                 </div>
 
-                <!-- TABLA DETALLADA DE MOVIMIENTOS CON FILTRO POR CATEGORÍA -->
+                <!-- TABLA DETALLADA DE MOVIMIENTOS CON FILTRO -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex flex-wrap justify-between items-center border-b border-rose-100 pb-2 gap-2">
                         <h3 class="text-base font-bold text-rose-700">📋 Historial Detallado de Entradas y Salidas</h3>
@@ -522,16 +544,6 @@
         let modoDiciembre = false;
         let ocultarSaldosPersonal = false;
 
-        // CATÁLOGO DE TINTAS
-        const tintasEternal = [
-            { id: "E08", nombre: "Bright Orange", cas: "#7732-18-5, #13463-67-7, #6505-28-8, #5567-15-7", ci: "CI-77891 (Blanco), CI-21160 (Naranja), CI-21098 (Amarillo)", uso: "Neutralizador de virados fríos/azules en labios o cejas." },
-            { id: "E40", nombre: "Lightning Yellow", cas: "#7732-18-5, #5468-75-7", ci: "CI-21095 (Amarillo Pigmento 14)", uso: "Modificador cálido. Aporta calidez y luminosidad." },
-            { id: "E02", nombre: "Triple Black", cas: "#7732-18-5, #1333-86-4", ci: "CI-77266 (Carbon Black)", uso: "Negro intenso para delineados o sombreado oscuro de cejas." },
-            { id: "E31", nombre: "White", cas: "#7732-18-5, #13463-67-7", ci: "CI-77891 (Titanium Dioxide White)", uso: "Aclarante y opacificante." },
-            { id: "E41", nombre: "Lipstick Red", cas: "#7732-18-5, #2786-76-7", ci: "CI-12475 (Pigment Red 170)", uso: "Rojo puro cromo para labios radiantes." },
-            { id: "E58", nombre: "Cocoa Bean", cas: "#7732-18-5, #6505-28-8, #147-14-8, #2786-76-7, #1309-37-1, #1333-86-4", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", uso: "Marrón cálido perfecto para base de cejas." }
-        ];
-
         function toggleModoDiciembre() {
             modoDiciembre = !modoDiciembre;
             const btn = document.getElementById('btnModoDiciembre');
@@ -566,8 +578,8 @@
         let movimientosFinancieros = [];
         let bloqueos = [];
         let excepciones = [];
+        let tintasNube = [];
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Extra", "Tarjetas", "Ahorros"];
-        let acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
 
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
@@ -597,11 +609,15 @@
             renderExcepciones();
         });
 
+        db.collection("tintas").onSnapshot(snapshot => {
+            tintasNube = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            renderTintas();
+        });
+
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
             if(doc.exists) {
                 const data = doc.data();
                 if(data.categorias) categoriasFinanzas = data.categorias;
-                if(data.acumulados) acumuladosFinanzas = data.acumulados;
             }
             renderCategoriasFinanzas();
             calcularFinanzas();
@@ -680,63 +696,146 @@
             });
         }
 
-        // CÁLCULO INTELIGENTE DE MEZCLA DE TINTAS
+        // CÁLCULO INTELIGENTE DE MEZCLA DE TINTAS Y DILUYENTE
         function calcularMezclaOptima() {
             const subtono = document.getElementById('microSubtono').value;
+            const condicionPiel = document.getElementById('microCondicionPiel').value;
             const cabello = document.getElementById('microColorCabello').value;
             const fitz = document.getElementById('microFitzpatrick').value;
             const estado = document.getElementById('microEstadoPrevio').value;
+            const tecnica = document.getElementById('microTecnicaSel').value;
             const elemRes = document.getElementById('sugerenciaMezcla');
 
             let sugerencia = "";
+            let gotasDiluyente = 0;
+
+            // Recomendación de diluyente según piel y técnica
+            if(tecnica === "Powder") {
+                gotasDiluyente = condicionPiel === "Madura" ? 3 : (condicionPiel === "Grasa" ? 1 : 2);
+            } else if(tecnica === "Lips") {
+                gotasDiluyente = 2;
+            } else {
+                gotasDiluyente = 0; // Microblading sin diluyente para mayor retención de trazo
+            }
 
             if(estado === "ViradoGris") {
-                sugerencia = "⚠️ <strong>Corrección de Virado a Gris / Azul:</strong> Aplicar neutralizador cálido puro <strong>Bright Orange (#E08)</strong> [CAS #6505-28-8, CI-21160] para calentar la piel. En la mezcla base añade 2 a 3 gotas de Bright Orange + Cocoa Bean (#E58).";
+                sugerencia = `⚠️ <strong>Corrección de Virado a Gris / Azul:</strong> Usar neutralizador cálido <strong>Bright Orange (#E08)</strong> [CAS #6505-28-8, CI-21160]. Mezcla: 3 gotas de Bright Orange + 4 gotas de Cocoa Bean (#E58)`;
             } else if(estado === "ViradoRojo") {
-                sugerencia = "⚠️ <strong>Corrección de Virado a Rojo:</strong> Neutralizar con modificador de base verdosa/oliva o añade 1 gota de Triple Black (#E02) [CI-77266] muy diluida para enfriar el pigmento cálido.";
+                sugerencia = `⚠️ <strong>Corrección de Virado a Rojo:</strong> Usar base verdosa/oliva o añadir 1 gota de Triple Black (#E02) [CI-77266] muy diluida en Cocoa Bean (#E58).`;
+            } else if(estado === "ViradoVerde") {
+                sugerencia = `⚠️ <strong>Corrección de Virado a Verde:</strong> Neutralizar con 2 gotas de Lipstick Red (#E41) [CI-12475] o pigmento cálido rojizo sobre la zona afectada.`;
             } else {
                 if(subtono === "Frio") {
                     if(cabello === "Negro" || cabello === "CastanoOscuro") {
-                        sugerencia = "🎯 <strong>Fórmula Recomendada:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Bright Orange (#E08)</strong> (para contrarrestar el subtono frío) + 1 gota opcional de <strong>Triple Black (#E02)</strong> si se busca mayor oscuridad.";
+                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Bright Orange (#E08)</strong> (para neutralizar subtono frío) + 1 gota de <strong>Triple Black (#E02)</strong>.`;
                     } else if(cabello === "Rubio" || cabello === "Canoso") {
-                        sugerencia = "🎯 <strong>Fórmula Recomendada:</strong> 3 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong> + 1 gota de <strong>White (#E31)</strong> para aclarado seguro.";
+                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 3 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong> + 1 gota de <strong>White (#E31)</strong>.`;
                     } else {
-                        sugerencia = "🎯 <strong>Fórmula Recomendada:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong>.";
+                        sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 2 gotas de <strong>Lightning Yellow (#E40)</strong>.`;
                     }
                 } else if(subtono === "Calido") {
-                    if(cabello === "Negro") {
-                        sugerencia = "🎯 <strong>Fórmula Recomendada:</strong> 5 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota de <strong>Triple Black (#E02)</strong>.";
-                    } else {
-                        sugerencia = "🎯 <strong>Fórmula Recomendada:</strong> Base <strong>Cocoa Bean (#E58)</strong> puro o con 1 gota de Lightning Yellow (#E40) para un tono castaño brillante y estable.";
-                    }
+                    sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 5 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota opcional de Lightning Yellow (#E40).`;
                 } else {
-                    sugerencia = "🎯 <strong>Fórmula neutra equilibrada:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota de <strong>Bright Orange (#E08)</strong>.";
+                    sugerencia = `🎯 <strong>Fórmula Sugerida:</strong> 4 gotas de <strong>Cocoa Bean (#E58)</strong> + 1 gota de <strong>Bright Orange (#E08)</strong>.`;
                 }
+            }
+
+            if(gotasDiluyente > 0) {
+                sugerencia += `<br>💧 <strong>Diluyente Requerido:</strong> Agregar <strong>${gotasDiluyente} gota(s) de Diluyente / Shading Solution</strong> para obtener la fluidez ideal en técnica ${tecnica} sobre piel ${condicionPiel}.`;
+            } else {
+                sugerencia += `<br>💧 <strong>Diluyente Requerido:</strong> 0 gotas (usar pigmento concentrado puro para máximo contraste de trazo).`;
             }
 
             elemRes.innerHTML = sugerencia;
             document.getElementById('microPigmentos').value = sugerencia.replace(/<[^>]*>?/gm, '');
         }
 
+        // GESTIÓN DE INVENTARIO DE TINTAS NUBE
+        function abrirFormularioTinta(idDoc = null) {
+            document.getElementById('formTintaContener').classList.remove('hidden');
+            if(idDoc) {
+                const t = tintasNube.find(item => item.idDoc === idDoc);
+                if(t) {
+                    document.getElementById('tintaEditId').value = t.idDoc;
+                    document.getElementById('tintaNombre').value = t.nombre;
+                    document.getElementById('tintaMarca').value = t.marca || '';
+                    document.getElementById('tintaSubtono').value = t.subtono || 'Cálido';
+                    document.getElementById('tintaCAS').value = t.cas || '';
+                    document.getElementById('tintaCI').value = t.ci || '';
+                    document.getElementById('tintaUso').value = t.uso || '';
+                    document.getElementById('tituloFormTinta').innerText = "Editar Tinta / Diluyente";
+                }
+            } else {
+                document.getElementById('tintaEditId').value = '';
+                document.getElementById('tintaNombre').value = '';
+                document.getElementById('tintaMarca').value = '';
+                document.getElementById('tintaCAS').value = '';
+                document.getElementById('tintaCI').value = '';
+                document.getElementById('tintaUso').value = '';
+                document.getElementById('tituloFormTinta').innerText = "Registrar Nuevo Pigmento o Solución";
+            }
+        }
+
+        function cerrarFormularioTinta() {
+            document.getElementById('formTintaContener').classList.add('hidden');
+        }
+
+        async function guardarTintaNube(e) {
+            e.preventDefault();
+            const editId = document.getElementById('tintaEditId').value;
+            const data = {
+                nombre: document.getElementById('tintaNombre').value.trim(),
+                marca: document.getElementById('tintaMarca').value.trim(),
+                subtono: document.getElementById('tintaSubtono').value,
+                cas: document.getElementById('tintaCAS').value.trim(),
+                ci: document.getElementById('tintaCI').value.trim(),
+                uso: document.getElementById('tintaUso').value.trim()
+            };
+
+            if(editId) {
+                await db.collection("tintas").doc(editId).update(data);
+            } else {
+                await db.collection("tintas").add(data);
+            }
+
+            cerrarFormularioTinta();
+            alert('✨ Tinta/Diluyente guardado con éxito en Firebase');
+        }
+
+        async function eliminarTintaNube(idDoc) {
+            if(confirm('¿Eliminar esta tinta/diluyente del inventario?')) {
+                await db.collection("tintas").doc(idDoc).delete();
+            }
+        }
+
         function renderTintas() {
             const grid = document.getElementById('gridTintas');
             if(!grid) return;
-            grid.innerHTML = tintasEternal.map(t => `
-                <div class="bg-rose-50/60 p-4 rounded-2xl border border-rose-100 space-y-2 shadow-sm">
+            if(tintasNube.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-rose-400 col-span-full text-center py-6">No hay tintas o diluyentes registrados en la nube.</p>`;
+                return;
+            }
+            grid.innerHTML = tintasNube.map(t => `
+                <div class="bg-rose-50/60 p-4 rounded-2xl border border-rose-100 space-y-2 shadow-sm relative">
                     <div class="flex justify-between items-center border-b border-rose-200 pb-2">
-                        <h3 class="font-bold text-rose-800 text-sm">${t.nombre} <span class="text-xs text-rose-500">(${t.id})</span></h3>
-                        <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">Eternal Ink</span>
+                        <h3 class="font-bold text-rose-800 text-sm">${t.nombre}</h3>
+                        <span class="text-[10px] ${t.subtono === 'Diluyente' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'} px-2 py-0.5 rounded-full font-bold">${t.subtono || 'Tinta'}</span>
                     </div>
-                    <p class="text-xs text-slate-600"><strong>Uso principal:</strong> ${t.uso}</p>
+                    <p class="text-xs text-slate-600"><strong>Marca:</strong> ${t.marca || 'N/A'}</p>
+                    <p class="text-xs text-slate-600"><strong>Uso principal:</strong> ${t.uso || 'N/A'}</p>
                     <div class="text-[11px] bg-white p-2 rounded-xl border border-rose-100 text-slate-500 space-y-1">
-                        <p><strong>CAS:</strong> ${t.cas}</p>
-                        <p><strong>Color Index (CI):</strong> ${t.ci}</p>
+                        <p><strong>CAS:</strong> ${t.cas || 'N/A'}</p>
+                        <p><strong>CI:</strong> ${t.ci || 'N/A'}</p>
+                    </div>
+                    <div class="flex gap-2 pt-2 border-t border-rose-100">
+                        <button onclick="abrirFormularioTinta('${t.idDoc}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-lg font-bold">Editar</button>
+                        <button onclick="eliminarTintaNube('${t.idDoc}')" class="text-xs bg-rose-200 text-rose-800 px-3 py-1 rounded-lg font-bold">Borrar</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // MOSTRAR HISTORIAL COMPLETO Y ACUMULADO DE LA CLIENTA
+        // HISTORIAL COMPLETO Y ACUMULADO DE LA CLIENTA
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
@@ -1073,12 +1172,7 @@
                 fecha: fechaHoy
             });
 
-            acumuladosFinanzas.sem += valMonto;
-            acumuladosFinanzas.mes += valMonto;
-            acumuladosFinanzas.anio += valMonto;
-            await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas, categorias: categoriasFinanzas }, { merge: true });
-
-            alert('✨ Cita realizada. El ingreso se fijó en tus ganancias.');
+            alert('✨ Cita realizada. El ingreso se fijó en tus finanzas.');
         }
 
         function crearFichaDesdeCita(nombre, fecha, servicio) {
@@ -1233,7 +1327,7 @@
         }
 
         async function agregarCategoriaNueva() {
-            const nombre = prompt('Escribe el nombre del nuevo sector o categoría (Ej. Dinero Extra, Cursos, etc.):');
+            const nombre = prompt('Escribe el nombre del nuevo sector o categoría:');
             if(nombre && nombre.trim() !== '') {
                 const nombreLimpio = nombre.trim();
                 if(!categoriasFinanzas.includes(nombreLimpio)) {
@@ -1268,13 +1362,6 @@
             const fecha = document.getElementById('finFecha').value;
 
             await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
-
-            if(categoria === 'Ingreso Cita/Servicio' && tipoFlujo === 'Entrada') {
-                acumuladosFinanzas.sem += monto;
-                acumuladosFinanzas.mes += monto;
-                acumuladosFinanzas.anio += monto;
-                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
-            }
 
             alert('✨ Movimiento guardado correctamente');
             e.target.reset();
@@ -1313,46 +1400,15 @@
             }
         }
 
-        async function reiniciarGananciasPeriodo() {
-            if(confirm('¿Deseas reiniciar los contadores de ganancia semanal, mensual y anual a $0.00 MXN?')) {
-                acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
-                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
-                alert('✨ Ganancias de citas reiniciadas a $0.00 MXN.');
-            }
-        }
-
         function calcularFinanzas() {
-            if(!document.getElementById('gananciaSemanal')) return;
-            let totalIngresosServicios = 0, totalGastos = 0;
-            let balancesExtra = {};
+            if(!document.getElementById('gananciaNeta')) return;
+            let totalNeta = 0;
 
             movimientosFinancieros.forEach(m => {
-                if(m.categoria === 'Ingreso Cita/Servicio') totalIngresosServicios += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                else if(m.categoria === 'Gasto/Insumos') totalGastos += (m.tipoFlujo === 'Salida' ? m.monto : -m.monto);
-                else {
-                    if(!balancesExtra[m.categoria]) balancesExtra[m.categoria] = 0;
-                    balancesExtra[m.categoria] += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                }
+                totalNeta += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
             });
 
-            document.getElementById('gananciaSemanal').innerText = `$${(acumuladosFinanzas.sem || 0).toFixed(2)} MXN`;
-            document.getElementById('gananciaMensual').innerText = `$${(acumuladosFinanzas.mes || 0).toFixed(2)} MXN`;
-            document.getElementById('gananciaAnual').innerText = `$${(acumuladosFinanzas.anio || 0).toFixed(2)} MXN`;
-
-            document.getElementById('totalIngresos').innerText = `$${totalIngresosServicios.toFixed(2)} MXN`;
-            document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
-
-            const divExtra = document.getElementById('listaBalancesCategoriasExtra');
-            if(divExtra) {
-                divExtra.innerHTML = Object.keys(balancesExtra).map(cat => `
-                    <div class="flex justify-between text-xs text-slate-600">
-                        <span>Total ${cat}:</span>
-                        <strong class="text-purple-600">${ocultarSaldosPersonal ? '$**** MXN' : '$' + balancesExtra[cat].toFixed(2) + ' MXN'}</strong>
-                    </div>
-                `).join('');
-            }
-
-            document.getElementById('gananciaNeta').innerText = `$${(totalIngresosServicios - totalGastos).toFixed(2)} MXN`;
+            document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? "$**** MXN" : `$${totalNeta.toFixed(2)} MXN`;
         }
 
         function renderExpedientes() {
