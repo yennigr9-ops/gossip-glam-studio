@@ -138,6 +138,7 @@
                 <button onclick="cambiarTab('agenda')" id="tab-agenda" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📖 Agenda y Citas</button>
                 <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
                 <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
+                <button onclick="cambiarTab('tintas')" id="tab-tintas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🎨 Inventario & Tintas</button>
                 <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
             </nav>
         </header>
@@ -145,7 +146,7 @@
         <!-- CONTENEDOR PRINCIPAL -->
         <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
 
-            <!-- 1. SECCIÓN FICHA TÉCNICA -->
+            <!-- 1. SECCIÓN FICHA TÉCNICA Y CALCULADOR -->
             <section id="seccion-ficha" class="space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                     <div class="flex justify-between items-center mb-6 border-b border-rose-100 pb-4">
@@ -197,15 +198,16 @@
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mapping</label><input type="text" id="mappingPestanas" placeholder="Ej. C: 8, 9, 10, 11mm" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                             </div>
                             <div class="pt-2 max-w-md mx-auto text-center">
-                                <label class="block text-xs font-bold text-rose-700 mb-1">Lienzo de Mapping y Diseño</label>
+                                <label class="block text-xs font-bold text-rose-700 mb-1">Lienzo de Mapping y Diseño (Ajustado)</label>
                                 <canvas id="canvasMapping" width="400" height="180" class="w-full cursor-crosshair"></canvas>
-                                <button type="button" onclick="limpiarCanvas('canvasMapping')" class="mt-1 text-xs text-rose-500 font-semibold">Limpiar</button>
+                                <button type="button" onclick="limpiarCanvas('canvasMapping')" class="mt-1 text-xs text-rose-500 font-semibold">Limpiar Lienzo</button>
                             </div>
                         </div>
 
-                        <!-- BLOQUE MICROPIGMENTACIÓN -->
+                        <!-- BLOQUE MICROPIGMENTACIÓN CON CALCULADOR DE COLOR INDEX Y DIAGNÓSTICO COMPLETO -->
                         <div id="bloqueMicro" class="space-y-4 hidden">
-                            <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación y Detalles Técnicos (Micropigmentación)</h3>
+                            <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación, Diagnóstico de Piel y Calculador de Tintas</h3>
+                            
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Diabetes"> Diabetes</label>
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Keloides"> Keloides</label>
@@ -216,13 +218,98 @@
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Tratamientos rostro"> Tratamientos rostro</label>
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
                             </div>
+
+                            <!-- CUESTIONARIO Y CALCULADOR INTELIGENTE -->
+                            <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-3">
+                                <h4 class="font-bold text-purple-800 text-xs uppercase tracking-wide flex items-center gap-1">🎨 Diagnóstico Avanzado de Piel & Subtono</h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Zona a Tratar *</label>
+                                        <select id="microZona" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Cejas">👁️ Cejas</option>
+                                            <option value="Labios">💋 Labios</option>
+                                            <option value="Delineado">👁️ Delineado de Ojos</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Fototipo (Fitzpatrick) *</label>
+                                        <select id="diagFototipo" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="T1">T1 - Muy clara / Pelirroja</option>
+                                            <option value="T2">T2 - Clara / Sensible</option>
+                                            <option value="T3" selected>T3 - Intermedia / Piel latina</option>
+                                            <option value="T4">T4 - Morena clara</option>
+                                            <option value="T5">T5 - Morena oscura</option>
+                                            <option value="T6">T6 - Oscura / Negra</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Subtono Real de Piel *</label>
+                                        <select id="diagSubtono" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Frío">❄️ Frío (Viraje a gris/azul)</option>
+                                            <option value="Neutro">⚖️ Neutro (Equilibrado)</option>
+                                            <option value="Cálido">🔥 Cálido (Viraje a rojo/naranja)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Tipo y Condición de Piel *</label>
+                                        <select id="diagPiel" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Seca">Seca / Fina</option>
+                                            <option value="Normal">Normal</option>
+                                            <option value="Mixta">Mixta</option>
+                                            <option value="Grasa">Grasa (Poros dilatados)</option>
+                                            <option value="Madura">Madura / Delicada</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">Color de Cabello Clienta</label>
+                                        <select id="diagCabello" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Castaño Oscuro">Castaño Oscuro / Negro</option>
+                                            <option value="Castaño Medio">Castaño Medio</option>
+                                            <option value="Rubio">Rubio / Dorado</option>
+                                            <option value="Cobrizo">Cobrizo / Pelirrojo</option>
+                                            <option value="Canoso">Canoso / Blanco</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-semibold text-purple-700 mb-1">¿Tiene Trabajo Previo?</label>
+                                        <select id="diagTrabajoPrevio" onchange="toggleTrabajoPrevio(); evaluarCalculoColor();" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="No">No (Piel virgen)</option>
+                                            <option value="Si">Sí (Requiere evaluación)</option>
+                                        </select>
+                                    </div>
+                                    <div id="boxVirajeResidual" class="hidden">
+                                        <label class="block font-semibold text-purple-700 mb-1">Viraje / Color Residual Actual</label>
+                                        <select id="diagViraje" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Gris/Azul">🩶 Gris / Azulado / Violáceo</option>
+                                            <option value="Rojizo/Naranja">🔴 Rojizo / Anaranjado / Rosa</option>
+                                            <option value="Verdoso">🟢 Verdoso / Olivo</option>
+                                            <option value="Oscuro/Saturado">🖤 Oscuro / Saturado / Hiperpigmentado</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 flex justify-between items-center">
+                                    <button type="button" onclick="evaluarCalculoColor()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-xl text-xs shadow-md flex items-center gap-1">
+                                        ⚡ Calcular Mezcla Inteligente por CI
+                                    </button>
+                                </div>
+
+                                <div id="resultadoCalculador" class="p-3 bg-white border border-purple-200 rounded-xl space-y-1 text-xs">
+                                    <p class="font-bold text-purple-800">🧪Resultado y Fórmula Calculada:</p>
+                                    <p id="resFormulaTxt" class="text-slate-700 italic">Selecciona los datos para generar la fórmula exacta basada en tus tintas registradas...</p>
+                                </div>
+                            </div>
+
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Zona</label><select id="microZona" class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-white"><option value="Cejas">Cejas</option><option value="Labios">Labios</option><option value="Delineado">Delineado</option></select></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos</label><input type="text" id="microPigmentos" placeholder="Ej. Dark Brown" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos (Fórmula)</label><input type="text" id="microPigmentos" placeholder="Fórmula calculada..." class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-purple-50/30"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización</label><input type="text" id="microNeutralizacion" placeholder="Ej. Corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización Aplicada</label><input type="text" id="microNeutralizacion" placeholder="Ej. Pasadas iniciales de corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                             </div>
                         </div>
 
@@ -240,10 +327,10 @@
                         </div>
                     </form>
 
-                    <!-- HISTORIAL DE CLIENTA DETALLADO COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING -->
+                    <!-- HISTORIAL DE CLIENTA DETALLADO EN FORMA DE ARRAY/HISTORIAL ACUMULADO -->
                     <div id="historialClientaActual" class="mt-8 pt-6 border-t border-rose-100 hidden">
-                        <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial de <span id="nombreClientaTitulo"></span></h3>
-                        <div id="listaHistorialClienta" class="space-y-2 max-h-56 overflow-y-auto"></div>
+                        <h3 class="font-bold text-rose-700 text-sm mb-3">📖 Historial Acumulado de <span id="nombreClientaTitulo"></span></h3>
+                        <div id="listaHistorialClienta" class="space-y-2 max-h-72 overflow-y-auto"></div>
                     </div>
                 </div>
             </section>
@@ -276,11 +363,11 @@
                 </div>
             </section>
 
-            <!-- 4. SECCIÓN EXPEDIENTES -->
+            <!-- 4. SECCIÓN EXPEDIENTES (VER EXPEDIENTES Y CADA FECHA INDIVIDUAL) -->
             <section id="seccion-expedientes" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
-                        <h2 class="text-lg font-bold text-rose-700">📂 Expedientes de Clientas (Nube)</h2>
+                        <h2 class="text-lg font-bold text-rose-700">📂 Expedientes de Clientas (Historial Completo)</h2>
                         <button onclick="cambiarTab('ficha')" class="btn-glam text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">+ Nueva Ficha</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -292,14 +379,13 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS CON RANGO DE FECHA INICIO Y FIN -->
+            <!-- 5. SECCIÓN BLOQUEO DE HORARIOS -->
             <section id="seccion-bloqueos" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 max-w-xl mx-auto space-y-4">
                     <h2 class="text-lg font-bold text-rose-700 pb-2 border-b border-rose-100">⚙️ Bloquear Días u Horarios (Familia / Niños)</h2>
                     <form onsubmit="guardarBloqueo(event)" class="space-y-4">
                         <input type="hidden" id="bloqueoEditId">
                         
-                        <!-- RANGO DE FECHAS DE BLOQUEO -->
                         <div class="grid grid-cols-2 gap-3 bg-rose-50/50 p-3 rounded-xl border border-rose-100">
                             <div>
                                 <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha Inicio Bloqueo *</label>
@@ -348,24 +434,48 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN FINANZAS CON CATEGORÍAS EDITABLES Y GANANCIAS ACUMULADAS PERSISTENTES -->
+            <!-- 6. SECCIÓN TINTAS & INVENTARIO -->
+            <section id="seccion-tintas" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                        <h2 class="text-lg font-bold text-rose-700">🎨 Catalogo e Inventario de Tintas & Color Index (CI)</h2>
+                        <button onclick="abrirModalTinta()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Nueva Tinta</button>
+                    </div>
+
+                    <!-- FORMULARIO TINTAS -->
+                    <div id="boxFormTinta" class="hidden p-4 bg-purple-50 rounded-xl border border-purple-200 space-y-3">
+                        <h3 class="font-bold text-purple-800 text-xs uppercase" id="tituloFormTinta">Agregar / Editar Tinta</h3>
+                        <form onsubmit="guardarTinta(event)" class="space-y-3 text-xs">
+                            <input type="hidden" id="tintaEditId">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div><label class="block font-semibold mb-1">Nombre Tinta *</label><input type="text" id="tintaNombre" required placeholder="Ej. Bright Orange" class="w-full p-2 border rounded-lg"></div>
+                                <div><label class="block font-semibold mb-1">Marca *</label><input type="text" id="tintaMarca" required placeholder="Ej. Eternal Ink" class="w-full p-2 border rounded-lg"></div>
+                                <div><label class="block font-semibold mb-1">Subtono Base *</label><select id="tintaSubtono" class="w-full p-2 border rounded-lg bg-white"><option value="Cálido">Cálido 🔥</option><option value="Frío">Frío ❄️</option><option value="Neutro">Neutro ⚖️</option></select></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div><label class="block font-semibold mb-1">Color Index (CI) *</label><input type="text" id="tintaCI" required placeholder="Ej. CI-77891, CI-21160" class="w-full p-2 border rounded-lg"></div>
+                                <div><label class="block font-semibold mb-1">Número CAS *</label><input type="text" id="tintaCAS" required placeholder="Ej. #7732-18-5" class="w-full p-2 border rounded-lg"></div>
+                                <div><label class="block font-semibold mb-1">Función Técnica</label><input type="text" id="tintaFuncion" placeholder="Ej. Neutralizador de fríos" class="w-full p-2 border rounded-lg"></div>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Tinta</button>
+                                <button type="button" onclick="cerrarModalTinta()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="gridTintas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+
+            <!-- 7. SECCIÓN FINANZAS CON EDITAR MOVIMIENTO, FILTRO CATEGORÍA Y BALANCE NETO PURE -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
-                        <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad de Saldos Personales</h3>
-                        <p class="text-xs text-slate-400">Oculta ahorros, tarjetas y cuentas frente a las clientas.</p>
+                        <h3 class="font-bold text-rose-700 text-sm">🔒 Privacidad y Gestión de Saldos</h3>
+                        <p class="text-xs text-slate-400">Oculta saldos frente a clientas si lo deseas.</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="reiniciarGananciasPeriodo()" class="bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🔄 Reiniciar Ganancias</button>
-                        <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
-                    </div>
-                </div>
-
-                <!-- CARDS DE GANANCIAS DE CITAS PERSISTENTES -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Semanal</p><h3 id="gananciaSemanal" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Mensual</p><h3 id="gananciaMensual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100"><p class="text-xs font-bold text-rose-400 uppercase">Ganancia Citas Anual</p><h3 id="gananciaAnual" class="text-2xl font-extrabold text-rose-700 mt-1">$0.00 MXN</h3></div>
+                    <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
                 </div>
 
                 <!-- ADMINISTRADOR Y EDITOR DE CATEGORÍAS -->
@@ -378,47 +488,55 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS -->
+                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS (INCLUYE EDICIÓN) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">💵 Registrar Movimiento o Gasto</h3>
+                        <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100" id="tituloFormFinanzas">💵 Registrar Movimiento o Gasto</h3>
                         <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
+                            <input type="hidden" id="finEditId">
                             <div class="grid grid-cols-2 gap-2">
                                 <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-emerald-50 text-emerald-800">
-                                    <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada de Dinero (+)
+                                    <input type="radio" name="tipoFlujo" value="Entrada" checked class="text-emerald-600"> Entrada (+)
                                 </label>
                                 <label class="flex items-center gap-2 p-2.5 border border-rose-200 rounded-xl text-xs font-bold cursor-pointer bg-rose-50 text-rose-800">
                                     <input type="radio" name="tipoFlujo" value="Salida" class="text-rose-600"> Salida / Gasto (-)
                                 </label>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector Destino</label>
+                                <label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Categoría / Sector</label>
                                 <select id="finCategoria" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white"></select>
                             </div>
-                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López / Compra Pigmentos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
+                            <input type="text" id="finDesc" required placeholder="Concepto (Ej. Cita María López / Compra Insumos)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <input type="number" step="0.01" id="finMonto" required placeholder="Monto ($ MXN)" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
                             <input type="date" id="finFecha" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm">
-                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Registrar en Historial</button>
+                            <div class="flex gap-2">
+                                <button type="submit" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-sm">Guardar Movimiento</button>
+                                <button type="button" id="btnCancelEditFin" onclick="cancelarEdicionFinanzas()" class="hidden bg-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-xl text-sm">Cancelar</button>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- BALANCE NETO GENERAL -->
+                    <!-- BALANCE NETO GENERAL DINÁMICO POR CATEGORÍAS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
                         <div>
-                            <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General</h3>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>Total Ingresos Citas / Servicios:</span> <strong id="totalIngresos" class="text-emerald-600">$0.00 MXN</strong></div>
-                                <div class="flex justify-between"><span>Total Gastos / Insumos:</span> <strong id="totalGastos" class="text-rose-600">$0.00 MXN</strong></div>
-                                <div id="listaBalancesCategoriasExtra" class="space-y-1 pt-1 border-t border-rose-50"></div>
-                                <hr class="my-2 border-rose-100">
-                                <div class="flex justify-between text-base"><span>Ganancia Neta Citas:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
-                            </div>
+                            <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General (Dinámico)</h3>
+                            <div id="listaBalanceDinamicoCategorias" class="space-y-2 text-sm"></div>
+                            <hr class="my-3 border-rose-100">
+                            <div class="flex justify-between text-base"><span>Ganancia Neta Citas / Servicios:</span> <strong id="gananciaNeta" class="text-rose-700 font-extrabold">$0.00 MXN</strong></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TABLA DETALLADA DE MOVIMIENTOS -->
+                <!-- TABLA DETALLADA DE MOVIMIENTOS CON FILTRO DE CATEGORÍA Y BOTÓN EDITAR -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
-                    <h3 class="text-base font-bold text-rose-700 border-b border-rose-100 pb-2">📋 Historial Detallado de Entradas y Salidas</h3>
+                    <div class="flex flex-wrap justify-between items-center gap-3 border-b border-rose-100 pb-2">
+                        <h3 class="text-base font-bold text-rose-700">📋 Historial Detallado de Entradas y Salidas</h3>
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-bold text-rose-700">Filtrar:</label>
+                            <select id="filtroCatFinanzas" onchange="renderHistorialFinanciero()" class="p-1.5 border border-rose-200 rounded-xl text-xs bg-white">
+                                <option value="todas">Todas las categorías</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs">
                             <thead>
@@ -493,9 +611,20 @@
         let movimientosFinancieros = [];
         let bloqueos = [];
         let excepciones = [];
-        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Extra", "Tarjetas", "Ahorros"];
-        let acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
+        let tintas = [];
+        let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Ahorros"];
 
+        // BASE DE DATOS INICIAL DE TINTAS
+        const tintasPredeterminadas = [
+            { nombre: "Bright Orange (#E08)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77891, CI-21160, CI-21098", cas: "#7732-18-5, #13463-67-7", funcion: "Neutralizador de tonos fríos/azulados/violáceos en cejas y labios" },
+            { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Modificador cálido, aporta luz y evita viraje a gris" },
+            { nombre: "Triple Black (#E02)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-77266", cas: "#7732-18-5, #1333-86-4", funcion: "Tono frío oscuro (Delineados / mezcla en cejas oscuras)" },
+            { nombre: "White (#E31)", marca: "Eternal Ink", subtono: "Neutro", ci: "CI-77891", cas: "#7732-18-5, #13463-67-7", funcion: "Aclarante / Opacificante" },
+            { nombre: "Lipstick Red (#E41)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-12475", cas: "#7732-18-5, #2786-76-7", funcion: "Pigmento cromo rojo puro para revitalización en lips" },
+            { nombre: "Cocoa Bean (#E58)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", cas: "#7732-18-5, #6505-28-8, #147-14-8", funcion: "Marrón cálido profundo ideal para base de cejas" }
+        ];
+
+        // FIREBASE LISTENERS
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
             actualizarDatalist();
@@ -524,11 +653,18 @@
             renderExcepciones();
         });
 
+        db.collection("tintas").onSnapshot(snapshot => {
+            tintas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            if(tintas.length === 0) {
+                // Cargar iniciales si está vacío
+                tintasPredeterminadas.forEach(t => db.collection("tintas").add(t));
+            }
+            renderTintas();
+        });
+
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
-            if(doc.exists) {
-                const data = doc.data();
-                if(data.categorias) categoriasFinanzas = data.categorias;
-                if(data.acumulados) acumuladosFinanzas = data.acumulados;
+            if(doc.exists && doc.data().categorias) {
+                categoriasFinanzas = doc.data().categorias;
             }
             renderCategoriasFinanzas();
             calcularFinanzas();
@@ -536,22 +672,31 @@
 
         setupCanvas('canvasMapping');
 
+        // LIENZO DE MAPPING CON CORRECCIÓN EXACTA DE COORDENADAS TOUCH/MOUSE
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
             if(!canvas) return;
             const ctx = canvas.getContext('2d');
             let dibujando = false;
             ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+            
             const obtenerPos = (e) => {
                 const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - rect.left, y: clientY - rect.top };
+                return {
+                    x: (clientX - rect.left) * scaleX,
+                    y: (clientY - rect.top) * scaleY
+                };
             };
+
             canvas.addEventListener('mousedown', (e) => { dibujando = true; const p = obtenerPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
             canvas.addEventListener('mousemove', (e) => { if (!dibujando) return; const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
             canvas.addEventListener('mouseup', () => dibujando = false);
             canvas.addEventListener('mouseleave', () => dibujando = false);
+            
             canvas.addEventListener('touchstart', (e) => { dibujando = true; const p = obtenerPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
             canvas.addEventListener('touchmove', (e) => { if (!dibujando) return; const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
             canvas.addEventListener('touchend', () => dibujando = false);
@@ -570,6 +715,7 @@
             if(tab === 'agenda') renderCitas();
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
+            if(tab === 'tintas') renderTintas();
         }
 
         function toggleServicio() {
@@ -580,6 +726,7 @@
             } else {
                 document.getElementById('bloquePestanas').classList.add('hidden');
                 document.getElementById('bloqueMicro').classList.remove('hidden');
+                evaluarCalculoColor();
             }
         }
 
@@ -599,42 +746,91 @@
             });
         }
 
-        // MOSTRAR HISTORIAL COMPLETO CON FECHA, SERVICIO, TÉCNICA, DISEÑO Y MAPPING
+        function toggleTrabajoPrevio() {
+            const trab = document.getElementById('diagTrabajoPrevio').value;
+            if(trab === 'Si') {
+                document.getElementById('boxVirajeResidual').classList.remove('hidden');
+            } else {
+                document.getElementById('boxVirajeResidual').classList.add('hidden');
+            }
+        }
+
+        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS POR COLOR INDEX (CI) Y TRABAJO PREVIO
+        function evaluarCalculoColor() {
+            const zona = document.getElementById('microZona').value;
+            const fototipo = document.getElementById('diagFototipo').value;
+            const subtono = document.getElementById('diagSubtono').value;
+            const piel = document.getElementById('diagPiel').value;
+            const cabello = document.getElementById('diagCabello').value;
+            const tieneTrabajoPrevio = document.getElementById('diagTrabajoPrevio').value === 'Si';
+            const viraje = document.getElementById('diagViraje').value;
+
+            let formula = "";
+            let notasTecnicas = "";
+
+            if(zona === 'Labios') {
+                // SEPARACIÓN ESTRICTA: NO USAR TONOS DE CEJAS (COCOA) EN LABIOS
+                if(tieneTrabajoPrevio && (viraje === 'Gris/Azul' || viraje === 'Oscuro/Saturado')) {
+                    formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08 - CI-21160) + 1 gota White (#E31 - CI-77891) para hiperpigmentación.\nPaso 2 (Tono Objetivo): 5 gotas Lipstick Red (#E41 - CI-12475).";
+                    notasTecnicas = "Aplicar pasadas suaves en Paso 1 sin saturar hasta cambiar matriz a tono cálido. Luego depositar el color deseado.";
+                } else if(subtono === 'Frío') {
+                    formula = "4 gotas Lipstick Red (#E41) + 2 gotas Bright Orange (#E08 - CI-21160).";
+                    notasTecnicas = "El modificador Bright Orange evita que los labios cicatricen en tonos morados o fríos.";
+                } else {
+                    formula = "5 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40) para dar luminosidad.";
+                    notasTecnicas = "Efecto Aquarelle o Full Lips. Piel responde de forma estable al pigmento cromo.";
+                }
+            } else {
+                // CEJAS O DELINEADO (BASADO EN INVENTARIO ETERNAL INK)
+                if(tieneTrabajoPrevio) {
+                    if(viraje === 'Gris/Azul') {
+                        formula = "Paso 1: 3 gotas Bright Orange (#E08 - CI-21160 - Cálido) puro para neutralizar frío.\nPaso 2: 5 gotas Cocoa Bean (#E58) + 1 gota Lightning Yellow (#E40).";
+                        notasTecnicas = "Inactivar la carga de negro carbono CI-77266 residual con base naranja antes de aplicar el color final.";
+                    } else if(viraje === 'Rojizo/Naranja') {
+                        formula = "5 gotas Cocoa Bean (#E58 - CI-74160 Phthalo Blue) con toques de neutralización de verde/oliva.";
+                        notasTecnicas = "Usar pigmentos inorgánicos o con base fría suave para contrarrestar el rojizo de la piel.";
+                    } else {
+                        formula = "4 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08).";
+                        notasTecnicas = "Ajuste de profundidad según fototipo " + fototipo;
+                    }
+                } else {
+                    if(subtono === 'Frío') {
+                        formula = "5 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08 - Modificador Cálido).";
+                        notasTecnicas = "Para evitar que el CI-77266 de la base vire a gris por el subtono frío de la clienta.";
+                    } else if(cabello === 'Rubio' || cabello === 'Canoso') {
+                        formula = "3 gotas Cocoa Bean (#E58) + 3 gotas Lightning Yellow (#E40) + 1 gota White (#E31).";
+                        notasTecnicas = "Tono suavizado de baja saturación.";
+                    } else {
+                        formula = "6 gotas Cocoa Bean (#E58) + 1 gota Lightning Yellow (#E40).";
+                        notasTecnicas = "Tono equilibrado neutro. Excelente retención en piel " + piel + ".";
+                    }
+                }
+            }
+
+            document.getElementById('resFormulaTxt').innerText = `🏆 Mezcla Sugerida:\n${formula}\n\n💡 Nota Técnica: ${notasTecnicas}`;
+            document.getElementById('microPigmentos').value = formula.replace(/\n/g, ' ');
+            document.getElementById('microNeutralizacion').value = tieneTrabajoPrevio ? `Neutralización para viraje ${viraje}` : 'Sin neutralización requerida';
+        }
+
+        // CARGAR HISTORIAL ACUMULADO (ARRAY DE REGISTROS DE LA CLIENTA)
         function cargarAntecedentesClienta(nombre) {
             const encontrada = fichas.filter(f => f.nombre.toLowerCase() === nombre.toLowerCase());
             if(encontrada.length > 0) {
                 encontrada.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-                const ultima = encontrada[0];
-
-                if(ultima.servicioTipo === 'Extensión de Pestañas' && ultima.detalles && ultima.detalles.checks) {
-                    document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
-                    toggleServicio();
-                    document.querySelectorAll('input[name="checkPestanas"]').forEach(chk => {
-                        chk.checked = ultima.detalles.checks.includes(chk.value);
-                    });
-                    document.getElementById('tecPestanas').value = ultima.detalles.tec || '';
-                    document.getElementById('disenoPestanas').value = ultima.detalles.diseno || '';
-                    document.getElementById('mappingPestanas').value = ultima.detalles.mapping || '';
-                } else if(ultima.servicioTipo === 'Micropigmentación' && ultima.detalles && ultima.detalles.checks) {
-                    document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
-                    toggleServicio();
-                    document.querySelectorAll('input[name="checkMicro"]').forEach(chk => {
-                        chk.checked = ultima.detalles.checks.includes(chk.value);
-                    });
-                }
 
                 document.getElementById('nombreClientaTitulo').innerText = nombre;
-                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map(f => {
+                document.getElementById('listaHistorialClienta').innerHTML = encontrada.map((f, idx) => {
                     let detalleExtra = '';
                     if(f.servicioTipo === 'Extensión de Pestañas') {
                         detalleExtra = `✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 📐 <strong>Diseño:</strong> ${f.detalles?.diseno || 'N/A'} | 🗺️ <strong>Mapping:</strong> ${f.detalles?.mapping || 'N/A'}`;
                     } else {
-                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | ✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 🎨 <strong>Pigmentos:</strong> ${f.detalles?.pigmentos || 'N/A'}`;
+                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | 🧪 <strong>Mezcla/CI:</strong> ${f.detalles?.pigmentos || 'N/A'} | ⚡ <strong>Cartucho/Voltaje:</strong> ${f.detalles?.cartucho || 'N/A'} - ${f.detalles?.voltaje || 'N/A'}`;
                     }
                     return `
                         <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100 space-y-1">
                             <div class="flex justify-between items-center">
                                 <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
+                                <button type="button" onclick="cargarFichaEnFormulario(${f.id})" class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded font-bold">📂 Ver esta fecha</button>
                             </div>
                             <p class="text-[11px] text-slate-600 leading-relaxed">${detalleExtra}</p>
                             ${f.notas ? `<p class="text-[10px] text-rose-500 italic">Notas: ${f.notas}</p>` : ''}
@@ -663,7 +859,6 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // CARGA HORARIOS CON EVALUACIÓN DE RANGO FECHA INICIO Y FECHA FIN EN BLOQUEOS
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -701,8 +896,6 @@
                     ocupadoBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
-
-                        // Verificar si la fecha cae dentro del rango de fechaInicio y fechaFin
                         const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
 
                         if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
@@ -740,25 +933,18 @@
             const hora = document.getElementById('pubHoraSeleccionada').value;
 
             const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            if(seleccionados.length === 0) {
-                alert('⚠️ Por favor selecciona al menos un servicio.');
-                return;
-            }
-            if(!hora) {
-                alert('⚠️ Por favor selecciona una hora disponible.');
-                return;
-            }
+            if(seleccionados.length === 0) { alert('⚠️ Por favor selecciona al menos un servicio.'); return; }
+            if(!hora) { alert('⚠️ Por favor selecciona una hora disponible.'); return; }
 
             const serviciosTxt = seleccionados.map(c => c.value).join(', ');
             let tiempoTotalMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             let montoTotal = seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0);
-            const fechaHora = `${fecha}T${hora}`;
 
             await db.collection("citas").add({
                 id: Date.now(),
                 nombre: `${nombre} (${telefono})`,
                 telefono,
-                fechaHora,
+                fechaHora: `${fecha}T${hora}`,
                 servicio: serviciosTxt,
                 duracionMin: tiempoTotalMin,
                 monto: montoTotal,
@@ -770,6 +956,7 @@
             calcularResumenPublico();
         }
 
+        // GUARDAR FICHA SIN SOBREESCRIBIR CLIENTA (AGREGA REGISTRO HISTÓRICO)
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -792,7 +979,10 @@
                 tec: document.getElementById('microTecnica').value,
                 cartucho: document.getElementById('microCartucho').value,
                 voltaje: document.getElementById('microVoltaje').value,
-                neutralizacion: document.getElementById('microNeutralizacion').value
+                neutralizacion: document.getElementById('microNeutralizacion').value,
+                fototipo: document.getElementById('diagFototipo').value,
+                subtono: document.getElementById('diagSubtono').value,
+                piel: document.getElementById('diagPiel').value
             };
 
             const dataFicha = {
@@ -813,11 +1003,10 @@
                     await db.collection("fichas").add(dataFicha);
                 }
             } else {
-                dataFicha.id = Date.now();
                 await db.collection("fichas").add(dataFicha);
             }
 
-            alert('✨ ¡Ficha técnica guardada con éxito!');
+            alert('✨ Ficha guardada en el historial de la clienta');
             limpiarFicha();
         }
 
@@ -850,7 +1039,7 @@
             });
 
             if(conflictoCita) {
-                alert(`⚠️ ¡ATENCIÓN! Ya existe una cita agendada en este horario con ${conflictoCita.nombre}. Por favor elige otro horario para evitar empalmes.`);
+                alert(`⚠️ ¡ATENCIÓN! Ya existe una cita en este horario con ${conflictoCita.nombre}.`);
                 return;
             }
 
@@ -892,33 +1081,21 @@
                 const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
 
                 const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
-                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita programada para el ${new Date(c.fechaHora).toLocaleString()} para el servicio de: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
+                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita para el ${new Date(c.fechaHora).toLocaleString()} para: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
                 const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
                 const nombreLimpio = c.nombre.split('(')[0].trim();
 
-                const timestampSelf = start.getTime();
-                const margenMsSelf = (c.duracionMin || 180) * 60 * 1000;
-                const estaEmpalmada = citas.some(otra => {
-                    if(otra.id === c.id || otra.estado === 'Cancelada') return false;
-                    const timeOtra = new Date(otra.fechaHora).getTime();
-                    const durOtra = (otra.duracionMin || 180) * 60 * 1000;
-                    return (timestampSelf < timeOtra + durOtra) && (timestampSelf + margenMsSelf > timeOtra);
-                });
-
                 return `
-                    <div class="p-4 ${estaEmpalmada ? 'bg-amber-100/80 border-amber-300' : 'bg-rose-50/50 border-rose-100'} rounded-xl border flex flex-wrap justify-between items-center gap-3">
+                    <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
                         <div>
-                            ${estaEmpalmada ? `<span class="bg-rose-600 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase mb-1 inline-block">⚠️ ¡Horario Empalmado!</span>` : ''}
                             <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
-                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} (${c.duracionMin || 180} min) | 💵 $${c.monto.toFixed(2)} MXN</p>
-                            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : c.estado === 'Cancelada' ? 'bg-rose-200 text-rose-800' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
+                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
+                            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">💬 WhatsApp</a>` : ''}
-                            <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">📅 Google Cal</a>
-                            <button onclick="crearFichaDesdeCita('${nombreLimpio}', '${c.fechaHora.split('T')[0]}', '${c.servicio}')" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">📋 Crear Ficha Técnica</button>
+                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">💬 WhatsApp</a>` : ''}
+                            <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold">📅 Cal</a>
                             <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
-                            <button onclick="editarCita(${c.id})" class="bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">Editar</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
                         </div>
                     </div>
@@ -926,62 +1103,28 @@
             }).join('');
         }
 
-        // MARCAR REALIZADA Y ACUMULAR GANANCIA PERSISTENTE
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
-            const valMonto = parseFloat(monto);
 
+            // REGISTRAR EN FINANZAS DENTRO DE "Ingreso Cita/Servicio"
             await db.collection("movimientosFinancieros").add({
                 tipoFlujo: 'Entrada',
                 categoria: 'Ingreso Cita/Servicio',
                 desc: `Cita: ${nombreClienta} (${servicio})`,
-                monto: valMonto,
+                monto: parseFloat(monto),
                 fecha: fechaHoy
             });
 
-            // Acumular de forma persistente en Firebase
-            acumuladosFinanzas.sem += valMonto;
-            acumuladosFinanzas.mes += valMonto;
-            acumuladosFinanzas.anio += valMonto;
-            await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas, categorias: categoriasFinanzas }, { merge: true });
-
-            alert('✨ Cita realizada. El ingreso se fijó en tus ganancias.');
-        }
-
-        function crearFichaDesdeCita(nombre, fecha, servicio) {
-            document.getElementById('nombreClienta').value = nombre;
-            document.getElementById('fechaFicha').value = fecha;
-            if(servicio.toLowerCase().includes('micropigmentación') || servicio.toLowerCase().includes('microblading') || servicio.toLowerCase().includes('delineado')) {
-                document.querySelector('input[name="tipoServicio"][value="micropigmentacion"]').checked = true;
-            } else {
-                document.querySelector('input[name="tipoServicio"][value="pestanas"]').checked = true;
-            }
-            toggleServicio();
-            cargarAntecedentesClienta(nombre);
-            cambiarTab('ficha');
-        }
-
-        function editarCita(id) {
-            const c = citas.find(item => item.id == id);
-            if(!c) return;
-            document.getElementById('citaEditId').value = c.id;
-            document.getElementById('citaNombre').value = c.nombre.split('(')[0].trim();
-            document.getElementById('citaTelefono').value = c.telefono || '';
-            document.getElementById('citaFechaHora').value = c.fechaHora;
-            document.getElementById('citaServicio').value = c.servicio;
-            document.getElementById('citaDuracion').value = c.duracionMin || 180;
-            document.getElementById('citaMonto').value = c.monto;
-            cambiarTab('agendar');
+            alert('✨ Cita realizada e ingreso acumulado en Finanzas.');
         }
 
         async function eliminarCita(idDoc) {
-            if(confirm('¿Eliminar cita de la agenda? Esto NO borrará los ingresos ya cobrados en tus finanzas.')) {
+            if(confirm('¿Eliminar cita de la agenda?')) {
                 await db.collection("citas").doc(idDoc).delete();
             }
         }
 
-        // GUARDAR BLOQUEO CON FECHA INICIO Y FECHA FIN
         async function guardarBloqueo(e) {
             e.preventDefault();
             const editId = document.getElementById('bloqueoEditId').value;
@@ -992,118 +1135,140 @@
             const horaFin = document.getElementById('bloqueoHoraFin').value;
             const motivo = document.getElementById('bloqueoMotivo').value;
 
-            if(fechaFin < fechaInicio) {
-                alert('⚠️ La Fecha Fin debe ser posterior a la Fecha Inicio.');
-                return;
-            }
-
             const dataBloqueo = { fechaInicio, fechaFin, diasRecurrentes, horaInicio, horaFin, motivo };
 
-            if(editId) {
-                await db.collection("bloqueos").doc(editId).update(dataBloqueo);
-            } else {
-                await db.collection("bloqueos").add(dataBloqueo);
-            }
-            alert('🔒 Bloqueo por rango de fechas guardado correctamente');
+            if(editId) await db.collection("bloqueos").doc(editId).update(dataBloqueo);
+            else await db.collection("bloqueos").add(dataBloqueo);
+
+            alert('🔒 Bloqueo guardado');
             document.getElementById('bloqueoEditId').value = '';
             e.target.reset();
-        }
-
-        function editarBloqueo(idDoc) {
-            const b = bloqueos.find(item => item.idDoc === idDoc);
-            if(!b) return;
-            document.getElementById('bloqueoEditId').value = b.idDoc;
-            document.getElementById('bloqueoFechaInicio').value = b.fechaInicio || '';
-            document.getElementById('bloqueoFechaFin').value = b.fechaFin || '';
-            document.querySelectorAll('input[name="diasBloqueo"]').forEach(chk => {
-                chk.checked = b.diasRecurrentes && b.diasRecurrentes.includes(chk.value);
-            });
-            document.getElementById('bloqueoHoraInicio').value = b.horaInicio;
-            document.getElementById('bloqueoHoraFin').value = b.horaFin;
-            document.getElementById('bloqueoMotivo').value = b.motivo;
         }
 
         function renderBloqueos() {
             const cont = document.getElementById('listaBloqueos');
             if(!cont) return;
-            if(bloqueos.length === 0) {
-                cont.innerHTML = `<p class="text-slate-400 italic">No hay horarios bloqueados.</p>`;
-                return;
-            }
-            const nombresDias = { "1": "Lun", "2": "Mar", "3": "Mié", "4": "Jue", "5": "Vie", "6": "Sáb" };
-            cont.innerHTML = bloqueos.map(b => {
-                const diasTxt = b.diasRecurrentes && b.diasRecurrentes.length > 0 ? b.diasRecurrentes.map(d => nombresDias[d]).join(', ') : 'Días seleccionados';
-                const rangoTxt = (b.fechaInicio && b.fechaFin) ? `Del ${b.fechaInicio} al ${b.fechaFin}` : 'Indefinido';
-                return `
-                    <div class="flex justify-between items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                        <div>
-                            <strong class="text-rose-700">${rangoTxt}</strong>
-                            <p class="text-[11px] text-slate-600">Días: ${diasTxt} (${b.horaInicio} a ${b.horaFin}) - ${b.motivo}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editarBloqueo('${b.idDoc}')" class="text-amber-600 font-bold text-xs">Editar</button>
-                            <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
-                        </div>
+            if(bloqueos.length === 0) { cont.innerHTML = `<p class="text-slate-400 italic">No hay bloqueos.</p>`; return; }
+            cont.innerHTML = bloqueos.map(b => `
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                    <div>
+                        <strong class="text-rose-700">${b.fechaInicio} al ${b.fechaFin}</strong>
+                        <p class="text-[11px] text-slate-600">Horario: ${b.horaInicio} - ${b.horaFin} (${b.motivo})</p>
                     </div>
-                `;
-            }).join('');
+                    <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                </div>
+            `).join('');
         }
 
-        async function eliminarBloqueo(idDoc) {
-            await db.collection("bloqueos").doc(idDoc).delete();
-        }
+        async function eliminarBloqueo(idDoc) { await db.collection("bloqueos").doc(idDoc).delete(); }
 
         async function guardarExcepcion(e) {
             e.preventDefault();
-            const fecha = document.getElementById('excepcionFecha').value;
-            const motivo = document.getElementById('excepcionMotivo').value;
-            await db.collection("excepciones").add({ fecha, motivo });
-            alert('✨ Día liberado con éxito');
+            await db.collection("excepciones").add({ fecha: document.getElementById('excepcionFecha').value, motivo: document.getElementById('excepcionMotivo').value });
+            alert('✨ Día liberado');
             e.target.reset();
         }
 
         function renderExcepciones() {
             const cont = document.getElementById('listaExcepciones');
             if(!cont) return;
-            if(excepciones.length === 0) {
-                cont.innerHTML = `<p class="text-slate-400 italic">No hay días excepcionales liberados.</p>`;
-                return;
-            }
-            cont.innerHTML = excepciones.map(ex => `
-                <div class="flex justify-between items-center p-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-                    <div><strong>${ex.fecha}</strong> - ${ex.motivo}</div>
-                    <button onclick="eliminarExcepcion('${ex.idDoc}')" class="text-rose-500 font-bold">✕</button>
+            cont.innerHTML = excepciones.map(ex => `<div class="p-1.5 bg-emerald-50 rounded text-xs"><strong>${ex.fecha}</strong> - ${ex.motivo}</div>`).join('');
+        }
+
+        // TINTAS & INVENTARIO FUNCTIONS
+        function abrirModalTinta() {
+            document.getElementById('boxFormTinta').classList.remove('hidden');
+            document.getElementById('tintaEditId').value = '';
+        }
+
+        function cerrarModalTinta() {
+            document.getElementById('boxFormTinta').classList.add('hidden');
+        }
+
+        async function guardarTinta(e) {
+            e.preventDefault();
+            const editId = document.getElementById('tintaEditId').value;
+            const dataTinta = {
+                nombre: document.getElementById('tintaNombre').value.trim(),
+                marca: document.getElementById('tintaMarca').value.trim(),
+                subtono: document.getElementById('tintaSubtono').value,
+                ci: document.getElementById('tintaCI').value.trim(),
+                cas: document.getElementById('tintaCAS').value.trim(),
+                funcion: document.getElementById('tintaFuncion').value.trim()
+            };
+
+            if(editId) await db.collection("tintas").doc(editId).update(dataTinta);
+            else await db.collection("tintas").add(dataTinta);
+
+            alert('🎨 Tinta guardada correctamente');
+            cerrarModalTinta();
+            e.target.reset();
+        }
+
+        function renderTintas() {
+            const grid = document.getElementById('gridTintas');
+            if(!grid) return;
+            if(tintas.length === 0) { grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay tintas.</p>`; return; }
+
+            grid.innerHTML = tintas.map(t => `
+                <div class="p-4 bg-purple-50/40 rounded-2xl border border-purple-100 space-y-2 text-xs">
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-bold text-purple-800 text-sm">${t.nombre}</h4>
+                        <span class="px-2 py-0.5 rounded font-bold ${t.subtono === 'Cálido' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}">${t.subtono}</span>
+                    </div>
+                    <p><strong>Marca:</strong> ${t.marca}</p>
+                    <p><strong>CI:</strong> <span class="text-purple-700 font-mono">${t.ci}</span></p>
+                    <p><strong>CAS:</strong> <span class="text-slate-600 font-mono">${t.cas}</span></p>
+                    <p class="text-slate-500 italic">${t.funcion}</p>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="editarTinta('${t.idDoc}')" class="text-purple-700 font-bold">Editar</button>
+                        <button onclick="eliminarTinta('${t.idDoc}')" class="text-rose-600 font-bold">Eliminar</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        async function eliminarExcepcion(idDoc) {
-            await db.collection("excepciones").doc(idDoc).delete();
+        function editarTinta(idDoc) {
+            const t = tintas.find(i => i.idDoc === idDoc);
+            if(!t) return;
+            abrirModalTinta();
+            document.getElementById('tintaEditId').value = t.idDoc;
+            document.getElementById('tintaNombre').value = t.nombre;
+            document.getElementById('tintaMarca').value = t.marca;
+            document.getElementById('tintaSubtono').value = t.subtono;
+            document.getElementById('tintaCI').value = t.ci;
+            document.getElementById('tintaCAS').value = t.cas;
+            document.getElementById('tintaFuncion').value = t.funcion;
         }
 
-        // AGREGAR Y EDITAR CATEGORÍAS EN FINANZAS
+        async function eliminarTinta(idDoc) {
+            if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
+        }
+
+        // FINANZAS COMPLETA CON EDICIÓN Y FILTRO POR CATEGORÍA
         function renderCategoriasFinanzas() {
             const sel = document.getElementById('finCategoria');
+            const selFiltro = document.getElementById('filtroCatFinanzas');
             const contCat = document.getElementById('contenedorGestionCategorias');
-            if(!sel || !contCat) return;
+            if(!sel) return;
 
             sel.innerHTML = categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
+            selFiltro.innerHTML = `<option value="todas">Todas las categorías</option>` + categoriasFinanzas.map(c => `<option value="${c}">${c}</option>`).join('');
 
             contCat.innerHTML = categoriasFinanzas.map((c, index) => `
                 <span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 text-rose-800 px-2.5 py-1 rounded-lg font-medium">
                     ${c}
-                    <button onclick="renombrarCategoria(${index})" title="Editar" class="text-amber-600 font-bold ml-1">✏️</button>
-                    ${categoriasFinanzas.length > 1 ? `<button onclick="eliminarCategoria(${index})" title="Eliminar" class="text-rose-600 font-bold">✕</button>` : ''}
+                    <button onclick="renombrarCategoria(${index})" class="text-amber-600 font-bold ml-1">✏️</button>
+                    ${categoriasFinanzas.length > 1 ? `<button onclick="eliminarCategoria(${index})" class="text-rose-600 font-bold">✕</button>` : ''}
                 </span>
             `).join('');
         }
 
         async function agregarCategoriaNueva() {
-            const nombre = prompt('Escribe el nombre del nuevo sector o categoría (Ej. Dinero Extra, Cursos, etc.):');
-            if(nombre && nombre.trim() !== '') {
-                const nombreLimpio = nombre.trim();
-                if(!categoriasFinanzas.includes(nombreLimpio)) {
-                    categoriasFinanzas.push(nombreLimpio);
+            const nombre = prompt('Escribe el nombre de la nueva categoría (Ej. Dinero Jose, Tanda tarjeta):');
+            if(nombre && nombre.trim()) {
+                if(!categoriasFinanzas.includes(nombre.trim())) {
+                    categoriasFinanzas.push(nombre.trim());
                     await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
                 }
             }
@@ -1111,15 +1276,15 @@
 
         async function renombrarCategoria(index) {
             const actual = categoriasFinanzas[index];
-            const nuevo = prompt(`Editar nombre de la categoría "${actual}":`, actual);
-            if(nuevo && nuevo.trim() !== '' && nuevo.trim() !== actual) {
+            const nuevo = prompt(`Editar categoría "${actual}":`, actual);
+            if(nuevo && nuevo.trim() && nuevo.trim() !== actual) {
                 categoriasFinanzas[index] = nuevo.trim();
                 await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
             }
         }
 
         async function eliminarCategoria(index) {
-            if(confirm(`¿Eliminar la categoría "${categoriasFinanzas[index]}"?`)) {
+            if(confirm(`¿Eliminar categoría "${categoriasFinanzas[index]}"?`)) {
                 categoriasFinanzas.splice(index, 1);
                 await db.collection("configuracion").doc("finanzas").set({ categorias: categoriasFinanzas }, { merge: true });
             }
@@ -1127,94 +1292,107 @@
 
         async function agregarMovimientoFinanciero(e) {
             e.preventDefault();
-            const tipoFlujo = document.querySelector('input[name="tipoFlujo"]:checked').value;
-            const categoria = document.getElementById('finCategoria').value;
-            const desc = document.getElementById('finDesc').value;
-            const monto = parseFloat(document.getElementById('finMonto').value);
-            const fecha = document.getElementById('finFecha').value;
+            const editId = document.getElementById('finEditId').value;
+            const dataMov = {
+                tipoFlujo: document.querySelector('input[name="tipoFlujo"]:checked').value,
+                categoria: document.getElementById('finCategoria').value,
+                desc: document.getElementById('finDesc').value.trim(),
+                monto: parseFloat(document.getElementById('finMonto').value),
+                fecha: document.getElementById('finFecha').value
+            };
 
-            await db.collection("movimientosFinancieros").add({ tipoFlujo, categoria, desc, monto, fecha });
+            if(editId) await db.collection("movimientosFinancieros").doc(editId).update(dataMov);
+            else await db.collection("movimientosFinancieros").add(dataMov);
 
-            // Si es un ingreso manual de cita, también suma al acumulado
-            if(categoria === 'Ingreso Cita/Servicio' && tipoFlujo === 'Entrada') {
-                acumuladosFinanzas.sem += monto;
-                acumuladosFinanzas.mes += monto;
-                acumuladosFinanzas.anio += monto;
-                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
-            }
-
-            alert('✨ Movimiento guardado correctamente');
+            alert('✨ Movimiento guardado');
+            cancelarEdicionFinanzas();
             e.target.reset();
             document.getElementById('finFecha').valueAsDate = new Date();
         }
 
+        function editarMovimientoFinanciero(idDoc) {
+            const m = movimientosFinancieros.find(i => i.idDoc === idDoc);
+            if(!m) return;
+            document.getElementById('finEditId').value = m.idDoc;
+            document.getElementById('tituloFormFinanzas').innerText = "✏️ Editar Movimiento / Gasto";
+            document.querySelector(`input[name="tipoFlujo"][value="${m.tipoFlujo}"]`).checked = true;
+            document.getElementById('finCategoria').value = m.categoria;
+            document.getElementById('finDesc').value = m.desc;
+            document.getElementById('finMonto').value = m.monto;
+            document.getElementById('finFecha').value = m.fecha;
+            document.getElementById('btnCancelEditFin').classList.remove('hidden');
+        }
+
+        function cancelarEdicionFinanzas() {
+            document.getElementById('finEditId').value = '';
+            document.getElementById('tituloFormFinanzas').innerText = "💵 Registrar Movimiento o Gasto";
+            document.getElementById('btnCancelEditFin').classList.add('hidden');
+        }
+
         function renderHistorialFinanciero() {
             const tbody = document.getElementById('tablaHistorialFinanciero');
+            const filtroCat = document.getElementById('filtroCatFinanzas').value;
             if(!tbody) return;
-            if(movimientosFinancieros.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos registrados.</td></tr>`;
+
+            let lista = movimientosFinancieros;
+            if(filtroCat !== 'todas') lista = lista.filter(m => m.categoria === filtroCat);
+
+            if(lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay movimientos.</td></tr>`;
                 return;
             }
-            tbody.innerHTML = movimientosFinancieros.map(m => `
+
+            tbody.innerHTML = lista.map(m => `
                 <tr class="border-b border-rose-50">
                     <td class="p-2.5">${m.fecha}</td>
                     <td class="p-2.5 font-medium">${m.desc}</td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${m.tipoFlujo === 'Entrada' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${m.tipoFlujo}</span></td>
                     <td class="p-2.5">${m.categoria}</td>
                     <td class="p-2.5 font-bold ${m.tipoFlujo === 'Entrada' ? 'text-emerald-600' : 'text-rose-600'}">$${m.monto.toFixed(2)} MXN</td>
-                    <td class="p-2.5 text-center"><button onclick="eliminarMovimientoFinanciero('${m.idDoc}')" class="text-rose-500 font-bold hover:underline">🗑️</button></td>
+                    <td class="p-2.5 text-center flex justify-center gap-2">
+                        <button onclick="editarMovimientoFinanciero('${m.idDoc}')" class="text-amber-600 font-bold">✏️</button>
+                        <button onclick="eliminarMovimientoFinanciero('${m.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
+                    </td>
                 </tr>
             `).join('');
         }
 
         async function eliminarMovimientoFinanciero(idDoc) {
-            if(confirm('¿Eliminar este registro del historial? (Tus tarjetas de ganancia semanal, mensual y anual NO se modificarán)')) {
+            if(confirm('¿Eliminar registro del historial?')) {
                 await db.collection("movimientosFinancieros").doc(idDoc).delete();
             }
         }
 
-        // BOTÓN EXPLICITO DE REINICIAR GANANCIAS
-        async function reiniciarGananciasPeriodo() {
-            if(confirm('¿Deseas reiniciar los contadores de ganancia semanal, mensual y anual a $0.00 MXN?')) {
-                acumuladosFinanzas = { sem: 0, mes: 0, anio: 0 };
-                await db.collection("configuracion").doc("finanzas").set({ acumulados: acumuladosFinanzas }, { merge: true });
-                alert('✨ Ganancias de citas reiniciadas a $0.00 MXN.');
-            }
-        }
-
+        // DESGLOSE DINÁMICO DE CATEGORÍAS EN BALANCE NETO GENERAL (UNIFICADO)
         function calcularFinanzas() {
-            if(!document.getElementById('gananciaSemanal')) return;
-            let totalIngresosServicios = 0, totalGastos = 0;
-            let balancesExtra = {};
+            const contenedorBalance = document.getElementById('listaBalanceDinamicoCategorias');
+            if(!contenedorBalance) return;
+
+            let netoPorCategoria = {};
+            categoriasFinanzas.forEach(c => netoPorCategoria[c] = 0);
 
             movimientosFinancieros.forEach(m => {
-                if(m.categoria === 'Ingreso Cita/Servicio') totalIngresosServicios += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                else if(m.categoria === 'Gasto/Insumos') totalGastos += (m.tipoFlujo === 'Salida' ? m.monto : -m.monto);
-                else {
-                    if(!balancesExtra[m.categoria]) balancesExtra[m.categoria] = 0;
-                    balancesExtra[m.categoria] += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
-                }
+                if(netoPorCategoria[m.categoria] === undefined) netoPorCategoria[m.categoria] = 0;
+                netoPorCategoria[m.categoria] += (m.tipoFlujo === 'Entrada' ? m.monto : -m.monto);
             });
 
-            // MOSTRAR GANANCIAS ACUMULADAS PERSISTENTES DE CITAS
-            document.getElementById('gananciaSemanal').innerText = `$${(acumuladosFinanzas.sem || 0).toFixed(2)} MXN`;
-            document.getElementById('gananciaMensual').innerText = `$${(acumuladosFinanzas.mes || 0).toFixed(2)} MXN`;
-            document.getElementById('gananciaAnual').innerText = `$${(acumuladosFinanzas.anio || 0).toFixed(2)} MXN`;
-
-            document.getElementById('totalIngresos').innerText = `$${totalIngresosServicios.toFixed(2)} MXN`;
-            document.getElementById('totalGastos').innerText = `$${totalGastos.toFixed(2)} MXN`;
-
-            const divExtra = document.getElementById('listaBalancesCategoriasExtra');
-            if(divExtra) {
-                divExtra.innerHTML = Object.keys(balancesExtra).map(cat => `
-                    <div class="flex justify-between text-xs text-slate-600">
-                        <span>Total ${cat}:</span>
-                        <strong class="text-purple-600">${ocultarSaldosPersonal ? '$**** MXN' : '$' + balancesExtra[cat].toFixed(2) + ' MXN'}</strong>
+            contenedorBalance.innerHTML = Object.keys(netoPorCategoria).map(cat => {
+                const monto = netoPorCategoria[cat];
+                return `
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-medium text-slate-700">${cat}:</span>
+                        <strong class="${monto >= 0 ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${ocultarSaldosPersonal ? '$**** MXN' : '$' + monto.toFixed(2) + ' MXN'}
+                        </strong>
                     </div>
-                `).join('');
-            }
+                `;
+            }).join('');
 
-            document.getElementById('gananciaNeta').innerText = `$${(totalIngresosServicios - totalGastos).toFixed(2)} MXN`;
+            const gananciaServicios = netoPorCategoria['Ingreso Cita/Servicio'] || 0;
+            const gastosServicios = netoPorCategoria['Gasto/Insumos'] || 0;
+            const netoFinal = gananciaServicios + gastosServicios;
+
+            document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${netoFinal.toFixed(2)} MXN`;
         }
 
         function renderExpedientes() {
@@ -1234,29 +1412,22 @@
                 return;
             }
 
-            grid.innerHTML = filtrados.map(f => {
-                let detalleInfo = f.servicioTipo === 'Extensión de Pestañas' 
-                    ? `Técnica: ${f.detalles?.tec || f.detalles?.diseno || 'N/A'}` 
-                    : `Zona: ${f.detalles?.zona || 'N/A'} | Técnica: ${f.detalles?.tec || 'N/A'}`;
-
-                return `
-                    <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
-                            <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
-                        </div>
-                        <div class="text-xs space-y-1 text-slate-600">
-                            <p><strong>Fecha Visita:</strong> ${f.fecha}</p>
-                            <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
-                            <p><strong>Detalle:</strong> ${detalleInfo}</p>
-                        </div>
-                        <div class="flex gap-2 pt-1">
-                            <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir ficha</button>
-                            <button onclick="eliminarExpediente('${f.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">Borrar</button>
-                        </div>
+            grid.innerHTML = filtrados.map(f => `
+                <div class="bg-rose-50/40 p-5 rounded-2xl border border-rose-100 space-y-3 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-rose-700 text-base">${f.nombre}</h3>
+                        <span class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full font-bold">Cloud</span>
                     </div>
-                `;
-            }).join('');
+                    <div class="text-xs space-y-1 text-slate-600">
+                        <p><strong>Fecha Visita:</strong> ${f.fecha}</p>
+                        <p><strong>Servicio:</strong> ${f.servicioTipo}</p>
+                    </div>
+                    <div class="flex gap-2 pt-1">
+                        <button onclick="cargarFichaEnFormulario(${f.id})" class="flex-1 bg-white border border-rose-200 text-rose-600 py-1.5 rounded-xl text-xs font-bold">Abrir esta fecha</button>
+                        <button onclick="eliminarExpediente('${f.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">Borrar</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function cargarFichaEnFormulario(id) {
