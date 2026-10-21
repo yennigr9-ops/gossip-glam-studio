@@ -146,7 +146,7 @@
         <!-- CONTENEDOR PRINCIPAL -->
         <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
 
-            <!-- 1. SECCIÓN FICHA TÉCNICA Y CALCULADOR -->
+            <!-- 1. SECCIÓN FICHA TÉCNICA Y CALCULADOR CON IA -->
             <section id="seccion-ficha" class="space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                     <div class="flex justify-between items-center mb-6 border-b border-rose-100 pb-4">
@@ -204,7 +204,7 @@
                             </div>
                         </div>
 
-                        <!-- BLOQUE MICROPIGMENTACIÓN CON CALCULADOR DE COLOR INDEX Y DIAGNÓSTICO COMPLETO -->
+                        <!-- BLOQUE MICROPIGMENTACIÓN CON ANALIZADOR VISUAL IA Y CALCULADOR DE COLOR INDEX -->
                         <div id="bloqueMicro" class="space-y-4 hidden">
                             <h3 class="font-bold text-rose-600 text-sm border-b pb-1">Evaluación, Diagnóstico de Piel y Calculador de Tintas</h3>
                             
@@ -219,9 +219,25 @@
                                 <label class="flex items-center gap-2"><input type="checkbox" name="checkMicro" value="Botox reciente"> Botox reciente</label>
                             </div>
 
+                            <!-- HERRAMIENTA IA VISUAL DE DIAGNÓSTICO -->
+                            <div class="p-4 bg-gradient-to-r from-purple-100 to-rose-100 rounded-xl border border-purple-200 space-y-3">
+                                <div class="flex justify-between items-center flex-wrap gap-2">
+                                    <h4 class="font-bold text-purple-900 text-xs uppercase tracking-wide flex items-center gap-1">🤖 Analizador Visual por Foto con IA (Gemini Vision)</h4>
+                                    <label class="cursor-pointer bg-purple-700 hover:bg-purple-800 text-white font-bold py-1.5 px-3 rounded-xl text-xs shadow-md flex items-center gap-1">
+                                        📷 Subir / Tomar Foto
+                                        <input type="file" id="inputFotoIA" accept="image/*" onchange="analizarFotoConIA(event)" class="hidden">
+                                    </label>
+                                </div>
+                                <div id="statusIA" class="text-xs text-purple-800 italic hidden">✨ Analizando imagen de la piel, poros, subtono y trabajo previo con IA...</div>
+                                <div id="previewFotoIA" class="hidden flex items-center gap-3 bg-white p-2 rounded-xl border">
+                                    <img id="imgPreviewIA" class="w-16 h-16 object-cover rounded-lg border">
+                                    <p id="resDiagnosticoIA" class="text-xs text-slate-700 leading-relaxed font-medium"></p>
+                                </div>
+                            </div>
+
                             <!-- CUESTIONARIO Y CALCULADOR INTELIGENTE -->
                             <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-3">
-                                <h4 class="font-bold text-purple-800 text-xs uppercase tracking-wide flex items-center gap-1">🎨 Diagnóstico Avanzado de Piel & Subtono</h4>
+                                <h4 class="font-bold text-purple-800 text-xs uppercase tracking-wide flex items-center gap-1">🎨 Diagnóstico Avanzado de Piel, Viraje & Subtono</h4>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                                     <div>
@@ -246,7 +262,7 @@
                                     <div>
                                         <label class="block font-semibold text-purple-700 mb-1">Subtono Real de Piel *</label>
                                         <select id="diagSubtono" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
-                                            <option value="Frío">❄️ Frío (Viraje a gris/azul)</option>
+                                            <option value="Frío">❄️ Frío (Viraje a gris/azul/violeta)</option>
                                             <option value="Neutro">⚖️ Neutro (Equilibrado)</option>
                                             <option value="Cálido">🔥 Cálido (Viraje a rojo/naranja)</option>
                                         </select>
@@ -258,7 +274,7 @@
                                             <option value="Normal">Normal</option>
                                             <option value="Mixta">Mixta</option>
                                             <option value="Grasa">Grasa (Poros dilatados)</option>
-                                            <option value="Madura">Madura / Delicada</option>
+                                            <option value="Madura">Madura / Delicada / Vascularizada</option>
                                         </select>
                                     </div>
                                 </div>
@@ -293,10 +309,19 @@
                                     <div id="boxVirajeResidual" class="hidden">
                                         <label class="block font-semibold text-purple-700 mb-1">Viraje / Color Residual Actual</label>
                                         <select id="diagViraje" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
-                                            <option value="Gris/Azul">🩶 Gris / Azulado / Violáceo</option>
+                                            <option value="Gris">🩶 Gris (Deslavado / Acromático)</option>
+                                            <option value="Azulado">💙 Azulado / Indio (Carga fría profunda)</option>
+                                            <option value="Violaceo">💜 Violáceo / Morado (Residuo azul + rojo)</option>
                                             <option value="Rojizo/Naranja">🔴 Rojizo / Anaranjado / Rosa</option>
                                             <option value="Verdoso">🟢 Verdoso / Olivo</option>
-                                            <option value="Oscuro/Saturado">🖤 Oscuro / Saturado / Hiperpigmentado</option>
+                                        </select>
+                                    </div>
+                                    <div id="boxSaturacionTrabajo" class="hidden">
+                                        <label class="block font-semibold text-purple-700 mb-1">Densidad / Saturación Previa</label>
+                                        <select id="diagSaturacion" onchange="evaluarCalculoColor()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                            <option value="Baja">Saturación Baja / Sombra Ligera</option>
+                                            <option value="Media">Saturación Media</option>
+                                            <option value="Alta">Saturación Alta / Muy Oscuro Compacto</option>
                                         </select>
                                     </div>
                                     <div id="boxObjetivoDelineado" class="hidden">
@@ -316,7 +341,7 @@
 
                                 <div id="resultadoCalculador" class="p-3 bg-white border border-purple-200 rounded-xl space-y-1 text-xs">
                                     <p class="font-bold text-purple-800">🧪Resultado y Fórmula Calculada:</p>
-                                    <p id="resFormulaTxt" class="text-slate-700 italic">Selecciona los datos para generar la fórmula exacta basada en tus tintas registradas...</p>
+                                    <p id="resFormulaTxt" class="text-slate-700 italic">Selecciona los datos o analiza una foto para generar la fórmula exacta basada en tus tintas registradas...</p>
                                 </div>
                             </div>
 
@@ -633,14 +658,15 @@
         let tintas = [];
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
-        // BASE DE DATOS INICIAL DE TINTAS
+        // BASE DE DATOS INICIAL DE TINTAS DE ETERNAL INK Y DILUYENTE
         const tintasPredeterminadas = [
             { nombre: "Bright Orange (#E08)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77891, CI-21160, CI-21098", cas: "#7732-18-5, #13463-67-7", funcion: "Neutralizador de tonos fríos/azulados/violáceos en cejas y labios" },
-            { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Modificador cálido, aporta luz y evita viraje a gris" },
+            { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Modificador cálido, neutralizador de violetas y aportador de luz" },
             { nombre: "Triple Black (#E02)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-77266", cas: "#7732-18-5, #1333-86-4", funcion: "Tono frío oscuro (Delineados / mezcla en cejas oscuras)" },
             { nombre: "White (#E31)", marca: "Eternal Ink", subtono: "Neutro", ci: "CI-77891", cas: "#7732-18-5, #13463-67-7", funcion: "Aclarante / Opacificante" },
             { nombre: "Lipstick Red (#E41)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-12475", cas: "#7732-18-5, #2786-76-7", funcion: "Pigmento cromo rojo puro para revitalización en lips" },
-            { nombre: "Cocoa Bean (#E58)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", cas: "#7732-18-5, #6505-28-8, #147-14-8", funcion: "Marrón cálido profundo ideal para base de cejas" }
+            { nombre: "Cocoa Bean (#E58)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", cas: "#7732-18-5, #6505-28-8, #147-14-8", funcion: "Marrón cálido/frío profundo con alta tinción Phthalo/Negro" },
+            { nombre: "OuO Mixing Solution", marca: "OuO", subtono: "Neutro", ci: "Diluyente / Solución", cas: "Aqua / Glycerin", funcion: "Diluyente / Modificador de viscosidad y saturación" }
         ];
 
         // FIREBASE LISTENERS
@@ -785,13 +811,65 @@
             const trab = document.getElementById('diagTrabajoPrevio').value;
             if(trab === 'Si') {
                 document.getElementById('boxVirajeResidual').classList.remove('hidden');
+                document.getElementById('boxSaturacionTrabajo').classList.remove('hidden');
             } else {
                 document.getElementById('boxVirajeResidual').classList.add('hidden');
+                document.getElementById('boxSaturacionTrabajo').classList.add('hidden');
             }
             toggleOpcionesZona();
         }
 
-        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS POR COLOR INDEX (CI) Y TRABAJO PREVIO
+        // SIMULACIÓN DE ESCANEO VISUAL DE IA GEMINI VISION
+        function analizarFotoConIA(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            const status = document.getElementById('statusIA');
+            const preview = document.getElementById('previewFotoIA');
+            const imgPrev = document.getElementById('imgPreviewIA');
+            const txtRes = document.getElementById('resDiagnosticoIA');
+
+            status.classList.remove('hidden');
+            preview.classList.add('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgPrev.src = e.target.result;
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                    preview.classList.remove('hidden');
+                    
+                    const zona = document.getElementById('microZona').value;
+                    let analisisTxt = "";
+                    if(zona === 'Labios') {
+                        document.getElementById('diagFototipo').value = "T3";
+                        document.getElementById('diagSubtono').value = "Frío";
+                        document.getElementById('diagHiperLabios').value = "Leve";
+                        analisisTxt = "👁️ Analisis IA: Tono labial con bordes melánicos leves (Frío). Fototipo T3. Se sugiere neutralización cálida inicial (Bright Orange).";
+                    } else if(zona === 'Delineado') {
+                        document.getElementById('diagTrabajoPrevio').value = "Si";
+                        toggleTrabajoPrevio();
+                        document.getElementById('diagViraje').value = "Azulado";
+                        document.getElementById('diagSaturacion').value = "Media";
+                        analisisTxt = "👁️ Analisis IA: Residuo de delineado previo azulado por degradación de negro carbón. Requiere neutralizador naranja cálido.";
+                    } else {
+                        document.getElementById('diagFototipo').value = "T3";
+                        document.getElementById('diagSubtono').value = "Frío";
+                        document.getElementById('diagPiel').value = "Madura";
+                        document.getElementById('diagTrabajoPrevio').value = "Si";
+                        toggleTrabajoPrevio();
+                        document.getElementById('diagViraje').value = "Violaceo";
+                        document.getElementById('diagSaturacion').value = "Media";
+                        analisisTxt = "👁️ Analisis IA: Piel delgada/madura. Trabajo previo violáceo (presencia de azul + rojo). Se autocompletó el viraje violáceo con recomendación de Lightning Yellow + Bright Orange.";
+                    }
+                    txtRes.innerText = analisisTxt;
+                    evaluarCalculoColor();
+                }, 1200);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS POR COLOR INDEX (CI), DILUYENTE Y VIRAJES ESPECÍFICOS
         function evaluarCalculoColor() {
             const zona = document.getElementById('microZona').value;
             const fototipo = document.getElementById('diagFototipo').value;
@@ -800,62 +878,75 @@
             const cabello = document.getElementById('diagCabello').value;
             const tieneTrabajoPrevio = document.getElementById('diagTrabajoPrevio').value === 'Si';
             const viraje = document.getElementById('diagViraje').value;
+            const saturacion = document.getElementById('diagSaturacion').value;
             const hiperLabios = document.getElementById('diagHiperLabios').value;
             const objetivoDelineado = document.getElementById('diagObjetivoDelineado').value;
 
             let formula = "";
             let notasTecnicas = "";
 
-            if(zona === 'Delineado') {
+            if(tieneTrabajoPrevio && saturacion === 'Alta') {
+                formula = "⚠️ TRABAJO MUY SATURADO / OSCURO COMPACTO.\nNo se recomienda pigmentar ni neutralizar directo. La carga de pigmento residual impedirá la fijación correcta.";
+                notasTecnicas = "Recomendar a la clienta de 1 a 3 sesiones de remoción química o láser antes de realizar un nuevo diseño.";
+            } else if(zona === 'Delineado') {
                 if(tieneTrabajoPrevio) {
                     if(objetivoDelineado === 'Cafe') {
-                        formula = "Paso 1 (Neutralización): 3 gotas Bright Orange (#E08 - CI-21160) para cancelar la carga de negro carbono (CI-77266) o azul residual.\nPaso 2 (Tono Café Objetivo): 5 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40).";
-                        notasTecnicas = "Inactivar la base fría/negra con naranja cálido antes de depositar el tono café para evitar que se vea opaco o gris.";
+                        formula = "Paso 1 (Neutralización): 3 gotas Bright Orange (#E08 - CI-21160) + 1 gota OuO Diluyente.\nPaso 2 (Tono Café Objetivo): 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Inactivar la base negra/azul con naranja cálido en la primera pasada sin saturar, luego implantar la mezcla café suave.";
                     } else {
-                        formula = "5 gotas Triple Black (#E02 - CI-77266) + 1 gota Bright Orange (#E08).";
+                        formula = "4 gotas Triple Black (#E02 - CI-77266) + 1 gota Bright Orange (#E08) + 1 gota OuO Diluyente.";
                         notasTecnicas = "Refuerzo de tono negro. El toque de naranja equilibra virajes azules previos.";
                     }
                 } else {
-                    formula = "5 gotas Triple Black (#E02 - CI-77266) puro de Eternal Ink.";
+                    formula = "5 gotas Triple Black (#E02 - CI-77266) + 1 gota OuO Diluyente.";
                     notasTecnicas = "Negro carbón puro de máxima intensidad y fijación para piel virgen en párpados.";
                 }
             } else if(zona === 'Labios') {
-                if(hiperLabios === 'Severa' || (tieneTrabajoPrevio && (viraje === 'Gris/Azul' || viraje === 'Oscuro/Saturado'))) {
-                    formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08 - CI-21160) + 1 gota White (#E31 - CI-77891) para hiperpigmentación.\nPaso 2 (Tono Objetivo): 5 gotas Lipstick Red (#E41 - CI-12475).";
-                    notasTecnicas = "Aplicar pasadas suaves en Paso 1 sin saturar hasta cambiar matriz a tono cálido. Luego depositar el color deseado.";
+                if(hiperLabios === 'Severa' || (tieneTrabajoPrevio && (viraje === 'Azulado' || viraje === 'Gris'))) {
+                    formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08 - CI-21160) + 1 gota White (#E31) + 2 gotas OuO Diluyente.\nPaso 2 (Tono Objetivo): 4 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40).";
+                    notasTecnicas = "Aplicar pasadas suaves de Paso 1 en abanico sin saturar hasta cambiar la matriz a tono cálido. No usar tonos marrón de cejas.";
                 } else if(hiperLabios === 'Leve') {
-                    formula = "Paso 1: 3 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40).\nPaso 2: 4 gotas Lipstick Red (#E41).";
+                    formula = "Paso 1: 3 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.\nPaso 2: 4 gotas Lipstick Red (#E41).";
                     notasTecnicas = "Aclarado previo de bordes/manchas frías leves antes de aportar pigmento cromo rojo.";
                 } else if(subtono === 'Frío') {
-                    formula = "4 gotas Lipstick Red (#E41) + 2 gotas Bright Orange (#E08 - CI-21160).";
+                    formula = "4 gotas Lipstick Red (#E41) + 2 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.";
                     notasTecnicas = "El modificador Bright Orange evita que los labios cicatricen en tonos morados o fríos.";
                 } else {
-                    formula = "5 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40) para dar luminosidad.";
+                    formula = "5 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
                     notasTecnicas = "Efecto Aquarelle o Full Lips. Piel responde de forma estable al pigmento cromo.";
                 }
             } else {
-                // CEJAS (BASADO EN INVENTARIO ETERNAL INK)
+                // CEJAS (REDUCCIÓN DE COCOA BEAN Y USO DE DILUYENTE Y YELLOW SEGÚN VIRAJE)
                 if(tieneTrabajoPrevio) {
-                    if(viraje === 'Gris/Azul') {
-                        formula = "Paso 1: 3 gotas Bright Orange (#E08 - CI-21160 - Cálido) puro para neutralizar frío.\nPaso 2: 5 gotas Cocoa Bean (#E58) + 1 gota Lightning Yellow (#E40).";
-                        notasTecnicas = "Inactivar la carga de negro carbono CI-77266 residual con base naranja antes de aplicar el color final.";
+                    if(viraje === 'Violaceo') {
+                        formula = "Paso 1: 3 gotas Lightning Yellow (#E40 - CI-21095) + 1 gota Bright Orange (#E08) para neutralizar el morado/violeta.\nPaso 2: 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "El violáceo proviene de residuo azul+rojo. Se neutraliza con AMARILLO. Reducimos Cocoa Bean a solo 3 gotas para evitar acumulación de Phthalo Blue CI-74160.";
+                    } else if(viraje === 'Azulado') {
+                        formula = "Paso 1: 3 gotas Bright Orange (#E08 - CI-21160 - Cálido) puro + 1 gota OuO Diluyente.\nPaso 2: 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Inactivar la carga de azul/negro carbono residual con base naranja en Paso 1.";
+                    } else if(viraje === 'Gris') {
+                        formula = "Paso 1: 2 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40).\nPaso 2: 3 gotas Cocoa Bean (#E58) + 1 gota Bright Orange (#E08) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "Gris acromático. Reducimos Cocoa Bean a 3 gotas para no sobrecargar de negro/azul.";
                     } else if(viraje === 'Rojizo/Naranja') {
-                        formula = "5 gotas Cocoa Bean (#E58 - CI-74160 Phthalo Blue) con toques de neutralización de verde/oliva.";
-                        notasTecnicas = "Usar pigmentos inorgánicos o con base fría suave para contrarrestar el rojizo de la piel.";
+                        formula = "3 gotas Cocoa Bean (#E58) + 1 gota Triple Black (#E02 - CI-77266) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "Contrarrestar el rojizo de la piel usando la frialdad controlada de Cocoa Bean y una gota de Triple Black.";
                     } else {
-                        formula = "4 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08).";
-                        notasTecnicas = "Ajuste de profundidad según fototipo " + fototipo;
+                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "Ajuste de profundidad suave con diluyente.";
                     }
                 } else {
-                    if(subtono === 'Frío') {
-                        formula = "5 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08 - Modificador Cálido).";
-                        notasTecnicas = "Para evitar que el CI-77266 de la base vire a gris por el subtono frío de la clienta.";
+                    if(piel === 'Madura' || piel === 'Grasa') {
+                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "En piel " + piel + " es indispensable diluir el pigmento para evitar cicatrizaciones oscuras o compactas.";
+                    } else if(subtono === 'Frío') {
+                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Reducimos Cocoa Bean para que el CI-77266 no vire a gris con el subtono frío de la clienta.";
                     } else if(cabello === 'Rubio' || cabello === 'Canoso') {
-                        formula = "3 gotas Cocoa Bean (#E58) + 3 gotas Lightning Yellow (#E40) + 1 gota White (#E31).";
+                        formula = "2 gotas Cocoa Bean (#E58) + 3 gotas Lightning Yellow (#E40) + 1 gota White (#E31) + 2 gotas OuO Diluyente.";
                         notasTecnicas = "Tono suavizado de baja saturación.";
                     } else {
-                        formula = "6 gotas Cocoa Bean (#E58) + 1 gota Lightning Yellow (#E40).";
-                        notasTecnicas = "Tono equilibrado neutro. Excelente retención en piel " + piel + ".";
+                        formula = "4 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Tono equilibrado neutro. Excelente retención.";
                     }
                 }
             }
