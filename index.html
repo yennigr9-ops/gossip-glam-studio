@@ -388,7 +388,7 @@
                 </div>
             </section>
 
-            <!-- 4. SECCIÓN EXPEDIENTES (VER EXPEDIENTES Y CADA FECHA INDIVIDUAL) -->
+            <!-- 4. SECCIÓN EXPEDIENTES -->
             <section id="seccion-expedientes" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4 border-b border-rose-100 pb-4">
@@ -496,7 +496,7 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN FINANZAS CON EDITAR MOVIMIENTO, FILTRO CATEGORÍA Y BALANCE NETO PURE -->
+            <!-- 7. SECCIÓN FINANZAS -->
             <section id="seccion-finanzas" class="space-y-6 hidden">
                 <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-rose-100">
                     <div>
@@ -516,7 +516,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS (INCLUYE EDICIÓN) -->
+                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                         <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100" id="tituloFormFinanzas">💵 Registrar Movimiento o Gasto</h3>
                         <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
@@ -554,7 +554,7 @@
                     </div>
                 </div>
 
-                <!-- TABLA DETALLADA DE MOVIMIENTOS CON FILTRO DE CATEGORÍA Y BOTÓN EDITAR -->
+                <!-- TABLA DETALLADA DE MOVIMIENTOS -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex flex-wrap justify-between items-center gap-3 border-b border-rose-100 pb-2">
                         <h3 class="text-base font-bold text-rose-700">📋 Historial Detallado de Entradas y Salidas</h3>
@@ -640,16 +640,19 @@
         let bloqueos = [];
         let excepciones = [];
         let tintas = [];
+        // CATEGORÍA ÚNICA ESTANDARIZADA PARA CITAS E INGRESOS: "Ingreso Cita/Servicio"
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
         // BASE DE DATOS INICIAL DE TINTAS DE ETERNAL INK Y DILUYENTE
         const tintasPredeterminadas = [
             { nombre: "Bright Orange (#E08)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77891, CI-21160, CI-21098", cas: "#7732-18-5, #13463-67-7", funcion: "Neutralizador de tonos fríos/azulados/violáceos en cejas y labios" },
-            { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Modificador cálido, neutralizador de violetas y aportador de luz" },
+            { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Neutralizador cálido de tonos violáceos/morados y aportador de luz" },
+            { nombre: "Mudslide", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77491, CI-77492, CI-77891", cas: "#7732-18-5", funcion: "Base marrón media cálida ideal para clientas latinas/cálidas sin carga fría" },
+            { nombre: "Caramel", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095, CI-12475", cas: "#7732-18-5", funcion: "Modificador y ablandador cálido dorado/miel para rubias y mezclas suaves" },
             { nombre: "Triple Black (#E02)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-77266", cas: "#7732-18-5, #1333-86-4", funcion: "Tono frío oscuro (Delineados / mezcla en cejas oscuras)" },
             { nombre: "White (#E31)", marca: "Eternal Ink", subtono: "Neutro", ci: "CI-77891", cas: "#7732-18-5, #13463-67-7", funcion: "Aclarante / Opacificante" },
             { nombre: "Lipstick Red (#E41)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-12475", cas: "#7732-18-5, #2786-76-7", funcion: "Pigmento cromo rojo puro para revitalización en lips" },
-            { nombre: "Cocoa Bean (#E58)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", cas: "#7732-18-5, #6505-28-8, #147-14-8", funcion: "Marrón cálido/frío profundo con alta tinción Phthalo/Negro" },
+            { nombre: "Cocoa Bean (#E58)", marca: "Eternal Ink", subtono: "Frío", ci: "CI-21160, CI-74160, CI-12475, CI-77491, CI-77266", cas: "#7732-18-5, #6505-28-8, #147-14-8", funcion: "Marrón cálido/frío profundo con alta tinción Phthalo/Negro (Usar con precaución)" },
             { nombre: "OuO Mixing Solution", marca: "OuO", subtono: "Neutro", ci: "Diluyente / Solución", cas: "Aqua / Glycerin", funcion: "Diluyente / Modificador de viscosidad y saturación" }
         ];
 
@@ -802,7 +805,7 @@
             toggleOpcionesZona();
         }
 
-        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS POR COLOR INDEX (CI), DILUYENTE Y VIRAJES ESPECÍFICOS
+        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS
         function evaluarCalculoColor() {
             const zona = document.getElementById('microZona').value;
             const fototipo = document.getElementById('diagFototipo').value;
@@ -824,62 +827,63 @@
             } else if(zona === 'Delineado') {
                 if(tieneTrabajoPrevio) {
                     if(objetivoDelineado === 'Cafe') {
-                        formula = "Paso 1 (Neutralización): 3 gotas Bright Orange (#E08 - CI-21160) + 1 gota OuO Diluyente.\nPaso 2 (Tono Café Objetivo): 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                        formula = "Paso 1 (Neutralización): 3 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.\nPaso 2 (Tono Café Objetivo): 3 gotas Mudslide + 1 gota Cocoa Bean (#E58) + 1 gota Caramel.";
                         notasTecnicas = "Inactivar la base negra/azul con naranja cálido en la primera pasada sin saturar, luego implantar la mezcla café suave.";
                     } else {
-                        formula = "4 gotas Triple Black (#E02 - CI-77266) + 1 gota Bright Orange (#E08) + 1 gota OuO Diluyente.";
+                        formula = "4 gotas Triple Black (#E02) + 1 gota Bright Orange (#E08) + 1 gota OuO Diluyente.";
                         notasTecnicas = "Refuerzo de tono negro. El toque de naranja equilibra virajes azules previos.";
                     }
                 } else {
-                    formula = "5 gotas Triple Black (#E02 - CI-77266) + 1 gota OuO Diluyente.";
+                    formula = "5 gotas Triple Black (#E02) + 1 gota OuO Diluyente.";
                     notasTecnicas = "Negro carbón puro de máxima intensidad y fijación para piel virgen en párpados.";
                 }
             } else if(zona === 'Labios') {
                 if(hiperLabios === 'Severa' || (tieneTrabajoPrevio && (viraje === 'Azulado' || viraje === 'Gris'))) {
-                    formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08 - CI-21160) + 1 gota White (#E31) + 2 gotas OuO Diluyente.\nPaso 2 (Tono Objetivo): 4 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40).";
-                    notasTecnicas = "Aplicar pasadas suaves de Paso 1 en abanico sin saturar hasta cambiar la matriz a tono cálido. No usar tonos marrón de cejas.";
+                    formula = "Paso 1 (Neutralización): 4 gotas Bright Orange (#E08) + 1 gota White (#E31) + 2 gotas OuO Diluyente.\nPaso 2 (Tono Objetivo): 4 gotas Lipstick Red (#E41) + 1 gota Caramel.";
+                    notasTecnicas = "Aplicar pasadas suaves de Paso 1 en abanico sin saturar hasta cambiar la matriz a tono cálido.";
                 } else if(hiperLabios === 'Leve') {
-                    formula = "Paso 1: 3 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.\nPaso 2: 4 gotas Lipstick Red (#E41).";
+                    formula = "Paso 1: 3 gotas Bright Orange (#E08) + 2 gotas Caramel + 1 gota OuO Diluyente.\nPaso 2: 4 gotas Lipstick Red (#E41).";
                     notasTecnicas = "Aclarado previo de bordes/manchas frías leves antes de aportar pigmento cromo rojo.";
                 } else if(subtono === 'Frío') {
                     formula = "4 gotas Lipstick Red (#E41) + 2 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.";
                     notasTecnicas = "El modificador Bright Orange evita que los labios cicatricen en tonos morados o fríos.";
                 } else {
-                    formula = "5 gotas Lipstick Red (#E41) + 1 gota Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                    formula = "5 gotas Lipstick Red (#E41) + 1 gota Caramel + 1 gota OuO Diluyente.";
                     notasTecnicas = "Efecto Aquarelle o Full Lips. Piel responde de forma estable al pigmento cromo.";
                 }
             } else {
-                // CEJAS (REDUCCIÓN DE COCOA BEAN Y USO DE DILUYENTE Y YELLOW SEGÚN VIRAJE)
+                // CEJAS (USO DE MUDSLIDE Y CARAMEL PARA CLIENTAS CÁLIDAS / LATINAS)
                 if(tieneTrabajoPrevio) {
                     if(viraje === 'Violaceo') {
-                        formula = "Paso 1: 3 gotas Lightning Yellow (#E40 - CI-21095) + 1 gota Bright Orange (#E08) para neutralizar el morado/violeta.\nPaso 2: 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 2 gotas OuO Diluyente.";
-                        notasTecnicas = "El violáceo proviene de residuo azul+rojo. Se neutraliza con AMARILLO. Reducimos Cocoa Bean a solo 3 gotas para evitar acumulación de Phthalo Blue CI-74160.";
+                        formula = "Paso 1: 3 gotas Lightning Yellow (#E40) + 1 gota Bright Orange (#E08) para neutralizar morado/violeta.\nPaso 2: 3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
+                        notasTecnicas = "El violáceo proviene de residuo azul+rojo. Se neutraliza con AMARILLO. Usamos Mudslide como base cálida suave.";
                     } else if(viraje === 'Azulado') {
-                        formula = "Paso 1: 3 gotas Bright Orange (#E08 - CI-21160 - Cálido) puro + 1 gota OuO Diluyente.\nPaso 2: 3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
+                        formula = "Paso 1: 3 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.\nPaso 2: 3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
                         notasTecnicas = "Inactivar la carga de azul/negro carbono residual con base naranja en Paso 1.";
                     } else if(viraje === 'Gris') {
-                        formula = "Paso 1: 2 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40).\nPaso 2: 3 gotas Cocoa Bean (#E58) + 1 gota Bright Orange (#E08) + 2 gotas OuO Diluyente.";
-                        notasTecnicas = "Gris acromático. Reducimos Cocoa Bean a 3 gotas para no sobrecargar de negro/azul.";
+                        formula = "Paso 1: 2 gotas Bright Orange (#E08) + 2 gotas Lightning Yellow (#E40).\nPaso 2: 3 gotas Mudslide + 1 gota Bright Orange (#E08) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Gris acromático. Mudslide devuelve la calidez marrón sin riesgo de oscurecer como el Cocoa Bean.";
                     } else if(viraje === 'Rojizo/Naranja') {
-                        formula = "3 gotas Cocoa Bean (#E58) + 1 gota Triple Black (#E02 - CI-77266) + 2 gotas OuO Diluyente.";
-                        notasTecnicas = "Contrarrestar el rojizo de la piel usando la frialdad controlada de Cocoa Bean y una gota de Triple Black.";
+                        formula = "3 gotas Mudslide + 1 gota Cocoa Bean (#E58) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "Contrarrestar el rojizo usando la frialdad controlada de una gota de Cocoa Bean mezclada en Mudslide.";
                     } else {
-                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08) + 2 gotas OuO Diluyente.";
+                        formula = "3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
                         notasTecnicas = "Ajuste de profundidad suave con diluyente.";
                     }
                 } else {
                     if(piel === 'Madura' || piel === 'Grasa') {
-                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 2 gotas OuO Diluyente.";
+                        formula = "3 gotas Mudslide + 1 gota Caramel + 2 gotas OuO Diluyente.";
                         notasTecnicas = "En piel " + piel + " es indispensable diluir el pigmento para evitar cicatrizaciones oscuras o compactas.";
                     } else if(subtono === 'Frío') {
-                        formula = "3 gotas Cocoa Bean (#E58) + 2 gotas Bright Orange (#E08) + 1 gota OuO Diluyente.";
-                        notasTecnicas = "Reducimos Cocoa Bean para que el CI-77266 no vire a gris con el subtono frío de la clienta.";
+                        formula = "3 gotas Mudslide + 1 gota Bright Orange (#E08) + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Mudslide evita que el trabajo vire a gris con el subtono frío de la clienta.";
                     } else if(cabello === 'Rubio' || cabello === 'Canoso') {
-                        formula = "2 gotas Cocoa Bean (#E58) + 3 gotas Lightning Yellow (#E40) + 1 gota White (#E31) + 2 gotas OuO Diluyente.";
-                        notasTecnicas = "Tono suavizado de baja saturación.";
+                        formula = "2 gotas Mudslide + 2 gotas Caramel + 1 gota White (#E31) + 2 gotas OuO Diluyente.";
+                        notasTecnicas = "Tono rubio/dorado suave de baja saturación.";
                     } else {
-                        formula = "4 gotas Cocoa Bean (#E58) + 2 gotas Lightning Yellow (#E40) + 1 gota OuO Diluyente.";
-                        notasTecnicas = "Tono equilibrado neutro. Excelente retención.";
+                        // CLIENTA CÁLIDA FOTOTIPO 3 (LA MÁS FRECUENTE)
+                        formula = "3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
+                        notasTecnicas = "Tono castaño cálido perfecto para piel latina. Cicatriza natural y brillante sin oscurecer.";
                     }
                 }
             }
@@ -935,6 +939,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
+        // LIBERACIÓN DE HORARIOS DINÁMICOS SIN HUECOS MUERTOS
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -948,6 +953,7 @@
                 tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             }
 
+            // Mapeo completo de horas continuas cada 30 min de 8am a 7pm (o 3am en Diciembre)
             const horasBase = modoDiciembre 
                 ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
                 : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
@@ -1171,6 +1177,7 @@
                             ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">💬 WhatsApp</a>` : ''}
                             <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold">📅 Cal</a>
                             <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                            <button onclick="crearFichaDirectaDesdeCita('${nombreLimpio}')" class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-semibold">📝 Crear Ficha</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
                         </div>
                     </div>
@@ -1178,6 +1185,7 @@
             }).join('');
         }
 
+        // MARCAR CITA REALIZADA: Manda dinero a la categoría ÚNICA "Ingreso Cita/Servicio" y ofrece abrir Ficha Técnica
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
@@ -1190,7 +1198,16 @@
                 fecha: fechaHoy
             });
 
-            alert('✨ Cita realizada e ingreso acumulado en Finanzas.');
+            if(confirm(`✨ Cita realizada e ingreso de $${monto} registrado en Finanzas.\n\n¿Deseas abrir la Ficha Técnica para guardar la mezcla/diseño de ${nombreClienta}?`)) {
+                crearFichaDirectaDesdeCita(nombreClienta);
+            }
+        }
+
+        function crearFichaDirectaDesdeCita(nombreClienta) {
+            limpiarFicha();
+            document.getElementById('nombreClienta').value = nombreClienta;
+            cargarAntecedentesClienta(nombreClienta);
+            cambiarTab('ficha');
         }
 
         async function eliminarCita(idDoc) {
