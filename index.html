@@ -1148,7 +1148,7 @@
             cambiarTab('agenda');
         }
 
-        function renderCitas() {
+                function renderCitas() {
             const cont = document.getElementById('contenedorListaCitas');
             document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
             if(citas.length === 0) {
@@ -1176,6 +1176,7 @@
                         <div class="flex flex-wrap gap-2">
                             ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">💬 WhatsApp</a>` : ''}
                             <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold">📅 Cal</a>
+                            <button onclick="editarCitaForm('${c.idDoc}')" class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✏️ Editar</button>
                             <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
                             <button onclick="crearFichaDirectaDesdeCita('${nombreLimpio}')" class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-semibold">📝 Crear Ficha</button>
                             <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
@@ -1183,6 +1184,57 @@
                     </div>
                 `;
             }).join('');
+        }
+
+                function renderCitas() {
+            const cont = document.getElementById('contenedorListaCitas');
+            document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
+            if(citas.length === 0) {
+                cont.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">No hay citas registradas.</p>`;
+                return;
+            }
+            cont.innerHTML = citas.map(c => {
+                const start = new Date(c.fechaHora);
+                const end = new Date(start.getTime() + (c.duracionMin || 180) * 60 * 1000);
+                const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
+                const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
+
+                const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
+                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita para el ${new Date(c.fechaHora).toLocaleString()} para: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
+                const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
+                const nombreLimpio = c.nombre.split('(')[0].trim();
+
+                return `
+                    <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
+                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
+                            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">💬 WhatsApp</a>` : ''}
+                            <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold">📅 Cal</a>
+                            <button onclick="editarCitaForm('${c.idDoc}')" class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✏️ Editar</button>
+                            <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
+                            <button onclick="crearFichaDirectaDesdeCita('${nombreLimpio}')" class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-semibold">📝 Crear Ficha</button>
+                            <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editarCitaForm(idDoc) {
+            const c = citas.find(item => item.idDoc === idDoc);
+            if(!c) return;
+            document.getElementById('citaEditId').value = c.id;
+            document.getElementById('citaNombre').value = c.nombre.split('(')[0].trim();
+            document.getElementById('citaTelefono').value = c.telefono || '';
+            document.getElementById('citaFechaHora').value = c.fechaHora;
+            document.getElementById('citaServicio').value = c.servicio;
+            document.getElementById('citaDuracion').value = c.duracionMin || 180;
+            document.getElementById('citaMonto').value = c.monto;
+            cambiarTab('agendar');
         }
 
         // MARCAR CITA REALIZADA: Manda dinero a la categoría ÚNICA "Ingreso Cita/Servicio" y ofrece abrir Ficha Técnica
