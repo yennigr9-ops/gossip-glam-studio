@@ -392,7 +392,7 @@
                     <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA (CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS) -->
                     <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase">📅 Consultor de Disponibilidad por Día (Horarios: 8am - 1:20pm / 2pm - 6pm)</h3>
-                        <p class="text-[11px] text-slate-500">Haz clic en cualquier hora "Libre" para marcarla en rojo (bloquearla manualmente si no puedes atender en ese hueco específico) y vuelve a hacer clic para liberarla.</p>
+                        <p class="text-[11px] text-slate-500">Haz clic en cualquier hora "Libre" para marcarla (bloquearla con rojo suave si no puedes atender) y vuelve a hacer clic para liberarla.</p>
                         <div class="flex flex-wrap gap-3 items-center">
                             <div>
                                 <label class="block text-[11px] font-semibold text-rose-700 mb-1">Seleccionar Fecha a Consultar:</label>
@@ -522,27 +522,31 @@
                 </div>
             </section>
 
-            <!-- NUEVO: SECCIÓN INVENTARIO GENERAL ESTILO EXCEL -->
+            <!-- SECCIÓN INVENTARIO GENERAL (SIN PRECIOS, ORGANIZADO POR CATEGORÍA Y EDICIÓN RÁPIDA CON UN TOQUE) -->
             <section id="seccion-inventario" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General de Insumos & Productos (Estilo Excel)</h2>
-                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Artículo</button>
+                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General (Toque directo en Stock / Estado)</h2>
+                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Artículo Rápido</button>
                     </div>
 
-                    <!-- Formulario modal inventario -->
+                    <!-- Formulario modal inventario rápido -->
                     <div id="boxFormInv" class="hidden p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-3">
-                        <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormInv">Registrar / Editar Artículo</h3>
+                        <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormInv">Agregar Artículo Rápido</h3>
                         <form onsubmit="guardarInventario(event)" class="space-y-3 text-xs">
                             <input type="hidden" id="invEditId">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <div><label class="block font-semibold mb-1">Nombre Artículo *</label><input type="text" id="invNombre" required placeholder="Ej. Cartuchos 0801RL" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Categoría / Sección *</label><input type="text" id="invCategoria" required placeholder="Ej. Insumos de pestañas / Cejas HD" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Stock / Cantidad *</label><input type="number" id="invCantidad" required placeholder="Ej. 15" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Nombre Artículo *</label><input type="text" id="invNombre" required placeholder="Ej. Lash Shampoo" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Categoría / Sección *</label><input type="text" id="invCategoria" required placeholder="Ej. insumos de pestanas" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Stock / Cantidad *</label><input type="number" id="invCantidad" required placeholder="Ej. 10" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div><label class="block font-semibold mb-1">Estado Rápido (DISP / Poca / No hay)</label><select id="invEstadoDisp" class="w-full p-2 border rounded-lg bg-white"><option value="DISP">DISP (Disponible)</option><option value="Poca">Poca Existencia</option><option value="No hay">No hay</option></select></div>
-                                <div><label class="block font-semibold mb-1">Costo Estimado ($ MXN)</label><input type="number" step="0.01" id="invCosto" placeholder="Ej. 250.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                            <div>
+                                <label class="block font-semibold mb-1">Estado Rápido *</label>
+                                <select id="invEstadoDisp" class="w-full p-2 border rounded-lg bg-white">
+                                    <option value="DISP">DISP (Disponible)</option>
+                                    <option value="Poca">Poca Existencia</option>
+                                    <option value="No hay">No hay</option>
+                                </select>
                             </div>
                             <div class="flex gap-2 pt-1">
                                 <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Artículo</button>
@@ -557,8 +561,8 @@
                                 <tr class="bg-rose-50 text-rose-700 uppercase">
                                     <th class="p-2.5 rounded-l-lg">Artículo / Insumo</th>
                                     <th class="p-2.5">Categoría</th>
-                                    <th class="p-2.5">Cantidad / Stock</th>
-                                    <th class="p-2.5">Estado (Excel)</th>
+                                    <th class="p-2.5">Cantidad / Stock (Toca para cambiar)</th>
+                                    <th class="p-2.5">Estado (Toca para cambiar)</th>
                                     <th class="p-2.5 rounded-r-lg text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -570,11 +574,11 @@
                 </div>
             </section>
 
-            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS (CON HISTORIAL DE ABONOS) -->
+            <!-- SECCIÓN MIS DEUDAS (ORDENADAS POR FECHA DE PRÓXIMO PAGO Y HISTORIAL DE ABONOS) -->
             <section id="seccion-deudas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Mis Deudas (Historial de Abonos)</h2>
+                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Mis Deudas (Ordenadas por Próximo Pago)</h2>
                         <button onclick="abrirModalDeuda()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Préstamo / Deuda</button>
                     </div>
 
@@ -583,11 +587,12 @@
                         <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
                         <form onsubmit="guardarDeuda(event)" class="space-y-3 text-xs">
                             <input type="hidden" id="deudaEditId">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div><label class="block font-semibold mb-1">A quién le debes (Acreedor) *</label><input type="text" id="deudaAcreedor" required placeholder="Ej. Miguel, Denis, Compartamos" class="w-full p-2 border rounded-lg bg-white"></div>
                                 <div><label class="block font-semibold mb-1">Monto Total de la Deuda *</label><input type="number" step="0.01" id="deudaMontoTotal" required placeholder="Ej. 3000.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Próxima Fecha de Pago *</label><input type="date" id="deudaFechaPago" required class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
-                            <div><label class="block font-semibold mb-1">Notas / Detalle inicial</label><input type="text" id="deudaNotas" placeholder="Ej. Préstamo inicial o camilla" class="w-full p-2 border rounded-lg bg-white"></div>
+                            <div><label class="block font-semibold mb-1">Notas / Detalle</label><input type="text" id="deudaNotas" placeholder="Ej. Préstamo principal o camilla" class="w-full p-2 border rounded-lg bg-white"></div>
                             <div class="flex gap-2 pt-1">
                                 <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Deuda</button>
                                 <button type="button" onclick="cerrarModalDeuda()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
@@ -603,8 +608,9 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div><label class="block font-semibold mb-1">Monto del Abono *</label><input type="number" step="0.01" id="abonoMonto" required placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
                                 <div><label class="block font-semibold mb-1">Fecha del Abono *</label><input type="date" id="abonoFecha" required class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Motivo / Quién lo recibió *</label><input type="text" id="abonoNota" required placeholder="Ej. Abono semanal / cobrador" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Nueva Fecha Próximo Pago *</label><input type="date" id="abonoNuevaFechaPago" required class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
+                            <div><label class="block font-semibold mb-1">Motivo / Quién lo recibió *</label><input type="text" id="abonoNota" required placeholder="Ej. Abono semanal / cobrador" class="w-full p-2 border rounded-lg bg-white"></div>
                             <div class="flex gap-2 pt-1">
                                 <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Abono</button>
                                 <button type="button" onclick="cerrarModalAbono()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
@@ -771,28 +777,71 @@
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
         const inventarioPredeterminado = [
-            { nombre: "hipoclorito", categoria: "insumos de pestanas", cantidad: 22, estadoDisp: "DISP", costo: 150 },
-            { nombre: "fleje", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP", costo: 80 },
-            { nombre: "guantes", categoria: "insumos de pestanas", cantidad: 15, estadoDisp: "DISP", costo: 120 },
-            { nombre: "gorro", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP", costo: 50 },
-            { nombre: "exfoliante de labios", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP", costo: 90 },
-            { nombre: "toalitas", categoria: "insumos de pestanas", cantidad: 20, estadoDisp: "DISP", costo: 60 },
-            { nombre: "vernier", categoria: "insumos de pestanas", cantidad: 2, estadoDisp: "DISP", costo: 200 },
-            { nombre: "papel oftomalico", categoria: "insumos de pestanas", cantidad: 30, estadoDisp: "DISP", costo: 110 },
-            { nombre: "inductor", categoria: "insumos de pestanas", cantidad: 5, estadoDisp: "DISP", costo: 180 },
-            { nombre: "maquina", categoria: "insumos de pestanas", cantidad: 1, estadoDisp: "DISP", costo: 1500 },
-            { nombre: "lash shampoo", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP", costo: 250 },
-            { nombre: "cepillos", categoria: "insumos de pestanas", cantidad: 50, estadoDisp: "DISP", costo: 100 },
-            { nombre: "papel osmotico", categoria: "cejas HD y 4K", cantidad: 5, estadoDisp: "DISP", costo: 130 },
-            { nombre: "kit laminado", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "Poca", costo: 450 },
-            { nombre: "cera facial", categoria: "cejas HD y 4K", cantidad: 4, estadoDisp: "DISP", costo: 220 }
+            // insumos de pestanas
+            { nombre: "hipoclorito", categoria: "insumos de pestanas", cantidad: 22, estadoDisp: "DISP" },
+            { nombre: "fleje", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "guantes", categoria: "insumos de pestanas", cantidad: 15, estadoDisp: "DISP" },
+            { nombre: "gorro", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP" },
+            { nombre: "exfoliante de labios", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP" },
+            { nombre: "toalitas", categoria: "insumos de pestanas", cantidad: 20, estadoDisp: "DISP" },
+            { nombre: "vernier", categoria: "insumos de pestanas", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "papel oftomalico", categoria: "insumos de pestanas", cantidad: 30, estadoDisp: "DISP" },
+            { nombre: "inductor", categoria: "insumos de pestanas", cantidad: 5, estadoDisp: "DISP" },
+            { nombre: "maquina", categoria: "insumos de pestanas", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "lash shampoo", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP" },
+            { nombre: "cepillos", categoria: "insumos de pestanas", cantidad: 50, estadoDisp: "DISP" },
+            { nombre: "pizeta", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "papel", categoria: "insumos de pestanas", cantidad: 12, estadoDisp: "DISP" },
+            { nombre: "bonder", categoria: "insumos de pestanas", cantidad: 4, estadoDisp: "DISP" },
+            { nombre: "cintas", categoria: "insumos de pestanas", cantidad: 6, estadoDisp: "DISP" },
+            { nombre: "adhesivo", categoria: "insumos de pestanas", cantidad: 5, estadoDisp: "DISP" },
+            { nombre: "removedor", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "desinfectante", categoria: "insumos de pestanas", cantidad: 7, estadoDisp: "DISP" },
+            { nombre: "primer", categoria: "insumos de pestanas", cantidad: 4, estadoDisp: "DISP" },
+            { nombre: "cofias", categoria: "insumos de pestanas", cantidad: 25, estadoDisp: "DISP" },
+            { nombre: "parches", categoria: "insumos de pestanas", cantidad: 40, estadoDisp: "DISP" },
+            { nombre: "agujas lengua de gato", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP" },
+            { nombre: "agujas shading", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP" },
+            { nombre: "thinner tinta", categoria: "insumos de pestanas", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "plumon mapping", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP" },
+
+            // cejas HD y 4K
+            { nombre: "papel osmotico", categoria: "cejas HD y 4K", cantidad: 5, estadoDisp: "DISP" },
+            { nombre: "kit laminado", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "Poca" },
+            { nombre: "cera facial", categoria: "cejas HD y 4K", cantidad: 4, estadoDisp: "DISP" },
+            { nombre: "cera piernas", categoria: "cejas HD y 4K", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "navajas", categoria: "cejas HD y 4K", cantidad: 15, estadoDisp: "DISP" },
+            { nombre: "agua oxigenada", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "henna", categoria: "cejas HD y 4K", cantidad: 5, estadoDisp: "DISP" },
+            { nombre: "exfoliante", categoria: "cejas HD y 4K", cantidad: 4, estadoDisp: "DISP" },
+            { nombre: "agua de rosas", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "No hay" },
+            { nombre: "vitamina", categoria: "cejas HD y 4K", cantidad: 10, estadoDisp: "Poca" },
+            { nombre: "arco", categoria: "cejas HD y 4K", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "cups", categoria: "cejas HD y 4K", cantidad: 100, estadoDisp: "DISP" },
+            { nombre: "pigmento tinta delineado negro", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "tinta blanca", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "tinta amarilla", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "tinta naranja", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "tinta roja", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "tinta cafe", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "Poca" },
+            { nombre: "pigmento tinta azul", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" },
+            { nombre: "pigmento tinta cejas tobacco", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "pigmento cranberry labios", categoria: "cejas HD y 4K", cantidad: 1, estadoDisp: "DISP" },
+            { nombre: "anestesia para piel abierta", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "DISP" },
+            { nombre: "anestesia piel cerrada", categoria: "cejas HD y 4K", cantidad: 3, estadoDisp: "DISP" },
+            { nombre: "cartucho 1001rl", categoria: "cejas HD y 4K", cantidad: 10, estadoDisp: "DISP" },
+            { nombre: "cartucho 1003 RI", categoria: "cejas HD y 4K", cantidad: 8, estadoDisp: "DISP" },
+            { nombre: "cartucho 0803 RI", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" },
+            { nombre: "cubrebocas", categoria: "cejas HD y 4K", cantidad: 30, estadoDisp: "DISP" },
+            { nombre: "benezil verde", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" },
+            { nombre: "lapiz de cera", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" }
         ];
 
         const deudasPredeterminadas = [
-            { acreedor: "Miguel", montoTotal: 3000, abonos: [{monto: 0, fecha: "2026-10-27", nota: "Préstamo inicial"}], notas: "Préstamo principal" },
-            { acreedor: "Denis", montoTotal: 4090, abonos: [{monto: 450, fecha: "2026-10-20", nota: "Denis $125+600+265 +500+250 Más $100 de cobrador"}], notas: "Préstamo adicional $1397" },
-            { acreedor: "Alba", montoTotal: 3570, abonos: [{monto: 595, fecha: "2026-10-20", nota: "Abono inicial tele / camilla"}], notas: "tele / camilla" },
-            { acreedor: "Compartamos", montoTotal: 1145, abonos: [{monto: 526, fecha: "2026-10-20", nota: "Abono jose / yo"}], notas: "jose / yo" }
+            { acreedor: "Miguel", montoTotal: 3000, fechaPago: "2026-11-15", abonos: [], notas: "Préstamo principal" },
+            { acreedor: "Denis", montoTotal: 4090, fechaPago: "2026-11-19", abonos: [{monto: 450, fecha: "2026-10-20", nota: "Abono inicial"}], notas: "Adicional $700 / 1397" },
+            { acreedor: "Alba", montoTotal: 3570, fechaPago: "2026-10-30", abonos: [{monto: 595, fecha: "2026-10-20", nota: "Abono inicial"}], notas: "Alba pago $972 / tele / camilla" },
+            { acreedor: "Compartamos", montoTotal: 5571, fechaPago: "2026-11-02", abonos: [], notas: "1145 X semana / $619 yo / $526 jose" }
         ];
 
         const tintasPredeterminadas = [
@@ -1202,7 +1251,7 @@
             });
         }
 
-        // VISTA CALENDARIO CON CUADRITOS VERDES Y ROJOS (Y CLIC MANUAL)
+        // VISTA CALENDARIO CON ROJO SUAVE PARECIDO AL DE CITAS PARA BLOQUEOS MANUALES
         function renderVistaCalendarioDia() {
             const fechaVal = document.getElementById('filtroFechaAgenda').value;
             const grid = document.getElementById('gridDisponibilidadDia');
@@ -1246,7 +1295,7 @@
                 let accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
 
                 if(ocupadaPorCita) {
-                    badgeColor = "bg-rose-100 text-rose-800 border-rose-200";
+                    badgeColor = "bg-rose-200 text-rose-900 border-rose-300";
                     estadoTxt = ocupadaPorCita.nombre.split('(')[0];
                     accionClick = "";
                 } else if(ocupadaPorBloqueo) {
@@ -1254,8 +1303,9 @@
                     estadoTxt = "Bloqueado 🔒";
                     accionClick = "";
                 } else if(manualBloqueado) {
-                    badgeColor = "bg-rose-600 text-white border-rose-700 cursor-pointer hover:bg-rose-700";
-                    estadoTxt = "Ocupado 🔴 (Clic libera)";
+                    // ROJO SUAVE / BAJITO IGUAL AL DE CITAS
+                    badgeColor = "bg-rose-200 text-rose-900 border-rose-300 cursor-pointer hover:bg-rose-300";
+                    estadoTxt = "Bloqueado 🚫 (Clic libera)";
                     accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
                 }
 
@@ -1665,7 +1715,7 @@
             if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
         }
 
-        // MÓDULO INVENTARIO GENERAL ESTILO EXCEL (CON DATOS PRECARGADOS)
+        // MÓDULO INVENTARIO GENERAL (ORGANIZADO POR CATEGORÍA Y EDICIÓN RÁPIDA CON UN TOQUE)
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1680,8 +1730,7 @@
                 nombre: document.getElementById('invNombre').value.trim(),
                 categoria: document.getElementById('invCategoria').value.trim(),
                 cantidad: parseInt(document.getElementById('invCantidad').value),
-                estadoDisp: document.getElementById('invEstadoDisp').value,
-                costo: parseFloat(document.getElementById('invCosto').value || 0)
+                estadoDisp: document.getElementById('invEstadoDisp').value
             };
             if(editId) await db.collection("inventario").doc(editId).update(dataInv);
             else await db.collection("inventario").add(dataInv);
@@ -1689,6 +1738,20 @@
             cerrarModalInv();
             e.target.reset();
         }
+
+        async function cambiarCantidadRapida(idDoc, cantidadActual) {
+            const nuevaCant = prompt("Ingresa la nueva cantidad (Stock):", cantidadActual);
+            if(nuevaCant !== null && !isNaN(nuevaCant)) {
+                await db.collection("inventario").doc(idDoc).update({ cantidad: parseInt(nuevaCant) });
+            }
+        }
+
+        async function cambiarEstadoRapido(idDoc, estadoActual) {
+            const estados = ["DISP", "Poca", "No hay"];
+            const siguienteEstado = estados[(estados.indexOf(estadoActual) + 1) % estados.length];
+            await db.collection("inventario").doc(idDoc).update({ estadoDisp: siguienteEstado });
+        }
+
         function renderInventario() {
             const tbody = document.getElementById('tablaInventarioGeneral');
             if(!tbody) return;
@@ -1696,6 +1759,10 @@
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>`;
                 return;
             }
+
+            // Ordenar por categoría alfabéticamente
+            inventario.sort((a,b) => (a.categoria || "").localeCompare(b.categoria || ""));
+
             tbody.innerHTML = inventario.map(i => {
                 let badgeStyle = "bg-emerald-100 text-emerald-800";
                 if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800";
@@ -1704,36 +1771,34 @@
                 return `
                     <tr class="border-b border-rose-50">
                         <td class="p-2.5 font-bold">${i.nombre}</td>
-                        <td class="p-2.5">${i.categoria}</td>
-                        <td class="p-2.5">${i.cantidad}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${badgeStyle}">${i.estadoDisp}</span></td>
+                        <td class="p-2.5 font-semibold text-rose-600">${i.categoria}</td>
+                        <td class="p-2.5">
+                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg font-bold border border-rose-200">
+                                🔢 ${i.cantidad} (Toca para editar)
+                            </button>
+                        </td>
+                        <td class="p-2.5">
+                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2.5 py-1 rounded font-bold ${badgeStyle}">
+                                ${i.estadoDisp || 'DISP'} (Toca cambia)
+                            </button>
+                        </td>
                         <td class="p-2.5 text-center flex justify-center gap-2">
-                            <button onclick="editarInventario('${i.idDoc}')" class="text-amber-600 font-bold">✏️</button>
                             <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
                         </td>
                     </tr>
                 `;
             }).join('');
         }
-        function editarInventario(idDoc) {
-            const i = inventario.find(item => item.idDoc === idDoc);
-            if(!i) return;
-            abrirModalInv();
-            document.getElementById('invEditId').value = i.idDoc;
-            document.getElementById('invNombre').value = i.nombre;
-            document.getElementById('invCategoria').value = i.categoria;
-            document.getElementById('invCantidad').value = i.cantidad;
-            document.getElementById('invEstadoDisp').value = i.estadoDisp || 'DISP';
-            document.getElementById('invCosto').value = i.costo;
-        }
+
         async function eliminarInventario(idDoc) {
             if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
         }
 
-        // MÓDULO MIS DEUDAS CON HISTORIAL DE ABONOS
+        // MÓDULO MIS DEUDAS (ORDENADAS POR FECHA DE PRÓXIMO PAGO Y HISTORIAL DE ABONOS)
         function abrirModalDeuda() {
             document.getElementById('boxFormDeuda').classList.remove('hidden');
             document.getElementById('deudaEditId').value = '';
+            document.getElementById('deudaFechaPago').valueAsDate = new Date();
         }
         function cerrarModalDeuda() {
             document.getElementById('boxFormDeuda').classList.add('hidden');
@@ -1744,6 +1809,7 @@
             const dataDeuda = {
                 acreedor: document.getElementById('deudaAcreedor').value.trim(),
                 montoTotal: parseFloat(document.getElementById('deudaMontoTotal').value),
+                fechaPago: document.getElementById('deudaFechaPago').value,
                 abonos: [],
                 notas: document.getElementById('deudaNotas').value.trim()
             };
@@ -1754,10 +1820,11 @@
             e.target.reset();
         }
 
-        function abrirModalAbono(idDoc) {
+        function abrirModalAbono(idDoc, fechaActual) {
             document.getElementById('boxFormAbono').classList.remove('hidden');
             document.getElementById('abonoDeudaId').value = idDoc;
             document.getElementById('abonoFecha').valueAsDate = new Date();
+            document.getElementById('abonoNuevaFechaPago').value = fechaActual || new Date().toISOString().split('T')[0];
         }
         function cerrarModalAbono() { document.getElementById('boxFormAbono').classList.add('hidden'); }
 
@@ -1766,14 +1833,18 @@
             const idDoc = document.getElementById('abonoDeudaId').value;
             const montoAbono = parseFloat(document.getElementById('abonoMonto').value);
             const fechaAbono = document.getElementById('abonoFecha').value;
+            const nuevaFechaPago = document.getElementById('abonoNuevaFechaPago').value;
             const notaAbono = document.getElementById('abonoNota').value.trim();
 
             const deudaObj = deudas.find(d => d.idDoc === idDoc);
             if(deudaObj) {
                 let abonosActuales = deudaObj.abonos || [];
                 abonosActuales.push({ monto: montoAbono, fecha: fechaAbono, nota: notaAbono });
-                await db.collection("deudas").doc(idDoc).update({ abonos: abonosActuales });
-                alert('💸 Abono registrado correctamente');
+                await db.collection("deudas").doc(idDoc).update({ 
+                    abonos: abonosActuales,
+                    fechaPago: nuevaFechaPago // Actualiza la fecha del próximo pago
+                });
+                alert('💸 Abono registrado y próximo pago actualizado');
                 cerrarModalAbono();
                 e.target.reset();
             }
@@ -1787,6 +1858,10 @@
                 document.getElementById('totalMisDeudas').innerText = "$0.00 MXN";
                 return;
             }
+
+            // Ordenar deudas por fecha de próximo pago (más cercano primero, estilo recordatorio)
+            deudas.sort((a,b) => new Date(a.fechaPago || '2099-12-31') - new Date(b.fechaPago || '2099-12-31'));
+
             let totalGeneral = 0;
             grid.innerHTML = deudas.map(d => {
                 const totalAbonado = (d.abonos || []).reduce((acc, a) => acc + (a.monto || 0), 0);
@@ -1807,6 +1882,7 @@
                         </div>
                         <p><strong>Deuda Total:</strong> $${(d.montoTotal || 0).toFixed(2)} MXN</p>
                         <p><strong>Total Abonado:</strong> $${totalAbonado.toFixed(2)} MXN</p>
+                        <p class="font-bold text-rose-700">⏰ Próximo Pago: ${d.fechaPago || 'Sin fecha'}</p>
                         ${d.notas ? `<p class="text-slate-500 italic">${d.notas}</p>` : ''}
                         
                         <div class="pt-2 border-t border-rose-100 space-y-1">
@@ -1815,7 +1891,7 @@
                         </div>
 
                         <div class="flex gap-2 pt-2">
-                            <button onclick="abrirModalAbono('${d.idDoc}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold text-[11px]">+ Abonar</button>
+                            <button onclick="abrirModalAbono('${d.idDoc}', '${d.fechaPago || ''}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold text-[11px]">+ Abonar</button>
                             <button onclick="editarDeuda('${d.idDoc}')" class="text-rose-700 font-bold">Editar</button>
                             <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold ml-auto">Eliminar</button>
                         </div>
@@ -1824,6 +1900,7 @@
             }).join('');
             document.getElementById('totalMisDeudas').innerText = `$${totalGeneral.toFixed(2)} MXN`;
         }
+
         function editarDeuda(idDoc) {
             const d = deudas.find(item => item.idDoc === idDoc);
             if(!d) return;
@@ -1831,6 +1908,7 @@
             document.getElementById('deudaEditId').value = d.idDoc;
             document.getElementById('deudaAcreedor').value = d.acreedor;
             document.getElementById('deudaMontoTotal').value = d.montoTotal;
+            document.getElementById('deudaFechaPago').value = d.fechaPago || '';
             document.getElementById('deudaNotas').value = d.notas || '';
         }
         async function eliminarDeuda(idDoc) {
