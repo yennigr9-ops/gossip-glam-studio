@@ -563,18 +563,18 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaInventarioGeneral">
-                                <tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>
+                                <tr><td colspan="5" class="text-center py-4 text-slate-400">Cargando inventario general...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS (A QUIÉN DEBO Y ABONOS) -->
+            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS (CON HISTORIAL DE ABONOS) -->
             <section id="seccion-deudas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Mis Deudas (A quién debo y abonos)</h2>
+                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Mis Deudas (Historial de Abonos)</h2>
                         <button onclick="abrirModalDeuda()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Préstamo / Deuda</button>
                     </div>
 
@@ -583,18 +583,31 @@
                         <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
                         <form onsubmit="guardarDeuda(event)" class="space-y-3 text-xs">
                             <input type="hidden" id="deudaEditId">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <div><label class="block font-semibold mb-1">A quién le debes (Acreedor) *</label><input type="text" id="deudaAcreedor" required placeholder="Ej. Miguel, Denis, Compartamos" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Monto Total Prestado / Deuda *</label><input type="number" step="0.01" id="deudaMontoTotal" required placeholder="Ej. 3000.00" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Abono Semanal / Actual</label><input type="number" step="0.01" id="deudaAbono" placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
-                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div><label class="block font-semibold mb-1">Próxima Fecha de Pago / Abono</label><input type="date" id="deudaFechaPago" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Notas / Detalle (ej. Camilla, Préstamo Adicional)</label><input type="text" id="deudaNotas" placeholder="Ej. Préstamo adicional $1397" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">A quién le debes (Acreedor) *</label><input type="text" id="deudaAcreedor" required placeholder="Ej. Miguel, Denis, Compartamos" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Monto Total de la Deuda *</label><input type="number" step="0.01" id="deudaMontoTotal" required placeholder="Ej. 3000.00" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
+                            <div><label class="block font-semibold mb-1">Notas / Detalle inicial</label><input type="text" id="deudaNotas" placeholder="Ej. Préstamo inicial o camilla" class="w-full p-2 border rounded-lg bg-white"></div>
                             <div class="flex gap-2 pt-1">
                                 <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Deuda</button>
                                 <button type="button" onclick="cerrarModalDeuda()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal Abonar -->
+                    <div id="boxFormAbono" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-3">
+                        <h3 class="font-bold text-emerald-800 text-xs uppercase">💸 Registrar Abono a Deuda</h3>
+                        <form onsubmit="guardarAbono(event)" class="space-y-3 text-xs">
+                            <input type="hidden" id="abonoDeudaId">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div><label class="block font-semibold mb-1">Monto del Abono *</label><input type="number" step="0.01" id="abonoMonto" required placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Fecha del Abono *</label><input type="date" id="abonoFecha" required class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Motivo / Quién lo recibió *</label><input type="text" id="abonoNota" required placeholder="Ej. Abono semanal / cobrador" class="w-full p-2 border rounded-lg bg-white"></div>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Abono</button>
+                                <button type="button" onclick="cerrarModalAbono()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
                             </div>
                         </form>
                     </div>
@@ -754,8 +767,33 @@
         let tintas = [];
         let inventario = [];
         let deudas = [];
-        let bloqueosManualesDia = {}; // Guardar bloqueos manuales por fecha y hora (ej: {"2026-10-27": {"15:00": true}})
+        let bloqueosManualesDia = {}; 
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
+
+        const inventarioPredeterminado = [
+            { nombre: "hipoclorito", categoria: "insumos de pestanas", cantidad: 22, estadoDisp: "DISP", costo: 150 },
+            { nombre: "fleje", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP", costo: 80 },
+            { nombre: "guantes", categoria: "insumos de pestanas", cantidad: 15, estadoDisp: "DISP", costo: 120 },
+            { nombre: "gorro", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP", costo: 50 },
+            { nombre: "exfoliante de labios", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP", costo: 90 },
+            { nombre: "toalitas", categoria: "insumos de pestanas", cantidad: 20, estadoDisp: "DISP", costo: 60 },
+            { nombre: "vernier", categoria: "insumos de pestanas", cantidad: 2, estadoDisp: "DISP", costo: 200 },
+            { nombre: "papel oftomalico", categoria: "insumos de pestanas", cantidad: 30, estadoDisp: "DISP", costo: 110 },
+            { nombre: "inductor", categoria: "insumos de pestanas", cantidad: 5, estadoDisp: "DISP", costo: 180 },
+            { nombre: "maquina", categoria: "insumos de pestanas", cantidad: 1, estadoDisp: "DISP", costo: 1500 },
+            { nombre: "lash shampoo", categoria: "insumos de pestanas", cantidad: 8, estadoDisp: "DISP", costo: 250 },
+            { nombre: "cepillos", categoria: "insumos de pestanas", cantidad: 50, estadoDisp: "DISP", costo: 100 },
+            { nombre: "papel osmotico", categoria: "cejas HD y 4K", cantidad: 5, estadoDisp: "DISP", costo: 130 },
+            { nombre: "kit laminado", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "Poca", costo: 450 },
+            { nombre: "cera facial", categoria: "cejas HD y 4K", cantidad: 4, estadoDisp: "DISP", costo: 220 }
+        ];
+
+        const deudasPredeterminadas = [
+            { acreedor: "Miguel", montoTotal: 3000, abonos: [{monto: 0, fecha: "2026-10-27", nota: "Préstamo inicial"}], notas: "Préstamo principal" },
+            { acreedor: "Denis", montoTotal: 4090, abonos: [{monto: 450, fecha: "2026-10-20", nota: "Denis $125+600+265 +500+250 Más $100 de cobrador"}], notas: "Préstamo adicional $1397" },
+            { acreedor: "Alba", montoTotal: 3570, abonos: [{monto: 595, fecha: "2026-10-20", nota: "Abono inicial tele / camilla"}], notas: "tele / camilla" },
+            { acreedor: "Compartamos", montoTotal: 1145, abonos: [{monto: 526, fecha: "2026-10-20", nota: "Abono jose / yo"}], notas: "jose / yo" }
+        ];
 
         const tintasPredeterminadas = [
             { nombre: "Bright Orange (#E08)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77891, CI-21160, CI-21098", cas: "#7732-18-5, #13463-67-7", funcion: "Neutralizador de tonos fríos/azulados/violáceos en cejas y labios" },
@@ -808,13 +846,23 @@
             renderTintas();
         });
 
-        db.collection("inventario").onSnapshot(snapshot => {
-            inventario = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+        db.collection("inventario").onSnapshot(async snapshot => { 
+            inventario = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() })); 
+            if(inventario.length === 0) {
+                for(const item of inventarioPredeterminado) {
+                    await db.collection("inventario").add(item);
+                }
+            }
             if(!document.getElementById('seccion-inventario').classList.contains('hidden')) renderInventario();
         });
 
-        db.collection("deudas").onSnapshot(snapshot => {
-            deudas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+        db.collection("deudas").onSnapshot(async snapshot => { 
+            deudas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() })); 
+            if(deudas.length === 0) {
+                for(const d of deudasPredeterminadas) {
+                    await db.collection("deudas").add(d);
+                }
+            }
             if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
         });
 
@@ -1154,13 +1202,16 @@
             });
         }
 
-        // VISTA CALENDARIO CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS LIBRES
+        // VISTA CALENDARIO CON CUADRITOS VERDES Y ROJOS (Y CLIC MANUAL)
         function renderVistaCalendarioDia() {
             const fechaVal = document.getElementById('filtroFechaAgenda').value;
             const grid = document.getElementById('gridDisponibilidadDia');
             if(!fechaVal || !grid) return;
 
-            const horasJornada = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
+            const horasJornada = modoDiciembre 
+                ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
+                : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
+
             const diaSemana = new Date(`${fechaVal}T00:00:00`).getDay();
             const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaVal);
 
@@ -1180,7 +1231,7 @@
                     ocupadaPorBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaVal}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaVal}T${b.horaFin}:00`).getTime();
-                        const dentroDeRango = (!b.fechaInicio || fechaVal >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
+                        const dentroDeRango = (!b.fechaInicio || fechaVal >= b.fechaInicio) && (!b.fechaFin || fechaVal <= b.fechaFin);
                         if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemana.toString())) {
                             return timestamp >= inicioB && timestamp < finB;
                         }
@@ -1191,7 +1242,7 @@
                 const manualBloqueado = bloqueosManualesDia[fechaVal]?.[h] === true;
 
                 let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200 cursor-pointer hover:bg-emerald-200";
-                let estadoTxt = "Libre ✨ (Haz clic para bloquear)";
+                let estadoTxt = "Libre ✨";
                 let accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
 
                 if(ocupadaPorCita) {
@@ -1200,11 +1251,11 @@
                     accionClick = "";
                 } else if(ocupadaPorBloqueo) {
                     badgeColor = "bg-slate-300 text-slate-700 border-slate-400";
-                    estadoTxt = "Bloqueado Rango 🔒";
+                    estadoTxt = "Bloqueado 🔒";
                     accionClick = "";
                 } else if(manualBloqueado) {
                     badgeColor = "bg-rose-600 text-white border-rose-700 cursor-pointer hover:bg-rose-700";
-                    estadoTxt = "Ocupado Manual 🔴 (Clic para liberar)";
+                    estadoTxt = "Ocupado 🔴 (Clic libera)";
                     accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
                 }
 
@@ -1614,7 +1665,7 @@
             if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
         }
 
-        // MÓDULO INVENTARIO GENERAL ESTILO EXCEL (CON DISP, POCA, NO HAY)
+        // MÓDULO INVENTARIO GENERAL ESTILO EXCEL (CON DATOS PRECARGADOS)
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1679,7 +1730,7 @@
             if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
         }
 
-        // MÓDULO MIS DEUDAS / PRÉSTAMOS (A QUIÉN DEBO Y ABONOS)
+        // MÓDULO MIS DEUDAS CON HISTORIAL DE ABONOS
         function abrirModalDeuda() {
             document.getElementById('boxFormDeuda').classList.remove('hidden');
             document.getElementById('deudaEditId').value = '';
@@ -1693,8 +1744,7 @@
             const dataDeuda = {
                 acreedor: document.getElementById('deudaAcreedor').value.trim(),
                 montoTotal: parseFloat(document.getElementById('deudaMontoTotal').value),
-                abono: parseFloat(document.getElementById('deudaAbono').value || 0),
-                fechaPago: document.getElementById('deudaFechaPago').value,
+                abonos: [],
                 notas: document.getElementById('deudaNotas').value.trim()
             };
             if(editId) await db.collection("deudas").doc(editId).update(dataDeuda);
@@ -1703,6 +1753,32 @@
             cerrarModalDeuda();
             e.target.reset();
         }
+
+        function abrirModalAbono(idDoc) {
+            document.getElementById('boxFormAbono').classList.remove('hidden');
+            document.getElementById('abonoDeudaId').value = idDoc;
+            document.getElementById('abonoFecha').valueAsDate = new Date();
+        }
+        function cerrarModalAbono() { document.getElementById('boxFormAbono').classList.add('hidden'); }
+
+        async function guardarAbono(e) {
+            e.preventDefault();
+            const idDoc = document.getElementById('abonoDeudaId').value;
+            const montoAbono = parseFloat(document.getElementById('abonoMonto').value);
+            const fechaAbono = document.getElementById('abonoFecha').value;
+            const notaAbono = document.getElementById('abonoNota').value.trim();
+
+            const deudaObj = deudas.find(d => d.idDoc === idDoc);
+            if(deudaObj) {
+                let abonosActuales = deudaObj.abonos || [];
+                abonosActuales.push({ monto: montoAbono, fecha: fechaAbono, nota: notaAbono });
+                await db.collection("deudas").doc(idDoc).update({ abonos: abonosActuales });
+                alert('💸 Abono registrado correctamente');
+                cerrarModalAbono();
+                e.target.reset();
+            }
+        }
+
         function renderDeudas() {
             const grid = document.getElementById('gridMisDeudas');
             if(!grid) return;
@@ -1713,8 +1789,16 @@
             }
             let totalGeneral = 0;
             grid.innerHTML = deudas.map(d => {
-                const restante = (d.montoTotal || 0) - (d.abono || 0);
+                const totalAbonado = (d.abonos || []).reduce((acc, a) => acc + (a.monto || 0), 0);
+                const restante = (d.montoTotal || 0) - totalAbonado;
                 totalGeneral += restante;
+
+                const historialHtml = (d.abonos || []).map(a => `
+                    <div class="text-[11px] bg-white p-2 rounded border border-rose-100 flex justify-between items-center">
+                        <span>📅 <strong>${a.fecha}</strong> - $${a.monto} (${a.nota})</span>
+                    </div>
+                `).join('');
+
                 return `
                     <div class="p-4 bg-rose-50/50 rounded-2xl border border-rose-200 space-y-2 text-xs shadow-sm">
                         <div class="flex justify-between items-start">
@@ -1722,12 +1806,18 @@
                             <span class="px-2 py-0.5 rounded font-bold bg-rose-200 text-rose-800">Restante: $${restante.toFixed(2)}</span>
                         </div>
                         <p><strong>Deuda Total:</strong> $${(d.montoTotal || 0).toFixed(2)} MXN</p>
-                        <p><strong>Abono actual:</strong> $${(d.abono || 0).toFixed(2)} MXN</p>
-                        <p><strong>Próximo Pago:</strong> ${d.fechaPago || 'N/A'}</p>
+                        <p><strong>Total Abonado:</strong> $${totalAbonado.toFixed(2)} MXN</p>
                         ${d.notas ? `<p class="text-slate-500 italic">${d.notas}</p>` : ''}
-                        <div class="flex gap-2 pt-2 border-t border-rose-100">
+                        
+                        <div class="pt-2 border-t border-rose-100 space-y-1">
+                            <p class="font-bold text-rose-700">📜 Historial de Abonos:</p>
+                            ${historialHtml || '<p class="text-slate-400 italic text-[11px]">Sin abonos aún.</p>'}
+                        </div>
+
+                        <div class="flex gap-2 pt-2">
+                            <button onclick="abrirModalAbono('${d.idDoc}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold text-[11px]">+ Abonar</button>
                             <button onclick="editarDeuda('${d.idDoc}')" class="text-rose-700 font-bold">Editar</button>
-                            <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold">Eliminar</button>
+                            <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold ml-auto">Eliminar</button>
                         </div>
                     </div>
                 `;
@@ -1741,8 +1831,6 @@
             document.getElementById('deudaEditId').value = d.idDoc;
             document.getElementById('deudaAcreedor').value = d.acreedor;
             document.getElementById('deudaMontoTotal').value = d.montoTotal;
-            document.getElementById('deudaAbono').value = d.abono;
-            document.getElementById('deudaFechaPago').value = d.fechaPago || '';
             document.getElementById('deudaNotas').value = d.notas || '';
         }
         async function eliminarDeuda(idDoc) {
