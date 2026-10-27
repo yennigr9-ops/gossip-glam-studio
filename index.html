@@ -58,6 +58,7 @@
                         <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Delineado Ojos" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Delineado <span>$1500</span></label>
                         <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Delineado + Línea de Luz" data-tiempo="180" data-precio="1500" onchange="calcularResumenPublico()"> Delineado + Línea de luz <span>$1500</span></label>
                         <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Retoque Micropigmentación" data-tiempo="150" data-precio="1100" onchange="calcularResumenPublico()"> Retoque <span>$1100</span></label>
+                        <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Remoción Química" data-tiempo="90" data-precio="1000" onchange="calcularResumenPublico()"> Remoción Química <span>$1000</span></label>
 
                         <p class="font-bold text-rose-600 border-b pb-1 pt-2">🌿 Cejas & Estilo (1.5 hrs)</p>
                         <label class="flex justify-between items-center"><input type="checkbox" name="pubServicio" value="Cejas HD" data-tiempo="90" data-precio="200" onchange="calcularResumenPublico()"> Cejas HD <span>$200</span></label>
@@ -139,6 +140,8 @@
                 <button onclick="cambiarTab('expedientes')" id="tab-expedientes" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📂 Expedientes</button>
                 <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
                 <button onclick="cambiarTab('tintas')" id="tab-tintas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🎨 Inventario & Tintas</button>
+                <button onclick="cambiarTab('inventario')" id="tab-inventario" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📦 Inventario General</button>
+                <button onclick="cambiarTab('deudas')" id="tab-deudas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💳 Control de Deudas</button>
                 <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
             </nav>
         </header>
@@ -176,7 +179,7 @@
                                     <input type="radio" name="tipoServicio" value="pestanas" checked onchange="toggleServicio()" class="text-rose-600"> Extensión de Pestañas
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer font-medium text-sm">
-                                    <input type="radio" name="tipoServicio" value="micropigmentacion" onchange="toggleServicio()" class="text-rose-600"> Micropigmentación
+                                    <input type="radio" name="tipoServicio" value="micropigmentacion" onchange="toggleServicio()" class="text-rose-600"> Micropigmentación / Remoción
                                 </label>
                             </div>
                         </div>
@@ -230,6 +233,7 @@
                                             <option value="Cejas">👁️ Cejas</option>
                                             <option value="Labios">💋 Labios</option>
                                             <option value="Delineado">👁️ Delineado de Ojos</option>
+                                            <option value="Remocion">🧪 Remoción Química</option>
                                         </select>
                                     </div>
                                     <div>
@@ -331,7 +335,7 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Mezcla de Pigmentos (Fórmula)</label><input type="text" id="microPigmentos" placeholder="Fórmula calculada..." class="w-full p-2 border border-rose-200 rounded-lg text-sm bg-purple-50/30"></div>
-                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
+                                <div><label class="block text-xs font-semibold text-rose-700 mb-1">Técnica</label><input type="text" id="microTecnica" placeholder="Ej. Powder Brows / Remoción" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Cartucho</label><input type="text" id="microCartucho" placeholder="Ej. 0801RL" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Voltaje</label><input type="text" id="microVoltaje" placeholder="Ej. 5.5V - XNET Flash" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
                                 <div><label class="block text-xs font-semibold text-rose-700 mb-1">Neutralización Aplicada</label><input type="text" id="microNeutralizacion" placeholder="Ej. Pasadas iniciales de corrección" class="w-full p-2 border border-rose-200 rounded-lg text-sm"></div>
@@ -369,7 +373,7 @@
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Nombre de la Clienta</label><input type="text" id="citaNombre" list="listaClientas" required placeholder="Nombre completo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Teléfono / WhatsApp</label><input type="tel" id="citaTelefono" placeholder="Ej. 8681234567" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Fecha y Hora</label><input type="datetime-local" id="citaFechaHora" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio(s)</label><input type="text" id="citaServicio" required placeholder="Ej. Spire Comic + Depilación Bozo" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
+                        <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Servicio(s)</label><input type="text" id="citaServicio" required placeholder="Ej. Spire Comic + Remoción Química" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Duración en minutos</label><input type="number" id="citaDuracion" required value="180" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Monto Total ($ MXN)</label><input type="number" step="0.01" id="citaMonto" required placeholder="Ej. 850.00" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm">✨ Guardar Cita</button>
@@ -379,12 +383,30 @@
 
             <!-- 3. SECCIÓN AGENDA Y CITAS -->
             <section id="seccion-agenda" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
-                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-rose-100">
-                        <h2 class="text-lg font-bold text-rose-700">📖 Agenda y Citas Programadas</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-rose-100">
+                        <h2 class="text-lg font-bold text-rose-700">📖 Agenda, Calendario y Citas Programadas</h2>
                         <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
                     </div>
-                    <div id="contenedorListaCitas" class="space-y-3"></div>
+
+                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA -->
+                    <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
+                        <h3 class="font-bold text-rose-800 text-xs uppercase">📅 Consultor de Disponibilidad por Día (Horarios: 8am - 1:20pm / 2pm - 6pm)</h3>
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-rose-700 mb-1">Seleccionar Fecha a Consultar:</label>
+                                <input type="date" id="filtroFechaAgenda" onchange="renderVistaCalendarioDia()" class="p-2 border border-rose-200 rounded-xl text-xs bg-white">
+                            </div>
+                        </div>
+                        <div id="gridDisponibilidadDia" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 pt-2 text-xs">
+                            <p class="text-slate-400 italic col-span-full">Selecciona una fecha arriba para ver los turnos libres y ocupados del día...</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <h3 class="font-bold text-rose-700 text-sm mb-3">📋 Listado Cronológico de Citas</h3>
+                        <div id="contenedorListaCitas" class="space-y-3"></div>
+                    </div>
                 </div>
             </section>
 
@@ -397,8 +419,8 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <input type="text" id="buscadorExpedientes" oninput="renderExpedientes()" placeholder="🔍 Buscar por nombre..." class="p-2.5 border border-rose-200 rounded-xl text-sm">
-                        <select id="filtroServicioExp" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="todos">Todos los servicios</option><option value="pestanas">Extensión de Pestañas</option><option value="micropigmentacion">Micropigmentación</option></select>
-                        <select id="ordenExpedientes" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="nombre">Ordenar por Nombre</option><option value="reciente">Ordenar por Última Visita</option></select>
+                        <select id="filtroServicioExp" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="todos">Todos los servicios</option><option value="pestanas">Extensión de Pestañas</option><option value="micropigmentacion">Micropigmentación / Remoción</option></select>
+                        <select id="ordenExpedientes" onchange="renderExpedientes()" class="p-2.5 border border-rose-200 rounded-xl text-sm bg-white"><option value="reciente">Ordenar por Más Reciente</option><option value="nombre">Ordenar por Nombre</option></select>
                     </div>
                     <div id="gridExpedientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
                 </div>
@@ -493,6 +515,93 @@
                     </div>
 
                     <div id="gridTintas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+
+            <!-- NUEVO: SECCIÓN INVENTARIO GENERAL -->
+            <section id="seccion-inventario" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General de Insumos & Productos</h2>
+                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Producto</button>
+                    </div>
+
+                    <!-- Formulario modal/caja inventario -->
+                    <div id="boxFormInv" class="hidden p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-3">
+                        <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormInv">Registrar / Editar Artículo</h3>
+                        <form onsubmit="guardarInventario(event)" class="space-y-3 text-xs">
+                            <input type="hidden" id="invEditId">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div><label class="block font-semibold mb-1">Nombre Artículo *</label><input type="text" id="invNombre" required placeholder="Ej. Cartuchos 0801RL" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Categoría *</label><input type="text" id="invCategoria" required placeholder="Ej. Agujas / Desechables" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Stock / Cantidad *</label><input type="number" id="invCantidad" required placeholder="Ej. 15" class="w-full p-2 border rounded-lg bg-white"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div><label class="block font-semibold mb-1">Stock Mínimo de Alerta</label><input type="number" id="invMinimo" value="3" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Costo Estimado ($ MXN)</label><input type="number" step="0.01" id="invCosto" placeholder="Ej. 250.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Artículo</button>
+                                <button type="button" onclick="cerrarModalInv()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="gridInventario" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+
+            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS / FIADOS -->
+            <section id="seccion-deudas" class="space-y-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Deudas y Saldos Pendientes (Fiados)</h2>
+                        <button onclick="abrirModalDeuda()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Deuda</button>
+                    </div>
+
+                    <!-- Formulario Deuda -->
+                    <div id="boxFormDeuda" class="hidden p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-3">
+                        <h3 class="font-bold text-amber-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
+                        <form onsubmit="guardarDeuda(event)" class="space-y-3 text-xs">
+                            <input type="hidden" id="deudaEditId">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div><label class="block font-semibold mb-1">Nombre de la Clienta *</label><input type="text" id="deudaClienta" required list="listaClientas" placeholder="Nombre clienta" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Concepto / Servicio *</label><input type="text" id="deudaConcepto" required placeholder="Ej. Retoque Micropigmentación" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Monto Adeudado ($ MXN) *</label><input type="number" step="0.01" id="deudaMonto" required placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div><label class="block font-semibold mb-1">Fecha Límite / Promesa</label><input type="date" id="deudaFecha" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Estado</label><select id="deudaEstado" class="w-full p-2 border rounded-lg bg-white"><option value="Pendiente">Pendiente ⏳</option><option value="Pagada">Pagada ✓</option></select></div>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" class="bg-amber-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Deuda</button>
+                                <button type="button" onclick="cerrarModalDeuda()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="flex justify-between items-center bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-xs font-bold text-amber-900">
+                        <span>Total Cuentas por Cobrar (Deudas Pendientes):</span>
+                        <strong id="totalDeudasPendientes" class="text-base text-rose-600">$0.00 MXN</strong>
+                    </div>
+
+                    <div class="overflow-x-auto pt-2">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="bg-amber-50 text-amber-800 uppercase">
+                                    <th class="p-2.5 rounded-l-lg">Clienta</th>
+                                    <th class="p-2.5">Concepto</th>
+                                    <th class="p-2.5">Monto</th>
+                                    <th class="p-2.5">Fecha Límite</th>
+                                    <th class="p-2.5">Estado</th>
+                                    <th class="p-2.5 rounded-r-lg text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaDeudas">
+                                <tr><td colspan="6" class="text-center py-4 text-slate-400">No hay deudas registradas.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -640,7 +749,8 @@
         let bloqueos = [];
         let excepciones = [];
         let tintas = [];
-        // CATEGORÍA ÚNICA ESTANDARIZADA PARA CITAS E INGRESOS: "Ingreso Cita/Servicio"
+        let inventario = [];
+        let deudas = [];
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
         // BASE DE DATOS INICIAL DE TINTAS DE ETERNAL INK Y DILUYENTE
@@ -656,21 +766,27 @@
             { nombre: "OuO Mixing Solution", marca: "OuO", subtono: "Neutro", ci: "Diluyente / Solución", cas: "Aqua / Glycerin", funcion: "Diluyente / Modificador de viscosidad y saturación" }
         ];
 
-        // FIREBASE LISTENERS
+        // FIREBASE LISTENERS CON ORDEN CRONOLÓGICO Y DE DATOS
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            fichas.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
             actualizarDatalist();
             if(!document.getElementById('seccion-expedientes').classList.contains('hidden')) renderExpedientes();
         });
 
         db.collection("citas").onSnapshot(snapshot => {
             citas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
-            if(!document.getElementById('seccion-agenda').classList.contains('hidden')) renderCitas();
+            citas.sort((a,b) => new Date(a.fechaHora) - new Date(b.fechaHora));
+            if(!document.getElementById('seccion-agenda').classList.contains('hidden')) {
+                renderCitas();
+                if(document.getElementById('filtroFechaAgenda').value) renderVistaCalendarioDia();
+            }
             calcularFinanzas();
         });
 
         db.collection("movimientosFinancieros").onSnapshot(snapshot => {
             movimientosFinancieros = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            movimientosFinancieros.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
             renderHistorialFinanciero();
             calcularFinanzas();
         });
@@ -690,6 +806,17 @@
             renderTintas();
         });
 
+        db.collection("inventario").onSnapshot(snapshot => {
+            inventario = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            if(!document.getElementById('seccion-inventario').classList.contains('hidden')) renderInventario();
+        });
+
+        db.collection("deudas").onSnapshot(snapshot => {
+            deudas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
+            deudas.sort((a,b) => new Date(b.fecha || '2099-12-31') - new Date(a.fecha || '2099-12-31'));
+            if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
+        });
+
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
             if(doc.exists && doc.data().categorias) {
                 categoriasFinanzas = doc.data().categorias;
@@ -699,6 +826,10 @@
         });
 
         setupCanvas('canvasMapping');
+
+        if(document.getElementById('filtroFechaAgenda')) {
+            document.getElementById('filtroFechaAgenda').valueAsDate = new Date();
+        }
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
@@ -739,10 +870,15 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`seccion-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-${tab}`).classList.add('active');
-            if(tab === 'agenda') renderCitas();
+            if(tab === 'agenda') {
+                renderCitas();
+                if(document.getElementById('filtroFechaAgenda').value) renderVistaCalendarioDia();
+            }
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
             if(tab === 'tintas') renderTintas();
+            if(tab === 'inventario') renderInventario();
+            if(tab === 'deudas') renderDeudas();
         }
 
         function toggleServicio() {
@@ -787,6 +923,9 @@
                 } else {
                     document.getElementById('boxObjetivoDelineado').classList.add('hidden');
                 }
+            } else if(zona === 'Remocion') {
+                document.getElementById('boxHiperpigmentacionLabios').classList.add('hidden');
+                document.getElementById('boxObjetivoDelineado').classList.add('hidden');
             } else {
                 document.getElementById('boxHiperpigmentacionLabios').classList.add('hidden');
                 document.getElementById('boxObjetivoDelineado').classList.add('hidden');
@@ -805,7 +944,7 @@
             toggleOpcionesZona();
         }
 
-        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS
+        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS Y REMOCIÓN
         function evaluarCalculoColor() {
             const zona = document.getElementById('microZona').value;
             const fototipo = document.getElementById('diagFototipo').value;
@@ -821,9 +960,12 @@
             let formula = "";
             let notasTecnicas = "";
 
-            if(tieneTrabajoPrevio && saturacion === 'Alta') {
-                formula = "⚠️ TRABAJO MUY SATURADO / OSCURO COMPACTO.\nNo se recomienda pigmentar ni neutralizar directo. La carga de pigmento residual impedirá la fijación correcta.";
-                notasTecnicas = "Recomendar a la clienta de 1 a 3 sesiones de remoción química o láser antes de realizar un nuevo diseño.";
+            if(zona === 'Remocion') {
+                formula = "🧪 PROTOCOLO DE REMOCIÓN QUÍMICA (Ácido / Solución Extractora).\nAplicación controlada con microbrush en técnica circular por capas.";
+                notasTecnicas = "No saturar la piel. Dejar reposar el producto según especificaciones del fabricante y neutralizar. Cita de seguimiento en 4-6 semanas.";
+            } else if(tieneTrabajoPrevio && saturacion === 'Alta') {
+                formula = "⚠️ TRABAJO MUY SATURADO / OSCURO COMPACTO.\nNo se recomienda pigmentar directo. Requiere previa sesión de remoción química.";
+                notasTecnicas = "Recomendar a la clienta de 1 a 3 sesiones de remoción antes de realizar un nuevo diseño.";
             } else if(zona === 'Delineado') {
                 if(tieneTrabajoPrevio) {
                     if(objetivoDelineado === 'Cafe') {
@@ -852,7 +994,6 @@
                     notasTecnicas = "Efecto Aquarelle o Full Lips. Piel responde de forma estable al pigmento cromo.";
                 }
             } else {
-                // CEJAS (USO DE MUDSLIDE Y CARAMEL PARA CLIENTAS CÁLIDAS / LATINAS)
                 if(tieneTrabajoPrevio) {
                     if(viraje === 'Violaceo') {
                         formula = "Paso 1: 3 gotas Lightning Yellow (#E40) + 1 gota Bright Orange (#E08) para neutralizar morado/violeta.\nPaso 2: 3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
@@ -881,7 +1022,6 @@
                         formula = "2 gotas Mudslide + 2 gotas Caramel + 1 gota White (#E31) + 2 gotas OuO Diluyente.";
                         notasTecnicas = "Tono rubio/dorado suave de baja saturación.";
                     } else {
-                        // CLIENTA CÁLIDA FOTOTIPO 3 (LA MÁS FRECUENTE)
                         formula = "3 gotas Mudslide + 1 gota Caramel + 1 gota OuO Diluyente.";
                         notasTecnicas = "Tono castaño cálido perfecto para piel latina. Cicatriza natural y brillante sin oscurecer.";
                     }
@@ -904,7 +1044,7 @@
                     if(f.servicioTipo === 'Extensión de Pestañas') {
                         detalleExtra = `✨ <strong>Técnica:</strong> ${f.detalles?.tec || 'N/A'} | 📐 <strong>Diseño:</strong> ${f.detalles?.diseno || 'N/A'} | 🗺️ <strong>Mapping:</strong> ${f.detalles?.mapping || 'N/A'}`;
                     } else {
-                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | 🧪 <strong>Mezcla/CI:</strong> ${f.detalles?.pigmentos || 'N/A'} | ⚡ <strong>Cartucho/Voltaje:</strong> ${f.detalles?.cartucho || 'N/A'} - ${f.detalles?.voltaje || 'N/A'}`;
+                        detalleExtra = `🎯 <strong>Zona:</strong> ${f.detalles?.zona || 'N/A'} | 🎨 <strong>Subtono:</strong> ${f.detalles?.subtono || 'N/A'} | 🧪 <strong>Fórmula:</strong> ${f.detalles?.pigmentos || 'N/A'}`;
                     }
                     return `
                         <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100 space-y-1">
@@ -939,7 +1079,7 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // LIBERACIÓN DE HORARIOS DINÁMICOS SIN HUECOS MUERTOS
+        // LIBERACIÓN DE HORARIOS DINÁMICOS RESPETANDO FRANJAS 8am-1:20pm y 2pm-6pm (o 3am dic)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -953,7 +1093,6 @@
                 tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             }
 
-            // Mapeo completo de horas continuas cada 30 min de 8am a 7pm (o 3am en Diciembre)
             const horasBase = modoDiciembre 
                 ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
                 : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
@@ -1007,6 +1146,58 @@
             });
         }
 
+        function renderVistaCalendarioDia() {
+            const fechaVal = document.getElementById('filtroFechaAgenda').value;
+            const grid = document.getElementById('gridDisponibilidadDia');
+            if(!fechaVal || !grid) return;
+
+            const horasJornada = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
+            const diaSemana = new Date(`${fechaVal}T00:00:00`).getDay();
+            const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaVal);
+
+            grid.innerHTML = horasJornada.map(h => {
+                const timeStr = `${fechaVal}T${h}:00`;
+                const timestamp = new Date(timeStr).getTime();
+
+                const ocupadaPorCita = citas.find(c => {
+                    if(c.estado === 'Cancelada') return false;
+                    const tCita = new Date(c.fechaHora).getTime();
+                    const dur = (c.duracionMin || 180) * 60 * 1000;
+                    return timestamp >= tCita && timestamp < tCita + dur;
+                });
+
+                let ocupadaPorBloqueo = false;
+                if(!esExcepcionLibre) {
+                    ocupadaPorBloqueo = bloqueos.some(b => {
+                        const inicioB = new Date(`${fechaVal}T${b.horaInicio}:00`).getTime();
+                        const finB = new Date(`${fechaVal}T${b.horaFin}:00`).getTime();
+                        const dentroDeRango = (!b.fechaInicio || fechaVal >= b.fechaInicio) && (!b.fechaFin || fechaVal <= b.fechaFin);
+                        if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemana.toString())) {
+                            return timestamp >= inicioB && timestamp < finB;
+                        }
+                        return false;
+                    });
+                }
+
+                let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                let estadoTxt = "Libre ✨";
+                if(ocupadaPorCita) {
+                    badgeColor = "bg-rose-100 text-rose-800 border-rose-200";
+                    estadoTxt = ocupadaPorCita.nombre.split('(')[0];
+                } else if(ocupadaPorBloqueo) {
+                    badgeColor = "bg-slate-200 text-slate-600 border-slate-300";
+                    estadoTxt = "Bloqueado 🔒";
+                }
+
+                return `
+                    <div class="p-2 rounded-xl border text-center ${badgeColor}">
+                        <strong class="block">${h}</strong>
+                        <span class="text-[10px] truncate block">${estadoTxt}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
         async function reservarClientaPublica(e) {
             e.preventDefault();
             const nombre = document.getElementById('pubNombre').value.trim();
@@ -1038,6 +1229,7 @@
             calcularResumenPublico();
         }
 
+        // GUARDAR FICHA ASEGURANDO TODOS LOS CAMPOS DE PIEL, SUBTONO Y FOTOTIPO
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -1053,17 +1245,23 @@
                 mapping: document.getElementById('mappingPestanas').value,
                 imgMapping: document.getElementById('canvasMapping').toDataURL()
             } : {
-                tipo: 'Micropigmentación',
+                tipo: 'Micropigmentación / Remoción',
                 checks: Array.from(document.querySelectorAll('input[name="checkMicro"]:checked')).map(c => c.value),
                 zona: document.getElementById('microZona').value,
+                fototipo: document.getElementById('diagFototipo').value,
+                subtono: document.getElementById('diagSubtono').value,
+                piel: document.getElementById('diagPiel').value,
+                cabello: document.getElementById('diagCabello').value,
+                trabajoPrevio: document.getElementById('diagTrabajoPrevio').value,
+                viraje: document.getElementById('diagViraje').value,
+                saturacion: document.getElementById('diagSaturacion').value,
+                hiperLabios: document.getElementById('diagHiperLabios').value,
+                objetivoDelineado: document.getElementById('diagObjetivoDelineado').value,
                 pigmentos: document.getElementById('microPigmentos').value,
                 tec: document.getElementById('microTecnica').value,
                 cartucho: document.getElementById('microCartucho').value,
                 voltaje: document.getElementById('microVoltaje').value,
-                neutralizacion: document.getElementById('microNeutralizacion').value,
-                fototipo: document.getElementById('diagFototipo').value,
-                subtono: document.getElementById('diagSubtono').value,
-                piel: document.getElementById('diagPiel').value
+                neutralizacion: document.getElementById('microNeutralizacion').value
             };
 
             const dataFicha = {
@@ -1148,45 +1346,7 @@
             cambiarTab('agenda');
         }
 
-                function renderCitas() {
-            const cont = document.getElementById('contenedorListaCitas');
-            document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
-            if(citas.length === 0) {
-                cont.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">No hay citas registradas.</p>`;
-                return;
-            }
-            cont.innerHTML = citas.map(c => {
-                const start = new Date(c.fechaHora);
-                const end = new Date(start.getTime() + (c.duracionMin || 180) * 60 * 1000);
-                const formatTime = d => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
-                const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita: ' + c.nombre + ' (' + c.servicio + ')')}&dates=${formatTime(start)}/${formatTime(end)}&details=${encodeURIComponent('Servicio: ' + c.servicio + '\nClienta: ' + c.nombre)}`;
-
-                const numLimpio = (c.telefono || c.nombre).replace(/\D/g, '');
-                const msgWa = encodeURIComponent(`Hola ${c.nombre.split('(')[0].trim()}, te saludo de Gossip & Glam Studio 👑. Te escribo para confirmar tu cita para el ${new Date(c.fechaHora).toLocaleString()} para: ${c.servicio}. ¿Nos confirmas tu asistencia?`);
-                const waUrl = numLimpio ? `https://wa.me/${numLimpio}?text=${msgWa}` : '#';
-                const nombreLimpio = c.nombre.split('(')[0].trim();
-
-                return `
-                    <div class="p-4 bg-rose-50/50 rounded-xl border border-rose-100 flex flex-wrap justify-between items-center gap-3">
-                        <div>
-                            <h4 class="font-bold text-rose-700 text-sm">${c.nombre}</h4>
-                            <p class="text-xs text-slate-500">📅 ${new Date(c.fechaHora).toLocaleString()} | 💄 ${c.servicio} | 💵 $${c.monto.toFixed(2)} MXN</p>
-                            <span class="inline-block mt-1 px-2 py-0.5 text-[10px] rounded font-bold ${c.estado === 'Realizada' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">${c.estado}</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            ${numLimpio ? `<a href="${waUrl}" target="_blank" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">💬 WhatsApp</a>` : ''}
-                            <a href="${gcalUrl}" target="_blank" class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold">📅 Cal</a>
-                            <button onclick="editarCitaForm('${c.idDoc}')" class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✏️ Editar</button>
-                            <button onclick="marcarCitaRealizadaYRegistrarIngreso('${c.idDoc}', '${nombreLimpio}', ${c.monto}, '${c.servicio}')" class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-lg text-xs font-semibold">✓ Realizada</button>
-                            <button onclick="crearFichaDirectaDesdeCita('${nombreLimpio}')" class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-semibold">📝 Crear Ficha</button>
-                            <button onclick="eliminarCita('${c.idDoc}')" class="bg-rose-200 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-semibold">Borrar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-                function renderCitas() {
+        function renderCitas() {
             const cont = document.getElementById('contenedorListaCitas');
             document.getElementById('contadorCitas').innerText = `${citas.length} citas`;
             if(citas.length === 0) {
@@ -1237,7 +1397,6 @@
             cambiarTab('agendar');
         }
 
-        // MARCAR CITA REALIZADA: Manda dinero a la categoría ÚNICA "Ingreso Cita/Servicio" y ofrece abrir Ficha Técnica
         async function marcarCitaRealizadaYRegistrarIngreso(idDoc, nombreClienta, monto, servicio) {
             await db.collection("citas").doc(idDoc).update({ estado: 'Realizada' });
             const fechaHoy = new Date().toISOString().split('T')[0];
@@ -1395,6 +1554,133 @@
 
         async function eliminarTinta(idDoc) {
             if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
+        }
+
+        // MÓDULO INVENTARIO GENERAL
+        function abrirModalInv() {
+            document.getElementById('boxFormInv').classList.remove('hidden');
+            document.getElementById('invEditId').value = '';
+        }
+        function cerrarModalInv() {
+            document.getElementById('boxFormInv').classList.add('hidden');
+        }
+        async function guardarInventario(e) {
+            e.preventDefault();
+            const editId = document.getElementById('invEditId').value;
+            const dataInv = {
+                nombre: document.getElementById('invNombre').value.trim(),
+                categoria: document.getElementById('invCategoria').value.trim(),
+                cantidad: parseInt(document.getElementById('invCantidad').value),
+                minimo: parseInt(document.getElementById('invMinimo').value),
+                costo: parseFloat(document.getElementById('invCosto').value || 0)
+            };
+            if(editId) await db.collection("inventario").doc(editId).update(dataInv);
+            else await db.collection("inventario").add(dataInv);
+            alert('📦 Artículo guardado');
+            cerrarModalInv();
+            e.target.reset();
+        }
+        function renderInventario() {
+            const grid = document.getElementById('gridInventario');
+            if(!grid) return;
+            if(inventario.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay artículos en el inventario general.</p>`;
+                return;
+            }
+            grid.innerHTML = inventario.map(i => `
+                <div class="p-4 bg-rose-50/40 rounded-2xl border border-rose-100 space-y-2 text-xs">
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-bold text-rose-800 text-sm">${i.nombre}</h4>
+                        <span class="px-2 py-0.5 rounded font-bold ${i.cantidad <= i.minimo ? 'bg-rose-200 text-rose-800' : 'bg-emerald-100 text-emerald-800'}">Stock: ${i.cantidad}</span>
+                    </div>
+                    <p><strong>Categoría:</strong> ${i.categoria}</p>
+                    <p><strong>Costo:</strong> $${i.costo.toFixed(2)} MXN</p>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="editarInventario('${i.idDoc}')" class="text-rose-700 font-bold">Editar</button>
+                        <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function editarInventario(idDoc) {
+            const i = inventario.find(item => item.idDoc === idDoc);
+            if(!i) return;
+            abrirModalInv();
+            document.getElementById('invEditId').value = i.idDoc;
+            document.getElementById('invNombre').value = i.nombre;
+            document.getElementById('invCategoria').value = i.categoria;
+            document.getElementById('invCantidad').value = i.cantidad;
+            document.getElementById('invMinimo').value = i.minimo;
+            document.getElementById('invCosto').value = i.costo;
+        }
+        async function eliminarInventario(idDoc) {
+            if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
+        }
+
+        // MÓDULO CONTROL DE DEUDAS / FIADOS
+        function abrirModalDeuda() {
+            document.getElementById('boxFormDeuda').classList.remove('hidden');
+            document.getElementById('deudaEditId').value = '';
+        }
+        function cerrarModalDeuda() {
+            document.getElementById('boxFormDeuda').classList.add('hidden');
+        }
+        async function guardarDeuda(e) {
+            e.preventDefault();
+            const editId = document.getElementById('deudaEditId').value;
+            const dataDeuda = {
+                clienta: document.getElementById('deudaClienta').value.trim(),
+                concepto: document.getElementById('deudaConcepto').value.trim(),
+                monto: parseFloat(document.getElementById('deudaMonto').value),
+                fecha: document.getElementById('deudaFecha').value,
+                estado: document.getElementById('deudaEstado').value
+            };
+            if(editId) await db.collection("deudas").doc(editId).update(dataDeuda);
+            else await db.collection("deudas").add(dataDeuda);
+            alert('💳 Registro de deuda guardado');
+            cerrarModalDeuda();
+            e.target.reset();
+        }
+        function renderDeudas() {
+            const tbody = document.getElementById('tablaDeudas');
+            if(!tbody) return;
+            if(deudas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay deudas registradas.</td></tr>`;
+                document.getElementById('totalDeudasPendientes').innerText = "$0.00 MXN";
+                return;
+            }
+            let totalPendiente = 0;
+            tbody.innerHTML = deudas.map(d => {
+                if(d.estado === 'Pendiente') totalPendiente += d.monto;
+                return `
+                    <tr class="border-b border-amber-50">
+                        <td class="p-2.5 font-bold">${d.clienta}</td>
+                        <td class="p-2.5">${d.concepto}</td>
+                        <td class="p-2.5 font-bold text-rose-600">$${d.monto.toFixed(2)} MXN</td>
+                        <td class="p-2.5">${d.fecha || 'N/A'}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${d.estado === 'Pagada' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${d.estado}</span></td>
+                        <td class="p-2.5 text-center flex justify-center gap-2">
+                            <button onclick="editarDeuda('${d.idDoc}')" class="text-amber-700 font-bold">✏️</button>
+                            <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            document.getElementById('totalDeudasPendientes').innerText = `$${totalPendiente.toFixed(2)} MXN`;
+        }
+        function editarDeuda(idDoc) {
+            const d = deudas.find(item => item.idDoc === idDoc);
+            if(!d) return;
+            abrirModalDeuda();
+            document.getElementById('deudaEditId').value = d.idDoc;
+            document.getElementById('deudaClienta').value = d.clienta;
+            document.getElementById('deudaConcepto').value = d.concepto;
+            document.getElementById('deudaMonto').value = d.monto;
+            document.getElementById('deudaFecha').value = d.fecha || '';
+            document.getElementById('deudaEstado').value = d.estado;
+        }
+        async function eliminarDeuda(idDoc) {
+            if(confirm('¿Eliminar registro de deuda?')) await db.collection("deudas").doc(idDoc).delete();
         }
 
         function renderCategoriasFinanzas() {
@@ -1580,6 +1866,7 @@
             `).join('');
         }
 
+        // CARGAR FICHA EN FORMULARIO RESTAURANDO CADA SELECTOR DE MICROPIGMENTACIÓN Y PIEL
         function cargarFichaEnFormulario(id) {
             const f = fichas.find(item => item.id == id);
             if(!f) return;
@@ -1610,6 +1897,19 @@
                     });
                 }
                 document.getElementById('microZona').value = f.detalles?.zona || 'Cejas';
+                document.getElementById('diagFototipo').value = f.detalles?.fototipo || 'T3';
+                document.getElementById('diagSubtono').value = f.detalles?.subtono || 'Frío';
+                document.getElementById('diagPiel').value = f.detalles?.piel || 'Seca';
+                document.getElementById('diagCabello').value = f.detalles?.cabello || 'Castaño Oscuro';
+                document.getElementById('diagTrabajoPrevio').value = f.detalles?.trabajoPrevio || 'No';
+                toggleTrabajoPrevio();
+                document.getElementById('diagViraje').value = f.detalles?.viraje || 'Gris';
+                document.getElementById('diagSaturacion').value = f.detalles?.saturacion || 'Baja';
+                document.getElementById('diagHiperLabios').value = f.detalles?.hiperLabios || 'Ninguna';
+                document.getElementById('diagObjetivoDelineado').value = f.detalles?.objetivoDelineado || 'Negro';
+                toggleOpcionesZona();
+                evaluarCalculoColor();
+
                 document.getElementById('microPigmentos').value = f.detalles?.pigmentos || '';
                 document.getElementById('microTecnica').value = f.detalles?.tec || '';
                 document.getElementById('microCartucho').value = f.detalles?.cartucho || '';
