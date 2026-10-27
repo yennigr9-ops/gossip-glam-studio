@@ -141,7 +141,7 @@
                 <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
                 <button onclick="cambiarTab('tintas')" id="tab-tintas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🎨 Inventario & Tintas</button>
                 <button onclick="cambiarTab('inventario')" id="tab-inventario" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📦 Inventario General</button>
-                <button onclick="cambiarTab('deudas')" id="tab-deudas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💳 Control de Deudas</button>
+                <button onclick="cambiarTab('deudas')" id="tab-deudas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💳 Mis Deudas (Préstamos)</button>
                 <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
             </nav>
         </header>
@@ -389,9 +389,10 @@
                         <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
                     </div>
 
-                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA -->
+                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA (CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS) -->
                     <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase">📅 Consultor de Disponibilidad por Día (Horarios: 8am - 1:20pm / 2pm - 6pm)</h3>
+                        <p class="text-[11px] text-slate-500">Haz clic en cualquier hora "Libre" para marcarla en rojo (bloquearla manualmente si no puedes atender en ese hueco específico) y vuelve a hacer clic para liberarla.</p>
                         <div class="flex flex-wrap gap-3 items-center">
                             <div>
                                 <label class="block text-[11px] font-semibold text-rose-700 mb-1">Seleccionar Fecha a Consultar:</label>
@@ -460,7 +461,10 @@
                             <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Hora Fin</label><input type="time" id="bloqueoHoraFin" required class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
                         </div>
                         <div><label class="block text-xs font-semibold text-rose-700 uppercase mb-1">Motivo / Nota</label><input type="text" id="bloqueoMotivo" required placeholder="Ej. Escuela niños" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm"></div>
-                        <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo por Rango</button>
+                        <div class="flex gap-2">
+                            <button type="submit" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md text-sm">🔒 Guardar Bloqueo por Rango</button>
+                            <button type="button" id="btnCancelEditBloqueo" onclick="cancelarEdicionBloqueo()" class="hidden bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl text-sm">Cancelar</button>
+                        </div>
                     </form>
 
                     <div class="mt-6 pt-4 border-t border-rose-100 space-y-3">
@@ -518,26 +522,26 @@
                 </div>
             </section>
 
-            <!-- NUEVO: SECCIÓN INVENTARIO GENERAL -->
+            <!-- NUEVO: SECCIÓN INVENTARIO GENERAL ESTILO EXCEL -->
             <section id="seccion-inventario" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General de Insumos & Productos</h2>
-                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Producto</button>
+                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General de Insumos & Productos (Estilo Excel)</h2>
+                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Artículo</button>
                     </div>
 
-                    <!-- Formulario modal/caja inventario -->
+                    <!-- Formulario modal inventario -->
                     <div id="boxFormInv" class="hidden p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormInv">Registrar / Editar Artículo</h3>
                         <form onsubmit="guardarInventario(event)" class="space-y-3 text-xs">
                             <input type="hidden" id="invEditId">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div><label class="block font-semibold mb-1">Nombre Artículo *</label><input type="text" id="invNombre" required placeholder="Ej. Cartuchos 0801RL" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Categoría *</label><input type="text" id="invCategoria" required placeholder="Ej. Agujas / Desechables" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Categoría / Sección *</label><input type="text" id="invCategoria" required placeholder="Ej. Insumos de pestañas / Cejas HD" class="w-full p-2 border rounded-lg bg-white"></div>
                                 <div><label class="block font-semibold mb-1">Stock / Cantidad *</label><input type="number" id="invCantidad" required placeholder="Ej. 15" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div><label class="block font-semibold mb-1">Stock Mínimo de Alerta</label><input type="number" id="invMinimo" value="3" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Estado Rápido (DISP / Poca / No hay)</label><select id="invEstadoDisp" class="w-full p-2 border rounded-lg bg-white"><option value="DISP">DISP (Disponible)</option><option value="Poca">Poca Existencia</option><option value="No hay">No hay</option></select></div>
                                 <div><label class="block font-semibold mb-1">Costo Estimado ($ MXN)</label><input type="number" step="0.01" id="invCosto" placeholder="Ej. 250.00" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
                             <div class="flex gap-2 pt-1">
@@ -547,61 +551,60 @@
                         </form>
                     </div>
 
-                    <div id="gridInventario" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
+                    <div class="overflow-x-auto pt-2">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="bg-rose-50 text-rose-700 uppercase">
+                                    <th class="p-2.5 rounded-l-lg">Artículo / Insumo</th>
+                                    <th class="p-2.5">Categoría</th>
+                                    <th class="p-2.5">Cantidad / Stock</th>
+                                    <th class="p-2.5">Estado (Excel)</th>
+                                    <th class="p-2.5 rounded-r-lg text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaInventarioGeneral">
+                                <tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
-            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS / FIADOS -->
+            <!-- NUEVO: SECCIÓN CONTROL DE DEUDAS (A QUIÉN DEBO Y ABONOS) -->
             <section id="seccion-deudas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Deudas y Saldos Pendientes (Fiados)</h2>
-                        <button onclick="abrirModalDeuda()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Deuda</button>
+                        <h2 class="text-lg font-bold text-rose-700">💳 Control de Mis Deudas (A quién debo y abonos)</h2>
+                        <button onclick="abrirModalDeuda()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Préstamo / Deuda</button>
                     </div>
 
                     <!-- Formulario Deuda -->
-                    <div id="boxFormDeuda" class="hidden p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-3">
-                        <h3 class="font-bold text-amber-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
+                    <div id="boxFormDeuda" class="hidden p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-3">
+                        <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
                         <form onsubmit="guardarDeuda(event)" class="space-y-3 text-xs">
                             <input type="hidden" id="deudaEditId">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <div><label class="block font-semibold mb-1">Nombre de la Clienta *</label><input type="text" id="deudaClienta" required list="listaClientas" placeholder="Nombre clienta" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Concepto / Servicio *</label><input type="text" id="deudaConcepto" required placeholder="Ej. Retoque Micropigmentación" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Monto Adeudado ($ MXN) *</label><input type="number" step="0.01" id="deudaMonto" required placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">A quién le debes (Acreedor) *</label><input type="text" id="deudaAcreedor" required placeholder="Ej. Miguel, Denis, Compartamos" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Monto Total Prestado / Deuda *</label><input type="number" step="0.01" id="deudaMontoTotal" required placeholder="Ej. 3000.00" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Abono Semanal / Actual</label><input type="number" step="0.01" id="deudaAbono" placeholder="Ej. 500.00" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div><label class="block font-semibold mb-1">Fecha Límite / Promesa</label><input type="date" id="deudaFecha" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Estado</label><select id="deudaEstado" class="w-full p-2 border rounded-lg bg-white"><option value="Pendiente">Pendiente ⏳</option><option value="Pagada">Pagada ✓</option></select></div>
+                                <div><label class="block font-semibold mb-1">Próxima Fecha de Pago / Abono</label><input type="date" id="deudaFechaPago" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Notas / Detalle (ej. Camilla, Préstamo Adicional)</label><input type="text" id="deudaNotas" placeholder="Ej. Préstamo adicional $1397" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
                             <div class="flex gap-2 pt-1">
-                                <button type="submit" class="bg-amber-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Deuda</button>
+                                <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold">Guardar Deuda</button>
                                 <button type="button" onclick="cerrarModalDeuda()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold">Cancelar</button>
                             </div>
                         </form>
                     </div>
 
-                    <div class="flex justify-between items-center bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-xs font-bold text-amber-900">
-                        <span>Total Cuentas por Cobrar (Deudas Pendientes):</span>
-                        <strong id="totalDeudasPendientes" class="text-base text-rose-600">$0.00 MXN</strong>
+                    <div class="flex justify-between items-center bg-rose-50/80 p-3 rounded-xl border border-rose-200 text-xs font-bold text-rose-900">
+                        <span>Total Deuda Acumulada (Lo que debo):</span>
+                        <strong id="totalMisDeudas" class="text-base text-rose-600">$0.00 MXN</strong>
                     </div>
 
-                    <div class="overflow-x-auto pt-2">
-                        <table class="w-full text-left text-xs">
-                            <thead>
-                                <tr class="bg-amber-50 text-amber-800 uppercase">
-                                    <th class="p-2.5 rounded-l-lg">Clienta</th>
-                                    <th class="p-2.5">Concepto</th>
-                                    <th class="p-2.5">Monto</th>
-                                    <th class="p-2.5">Fecha Límite</th>
-                                    <th class="p-2.5">Estado</th>
-                                    <th class="p-2.5 rounded-r-lg text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaDeudas">
-                                <tr><td colspan="6" class="text-center py-4 text-slate-400">No hay deudas registradas.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div id="gridMisDeudas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
                 </div>
             </section>
 
@@ -751,9 +754,9 @@
         let tintas = [];
         let inventario = [];
         let deudas = [];
+        let bloqueosManualesDia = {}; // Guardar bloqueos manuales por fecha y hora (ej: {"2026-10-27": {"15:00": true}})
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
-        // BASE DE DATOS INICIAL DE TINTAS DE ETERNAL INK Y DILUYENTE
         const tintasPredeterminadas = [
             { nombre: "Bright Orange (#E08)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-77891, CI-21160, CI-21098", cas: "#7732-18-5, #13463-67-7", funcion: "Neutralizador de tonos fríos/azulados/violáceos en cejas y labios" },
             { nombre: "Lightning Yellow (#E40)", marca: "Eternal Ink", subtono: "Cálido", ci: "CI-21095", cas: "#7732-18-5, #5468-75-7", funcion: "Neutralizador cálido de tonos violáceos/morados y aportador de luz" },
@@ -766,7 +769,6 @@
             { nombre: "OuO Mixing Solution", marca: "OuO", subtono: "Neutro", ci: "Diluyente / Solución", cas: "Aqua / Glycerin", funcion: "Diluyente / Modificador de viscosidad y saturación" }
         ];
 
-        // FIREBASE LISTENERS CON ORDEN CRONOLÓGICO Y DE DATOS
         db.collection("fichas").onSnapshot(snapshot => {
             fichas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
             fichas.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
@@ -813,8 +815,14 @@
 
         db.collection("deudas").onSnapshot(snapshot => {
             deudas = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
-            deudas.sort((a,b) => new Date(b.fecha || '2099-12-31') - new Date(a.fecha || '2099-12-31'));
             if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
+        });
+
+        db.collection("configuracion").doc("bloqueosManuales").onSnapshot(doc => {
+            if(doc.exists) {
+                bloqueosManualesDia = doc.data().datos || {};
+                if(document.getElementById('filtroFechaAgenda')?.value) renderVistaCalendarioDia();
+            }
         });
 
         db.collection("configuracion").doc("finanzas").onSnapshot(doc => {
@@ -944,7 +952,6 @@
             toggleOpcionesZona();
         }
 
-        // MOTOR INTELIGENTE DE CÁLCULO DE MEZCLAS Y REMOCIÓN
         function evaluarCalculoColor() {
             const zona = document.getElementById('microZona').value;
             const fototipo = document.getElementById('diagFototipo').value;
@@ -1079,7 +1086,6 @@
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
 
-        // LIBERACIÓN DE HORARIOS DINÁMICOS RESPETANDO FRANJAS 8am-1:20pm y 2pm-6pm (o 3am dic)
         function cargarHorariosDisponibles() {
             const fechaSel = document.getElementById('pubFecha').value;
             const cont = document.getElementById('contenedorHorarios');
@@ -1126,7 +1132,9 @@
                     });
                 }
 
-                const estaBloqueado = ocupadoCita || ocupadoBloqueo;
+                const manualBloqueado = bloqueosManualesDia[fechaSel]?.[hora] === true;
+                const estaBloqueado = ocupadoCita || ocupadoBloqueo || manualBloqueado;
+
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = `p-2 rounded-xl text-xs font-bold border ${estaBloqueado ? 'bg-gray-200 text-gray-400 border-gray-300 line-through cursor-not-allowed' : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'}`;
@@ -1146,6 +1154,7 @@
             });
         }
 
+        // VISTA CALENDARIO CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS LIBRES
         function renderVistaCalendarioDia() {
             const fechaVal = document.getElementById('filtroFechaAgenda').value;
             const grid = document.getElementById('gridDisponibilidadDia');
@@ -1171,7 +1180,7 @@
                     ocupadaPorBloqueo = bloqueos.some(b => {
                         const inicioB = new Date(`${fechaVal}T${b.horaInicio}:00`).getTime();
                         const finB = new Date(`${fechaVal}T${b.horaFin}:00`).getTime();
-                        const dentroDeRango = (!b.fechaInicio || fechaVal >= b.fechaInicio) && (!b.fechaFin || fechaVal <= b.fechaFin);
+                        const dentroDeRango = (!b.fechaInicio || fechaVal >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
                         if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemana.toString())) {
                             return timestamp >= inicioB && timestamp < finB;
                         }
@@ -1179,23 +1188,40 @@
                     });
                 }
 
-                let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200";
-                let estadoTxt = "Libre ✨";
+                const manualBloqueado = bloqueosManualesDia[fechaVal]?.[h] === true;
+
+                let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200 cursor-pointer hover:bg-emerald-200";
+                let estadoTxt = "Libre ✨ (Haz clic para bloquear)";
+                let accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
+
                 if(ocupadaPorCita) {
                     badgeColor = "bg-rose-100 text-rose-800 border-rose-200";
                     estadoTxt = ocupadaPorCita.nombre.split('(')[0];
+                    accionClick = "";
                 } else if(ocupadaPorBloqueo) {
-                    badgeColor = "bg-slate-200 text-slate-600 border-slate-300";
-                    estadoTxt = "Bloqueado 🔒";
+                    badgeColor = "bg-slate-300 text-slate-700 border-slate-400";
+                    estadoTxt = "Bloqueado Rango 🔒";
+                    accionClick = "";
+                } else if(manualBloqueado) {
+                    badgeColor = "bg-rose-600 text-white border-rose-700 cursor-pointer hover:bg-rose-700";
+                    estadoTxt = "Ocupado Manual 🔴 (Clic para liberar)";
+                    accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
                 }
 
                 return `
-                    <div class="p-2 rounded-xl border text-center ${badgeColor}">
-                        <strong class="block">${h}</strong>
-                        <span class="text-[10px] truncate block">${estadoTxt}</span>
+                    <div class="p-2.5 rounded-xl border text-center transition-all ${badgeColor}" ${accionClick}>
+                        <strong class="block text-sm">${h}</strong>
+                        <span class="text-[10px] truncate block font-medium mt-0.5">${estadoTxt}</span>
                     </div>
                 `;
             }).join('');
+        }
+
+        async function toggleBloqueoManual(fecha, hora) {
+            if(!bloqueosManualesDia[fecha]) bloqueosManualesDia[fecha] = {};
+            bloqueosManualesDia[fecha][hora] = !bloqueosManualesDia[fecha][hora];
+            await db.collection("configuracion").doc("bloqueosManuales").set({ datos: bloqueosManualesDia });
+            renderVistaCalendarioDia();
         }
 
         async function reservarClientaPublica(e) {
@@ -1229,7 +1255,6 @@
             calcularResumenPublico();
         }
 
-        // GUARDAR FICHA ASEGURANDO TODOS LOS CAMPOS DE PIEL, SUBTONO Y FOTOTIPO
         async function guardarFicha(e) {
             e.preventDefault();
             const editId = document.getElementById('fichaEditId').value;
@@ -1443,8 +1468,28 @@
             else await db.collection("bloqueos").add(dataBloqueo);
 
             alert('🔒 Bloqueo guardado');
-            document.getElementById('bloqueoEditId').value = '';
+            cancelarEdicionBloqueo();
             e.target.reset();
+        }
+
+        function editarBloqueo(idDoc) {
+            const b = bloqueos.find(item => item.idDoc === idDoc);
+            if(!b) return;
+            document.getElementById('bloqueoEditId').value = b.idDoc;
+            document.getElementById('bloqueoFechaInicio').value = b.fechaInicio || '';
+            document.getElementById('bloqueoFechaFin').value = b.fechaFin || '';
+            document.querySelectorAll('input[name="diasBloqueo"]').forEach(chk => {
+                chk.checked = b.diasRecurrentes && b.diasRecurrentes.includes(chk.value);
+            });
+            document.getElementById('bloqueoHoraInicio').value = b.horaInicio || '';
+            document.getElementById('bloqueoHoraFin').value = b.horaFin || '';
+            document.getElementById('bloqueoMotivo').value = b.motivo || '';
+            document.getElementById('btnCancelEditBloqueo').classList.remove('hidden');
+        }
+
+        function cancelarEdicionBloqueo() {
+            document.getElementById('bloqueoEditId').value = '';
+            document.getElementById('btnCancelEditBloqueo').classList.add('hidden');
         }
 
         function renderBloqueos() {
@@ -1457,7 +1502,10 @@
                         <strong class="text-rose-700">${b.fechaInicio} al ${b.fechaFin}</strong>
                         <p class="text-[11px] text-slate-600">Horario: ${b.horaInicio} - ${b.horaFin} (${b.motivo})</p>
                     </div>
-                    <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                    <div class="flex gap-2">
+                        <button onclick="editarBloqueo('${b.idDoc}')" class="text-amber-600 font-bold">✏️</button>
+                        <button onclick="eliminarBloqueo('${b.idDoc}')" class="text-rose-500 font-bold">✕</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -1471,10 +1519,20 @@
             e.target.reset();
         }
 
+        async function eliminarExcepcion(idDoc) {
+            await db.collection("excepciones").doc(idDoc).delete();
+        }
+
         function renderExcepciones() {
             const cont = document.getElementById('listaExcepciones');
             if(!cont) return;
-            cont.innerHTML = excepciones.map(ex => `<div class="p-1.5 bg-emerald-50 rounded text-xs"><strong>${ex.fecha}</strong> - ${ex.motivo}</div>`).join('');
+            if(excepciones.length === 0) { cont.innerHTML = `<p class="text-slate-400 italic text-xs">No hay excepciones activas.</p>`; return; }
+            cont.innerHTML = excepciones.map(ex => `
+                <div class="flex justify-between items-center p-1.5 bg-emerald-50 rounded text-xs border border-emerald-200">
+                    <div><strong>${ex.fecha}</strong> - ${ex.motivo}</div>
+                    <button onclick="eliminarExcepcion('${ex.idDoc}')" class="text-rose-500 font-bold ml-2">🗑️</button>
+                </div>
+            `).join('');
         }
 
         function abrirModalTinta() {
@@ -1556,7 +1614,7 @@
             if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
         }
 
-        // MÓDULO INVENTARIO GENERAL
+        // MÓDULO INVENTARIO GENERAL ESTILO EXCEL (CON DISP, POCA, NO HAY)
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1571,7 +1629,7 @@
                 nombre: document.getElementById('invNombre').value.trim(),
                 categoria: document.getElementById('invCategoria').value.trim(),
                 cantidad: parseInt(document.getElementById('invCantidad').value),
-                minimo: parseInt(document.getElementById('invMinimo').value),
+                estadoDisp: document.getElementById('invEstadoDisp').value,
                 costo: parseFloat(document.getElementById('invCosto').value || 0)
             };
             if(editId) await db.collection("inventario").doc(editId).update(dataInv);
@@ -1581,26 +1639,30 @@
             e.target.reset();
         }
         function renderInventario() {
-            const grid = document.getElementById('gridInventario');
-            if(!grid) return;
+            const tbody = document.getElementById('tablaInventarioGeneral');
+            if(!tbody) return;
             if(inventario.length === 0) {
-                grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay artículos en el inventario general.</p>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>`;
                 return;
             }
-            grid.innerHTML = inventario.map(i => `
-                <div class="p-4 bg-rose-50/40 rounded-2xl border border-rose-100 space-y-2 text-xs">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-bold text-rose-800 text-sm">${i.nombre}</h4>
-                        <span class="px-2 py-0.5 rounded font-bold ${i.cantidad <= i.minimo ? 'bg-rose-200 text-rose-800' : 'bg-emerald-100 text-emerald-800'}">Stock: ${i.cantidad}</span>
-                    </div>
-                    <p><strong>Categoría:</strong> ${i.categoria}</p>
-                    <p><strong>Costo:</strong> $${i.costo.toFixed(2)} MXN</p>
-                    <div class="flex gap-2 pt-2">
-                        <button onclick="editarInventario('${i.idDoc}')" class="text-rose-700 font-bold">Editar</button>
-                        <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">Eliminar</button>
-                    </div>
-                </div>
-            `).join('');
+            tbody.innerHTML = inventario.map(i => {
+                let badgeStyle = "bg-emerald-100 text-emerald-800";
+                if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800";
+                if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800";
+
+                return `
+                    <tr class="border-b border-rose-50">
+                        <td class="p-2.5 font-bold">${i.nombre}</td>
+                        <td class="p-2.5">${i.categoria}</td>
+                        <td class="p-2.5">${i.cantidad}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${badgeStyle}">${i.estadoDisp}</span></td>
+                        <td class="p-2.5 text-center flex justify-center gap-2">
+                            <button onclick="editarInventario('${i.idDoc}')" class="text-amber-600 font-bold">✏️</button>
+                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
         function editarInventario(idDoc) {
             const i = inventario.find(item => item.idDoc === idDoc);
@@ -1610,14 +1672,14 @@
             document.getElementById('invNombre').value = i.nombre;
             document.getElementById('invCategoria').value = i.categoria;
             document.getElementById('invCantidad').value = i.cantidad;
-            document.getElementById('invMinimo').value = i.minimo;
+            document.getElementById('invEstadoDisp').value = i.estadoDisp || 'DISP';
             document.getElementById('invCosto').value = i.costo;
         }
         async function eliminarInventario(idDoc) {
             if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
         }
 
-        // MÓDULO CONTROL DE DEUDAS / FIADOS
+        // MÓDULO MIS DEUDAS / PRÉSTAMOS (A QUIÉN DEBO Y ABONOS)
         function abrirModalDeuda() {
             document.getElementById('boxFormDeuda').classList.remove('hidden');
             document.getElementById('deudaEditId').value = '';
@@ -1629,55 +1691,59 @@
             e.preventDefault();
             const editId = document.getElementById('deudaEditId').value;
             const dataDeuda = {
-                clienta: document.getElementById('deudaClienta').value.trim(),
-                concepto: document.getElementById('deudaConcepto').value.trim(),
-                monto: parseFloat(document.getElementById('deudaMonto').value),
-                fecha: document.getElementById('deudaFecha').value,
-                estado: document.getElementById('deudaEstado').value
+                acreedor: document.getElementById('deudaAcreedor').value.trim(),
+                montoTotal: parseFloat(document.getElementById('deudaMontoTotal').value),
+                abono: parseFloat(document.getElementById('deudaAbono').value || 0),
+                fechaPago: document.getElementById('deudaFechaPago').value,
+                notas: document.getElementById('deudaNotas').value.trim()
             };
             if(editId) await db.collection("deudas").doc(editId).update(dataDeuda);
             else await db.collection("deudas").add(dataDeuda);
-            alert('💳 Registro de deuda guardado');
+            alert('💳 Deuda guardada correctamente');
             cerrarModalDeuda();
             e.target.reset();
         }
         function renderDeudas() {
-            const tbody = document.getElementById('tablaDeudas');
-            if(!tbody) return;
+            const grid = document.getElementById('gridMisDeudas');
+            if(!grid) return;
             if(deudas.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">No hay deudas registradas.</td></tr>`;
-                document.getElementById('totalDeudasPendientes').innerText = "$0.00 MXN";
+                grid.innerHTML = `<p class="col-span-full text-slate-400 text-center text-xs">No hay deudas registradas.</p>`;
+                document.getElementById('totalMisDeudas').innerText = "$0.00 MXN";
                 return;
             }
-            let totalPendiente = 0;
-            tbody.innerHTML = deudas.map(d => {
-                if(d.estado === 'Pendiente') totalPendiente += d.monto;
+            let totalGeneral = 0;
+            grid.innerHTML = deudas.map(d => {
+                const restante = (d.montoTotal || 0) - (d.abono || 0);
+                totalGeneral += restante;
                 return `
-                    <tr class="border-b border-amber-50">
-                        <td class="p-2.5 font-bold">${d.clienta}</td>
-                        <td class="p-2.5">${d.concepto}</td>
-                        <td class="p-2.5 font-bold text-rose-600">$${d.monto.toFixed(2)} MXN</td>
-                        <td class="p-2.5">${d.fecha || 'N/A'}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded font-bold ${d.estado === 'Pagada' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${d.estado}</span></td>
-                        <td class="p-2.5 text-center flex justify-center gap-2">
-                            <button onclick="editarDeuda('${d.idDoc}')" class="text-amber-700 font-bold">✏️</button>
-                            <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
-                        </td>
-                    </tr>
+                    <div class="p-4 bg-rose-50/50 rounded-2xl border border-rose-200 space-y-2 text-xs shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-rose-800 text-sm">👤 A: ${d.acreedor}</h4>
+                            <span class="px-2 py-0.5 rounded font-bold bg-rose-200 text-rose-800">Restante: $${restante.toFixed(2)}</span>
+                        </div>
+                        <p><strong>Deuda Total:</strong> $${(d.montoTotal || 0).toFixed(2)} MXN</p>
+                        <p><strong>Abono actual:</strong> $${(d.abono || 0).toFixed(2)} MXN</p>
+                        <p><strong>Próximo Pago:</strong> ${d.fechaPago || 'N/A'}</p>
+                        ${d.notas ? `<p class="text-slate-500 italic">${d.notas}</p>` : ''}
+                        <div class="flex gap-2 pt-2 border-t border-rose-100">
+                            <button onclick="editarDeuda('${d.idDoc}')" class="text-rose-700 font-bold">Editar</button>
+                            <button onclick="eliminarDeuda('${d.idDoc}')" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </div>
                 `;
             }).join('');
-            document.getElementById('totalDeudasPendientes').innerText = `$${totalPendiente.toFixed(2)} MXN`;
+            document.getElementById('totalMisDeudas').innerText = `$${totalGeneral.toFixed(2)} MXN`;
         }
         function editarDeuda(idDoc) {
             const d = deudas.find(item => item.idDoc === idDoc);
             if(!d) return;
             abrirModalDeuda();
             document.getElementById('deudaEditId').value = d.idDoc;
-            document.getElementById('deudaClienta').value = d.clienta;
-            document.getElementById('deudaConcepto').value = d.concepto;
-            document.getElementById('deudaMonto').value = d.monto;
-            document.getElementById('deudaFecha').value = d.fecha || '';
-            document.getElementById('deudaEstado').value = d.estado;
+            document.getElementById('deudaAcreedor').value = d.acreedor;
+            document.getElementById('deudaMontoTotal').value = d.montoTotal;
+            document.getElementById('deudaAbono').value = d.abono;
+            document.getElementById('deudaFechaPago').value = d.fechaPago || '';
+            document.getElementById('deudaNotas').value = d.notas || '';
         }
         async function eliminarDeuda(idDoc) {
             if(confirm('¿Eliminar registro de deuda?')) await db.collection("deudas").doc(idDoc).delete();
@@ -1866,7 +1932,6 @@
             `).join('');
         }
 
-        // CARGAR FICHA EN FORMULARIO RESTAURANDO CADA SELECTOR DE MICROPIGMENTACIÓN Y PIEL
         function cargarFichaEnFormulario(id) {
             const f = fichas.find(item => item.id == id);
             if(!f) return;
