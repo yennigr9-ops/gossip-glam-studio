@@ -522,12 +522,12 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN INVENTARIO GENERAL (SIN PRECIOS, ORGANIZADO POR CATEGORÍA Y EDICIÓN RÁPIDA CON UN TOQUE) -->
+            <!-- SECCIÓN INVENTARIO GENERAL (AJUSTADO PARA PANTALLA DE CELULAR Y SIN TEXTOS MOLESTOS) -->
             <section id="seccion-inventario" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">📦 Inventario General (Toque directo en Stock / Estado)</h2>
-                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Artículo Rápido</button>
+                        <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General</h2>
+                        <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Artículo</button>
                     </div>
 
                     <!-- Formulario modal inventario rápido -->
@@ -543,9 +543,9 @@
                             <div>
                                 <label class="block font-semibold mb-1">Estado Rápido *</label>
                                 <select id="invEstadoDisp" class="w-full p-2 border rounded-lg bg-white">
-                                    <option value="DISP">DISP (Disponible)</option>
-                                    <option value="Poca">Poca Existencia</option>
-                                    <option value="No hay">No hay</option>
+                                    <option value="DISP">Disponible (DISP)</option>
+                                    <option value="Poca">Pocas Piezas</option>
+                                    <option value="No hay">No Hay</option>
                                 </select>
                             </div>
                             <div class="flex gap-2 pt-1">
@@ -555,15 +555,16 @@
                         </form>
                     </div>
 
-                    <div class="overflow-x-auto pt-2">
-                        <table class="w-full text-left text-xs">
+                    <!-- TABLA COMPACTA Y AJUSTADA A PANTALLA -->
+                    <div class="overflow-x-auto pt-1">
+                        <table class="w-full text-left text-[11px] md:text-xs">
                             <thead>
-                                <tr class="bg-rose-50 text-rose-700 uppercase">
-                                    <th class="p-2.5 rounded-l-lg">Artículo / Insumo</th>
-                                    <th class="p-2.5">Categoría</th>
-                                    <th class="p-2.5">Cantidad / Stock (Toca para cambiar)</th>
-                                    <th class="p-2.5">Estado (Toca para cambiar)</th>
-                                    <th class="p-2.5 rounded-r-lg text-center">Acciones</th>
+                                <tr class="bg-rose-50 text-rose-700 uppercase font-bold">
+                                    <th class="p-2 rounded-l-lg">Artículo</th>
+                                    <th class="p-2">Categoría</th>
+                                    <th class="p-2 text-center">Cantidad</th>
+                                    <th class="p-2 text-center">Estado</th>
+                                    <th class="p-2 rounded-r-lg text-center">🗑️</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaInventarioGeneral">
@@ -1251,7 +1252,6 @@
             });
         }
 
-        // VISTA CALENDARIO CON ROJO SUAVE PARECIDO AL DE CITAS PARA BLOQUEOS MANUALES
         function renderVistaCalendarioDia() {
             const fechaVal = document.getElementById('filtroFechaAgenda').value;
             const grid = document.getElementById('gridDisponibilidadDia');
@@ -1303,9 +1303,8 @@
                     estadoTxt = "Bloqueado 🔒";
                     accionClick = "";
                 } else if(manualBloqueado) {
-                    // ROJO SUAVE / BAJITO IGUAL AL DE CITAS
                     badgeColor = "bg-rose-200 text-rose-900 border-rose-300 cursor-pointer hover:bg-rose-300";
-                    estadoTxt = "Bloqueado 🚫 (Clic libera)";
+                    estadoTxt = "Bloqueado 🚫";
                     accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
                 }
 
@@ -1715,7 +1714,7 @@
             if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
         }
 
-        // MÓDULO INVENTARIO GENERAL (ORGANIZADO POR CATEGORÍA Y EDICIÓN RÁPIDA CON UN TOQUE)
+        // MÓDULO INVENTARIO GENERAL (LIMPIO, COMPACTO Y SIN TEXTOS DE 'TOCA')
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1760,7 +1759,6 @@
                 return;
             }
 
-            // Ordenar por categoría alfabéticamente
             inventario.sort((a,b) => (a.categoria || "").localeCompare(b.categoria || ""));
 
             tbody.innerHTML = inventario.map(i => {
@@ -1768,22 +1766,27 @@
                 if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800";
                 if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800";
 
+                let estadoTextoLimpio = i.estadoDisp || 'DISP';
+                if(estadoTextoLimpio === 'DISP') estadoTextoLimpio = 'Disponible';
+                if(estadoTextoLimpio === 'Poca') estadoTextoLimpio = 'Pocas piezas';
+                if(estadoTextoLimpio === 'No hay') estadoTextoLimpio = 'No disponible';
+
                 return `
                     <tr class="border-b border-rose-50">
-                        <td class="p-2.5 font-bold">${i.nombre}</td>
-                        <td class="p-2.5 font-semibold text-rose-600">${i.categoria}</td>
-                        <td class="p-2.5">
-                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg font-bold border border-rose-200">
-                                🔢 ${i.cantidad} (Toca para editar)
+                        <td class="p-2 font-bold text-slate-800">${i.nombre}</td>
+                        <td class="p-2 font-semibold text-rose-600">${i.categoria}</td>
+                        <td class="p-2 text-center">
+                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2 py-1 rounded-md font-bold border border-rose-200 text-rose-700">
+                                ${i.cantidad}
                             </button>
                         </td>
-                        <td class="p-2.5">
-                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2.5 py-1 rounded font-bold ${badgeStyle}">
-                                ${i.estadoDisp || 'DISP'} (Toca cambia)
+                        <td class="p-2 text-center">
+                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-1 rounded-md font-bold ${badgeStyle}">
+                                ${estadoTextoLimpio}
                             </button>
                         </td>
-                        <td class="p-2.5 text-center flex justify-center gap-2">
-                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
+                        <td class="p-2 text-center">
+                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold hover:text-rose-700">🗑️</button>
                         </td>
                     </tr>
                 `;
@@ -1842,7 +1845,7 @@
                 abonosActuales.push({ monto: montoAbono, fecha: fechaAbono, nota: notaAbono });
                 await db.collection("deudas").doc(idDoc).update({ 
                     abonos: abonosActuales,
-                    fechaPago: nuevaFechaPago // Actualiza la fecha del próximo pago
+                    fechaPago: nuevaFechaPago 
                 });
                 alert('💸 Abono registrado y próximo pago actualizado');
                 cerrarModalAbono();
@@ -1859,7 +1862,6 @@
                 return;
             }
 
-            // Ordenar deudas por fecha de próximo pago (más cercano primero, estilo recordatorio)
             deudas.sort((a,b) => new Date(a.fechaPago || '2099-12-31') - new Date(b.fechaPago || '2099-12-31'));
 
             let totalGeneral = 0;
