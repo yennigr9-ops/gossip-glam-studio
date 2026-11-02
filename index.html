@@ -391,7 +391,7 @@
                         <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
                     </div>
 
-                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA (CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS) -->
+                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA -->
                     <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase">📅 Consultor de Disponibilidad por Día (Horarios: 8am - 1:20pm / 2pm - 6pm)</h3>
                         <p class="text-[11px] text-slate-500">Haz clic en cualquier hora "Libre" para marcarla (bloquearla con rojo suave si no puedes atender) y vuelve a hacer clic para liberarla.</p>
@@ -524,11 +524,14 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN INVENTARIO GENERAL (CON ARTÍCULOS FALTANTES / NO DISPONIBLES ARRIBA AUTOMÁTICAMENTE) -->
+            <!-- SECCIÓN INVENTARIO GENERAL EN VISTA CUADRÍCULA / TARJETAS LIMPIAS -->
             <section id="seccion-inventario" class="space-y-6 hidden">
-                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
+                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General</h2>
+                        <div>
+                            <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General</h2>
+                            <p class="text-xs text-slate-400">Organizado en tarjetas por categorías y faltantes al inicio.</p>
+                        </div>
                         <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Artículo</button>
                     </div>
 
@@ -557,38 +560,22 @@
                         </form>
                     </div>
 
-                    <!-- TABLA ORDENADA (FALTANTES Y NO DISPONIBLES ARRIBA) -->
-                    <div class="overflow-x-auto pt-1">
-                        <table class="w-full text-left text-[11px] md:text-xs">
-                            <thead>
-                                <tr class="bg-rose-50 text-rose-700 uppercase font-bold">
-                                    <th class="p-2 rounded-l-lg">Artículo</th>
-                                    <th class="p-2">Categoría</th>
-                                    <th class="p-2 text-center">Cantidad</th>
-                                    <th class="p-2 text-center">Estado</th>
-                                    <th class="p-2 rounded-r-lg text-center">🗑️</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaInventarioGeneral">
-                                <tr><td colspan="5" class="text-center py-4 text-slate-400">Cargando inventario general...</td></tr>
-                            </tbody>
-                        </table>
+                    <!-- VISTA CUADRÍCULA TARJETAS (FALTANTES Y NO DISPONIBLES DESTACADOS) -->
+                    <div id="gridInventarioGeneral" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                        <p class="text-center text-slate-400 text-xs col-span-full">Cargando inventario general...</p>
                     </div>
                 </div>
             </section>
 
-            <!-- SECCIÓN NUEVA: BLÍSTERES DE PESTAÑAS (ORDENADO COMO TU IMAGEN) -->
+            <!-- SECCIÓN BLÍSTERES DE PESTAÑAS (CUADRÍCULA LIMPIA SIN BOTÓN MOLLESTO CORREGIDA) -->
             <section id="seccion-blisters" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <div>
-                            <h2 class="text-lg font-bold text-rose-700">👁️ Control de Blísteres de Pestañas</h2>
-                            <p class="text-xs text-slate-400">Revisa qué medidas te hacen falta y cuántas te quedan en existencia.</p>
-                        </div>
-                        <button onclick="cargarBlistersPredeterminados()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold">🔄 Sincronizar / Cargar Cuadrícula</button>
+                    <div class="border-b border-rose-100 pb-3">
+                        <h2 class="text-lg font-bold text-rose-700">👁️ Control de Blísteres de Pestañas</h2>
+                        <p class="text-xs text-slate-400">Revisa qué medidas te hacen falta y cuántas te quedan en existencia.</p>
                     </div>
 
-                    <!-- Cuadrícula idéntica a tu imagen -->
+                    <!-- Cuadrícula limpia ordenada -->
                     <div id="gridBlisters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
                 </div>
             </section>
@@ -735,67 +722,70 @@
                 </div>
             </section>
 
-            <!-- 8. SECCIÓN NUEVA: CONTROL DE GASTO DE TU ESPOSO -->
+            <!-- 8. SECCIÓN ACTUALIZADA: CONTROL DE GASTO DE TU ESPOSO (CON GUARDADO EN FIREBASE + DESGLOSE Y BOTÓN BORRAR) -->
             <section id="seccion-esposo" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                    <div class="border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">👷‍♂️ Control de Sueldo Variable y Pagos Fijos de tu Esposo</h2>
-                        <p class="text-xs text-slate-400">Calcula automáticamente la distribución del sueldo y asegura el mandado, pagos fijos y viáticos.</p>
+                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
+                        <div>
+                            <h2 class="text-lg font-bold text-rose-700">👷‍♂️ Control de Sueldo Variable y Pagos Fijos de tu Esposo</h2>
+                            <p class="text-xs text-slate-400">Guardado automáticamente en tu Nube de Firebase.</p>
+                        </div>
+                        <button onclick="limpiarCamposEsposo()" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🗑️ Limpiar / Borrar Datos</button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
-                            <h3 class="font-bold text-rose-800 text-xs uppercase">⚙️ Parámetros Semanales</h3>
+                            <h3 class="font-bold text-rose-800 text-xs uppercase">⚙️ Parámetros Semanales y Entrega de Efectivo</h3>
                             <div>
-                                <label class="block text-xs font-semibold text-rose-700 mb-1">Sueldo Recibido en la Semana ($ MXN):</label>
-                                <input type="number" id="espSueldoSemanal" value="4000" oninput="calcularGastoEsposo()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white font-bold text-rose-700">
-                                <span class="text-[10px] text-slate-400">Normal $4,000 (o ajusta si faltó 1 o 2 días: $3,200 / $2,400)</span>
+                                <label class="block text-xs font-semibold text-rose-700 mb-1">Sueldo Entregado / Recibido ($ MXN):</label>
+                                <input type="number" id="espSueldoSemanal" value="4000" oninput="guardarYCalcularEsposo()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white font-bold text-rose-700" placeholder="Ej. 980">
+                                <span class="text-[10px] text-slate-400">Ingresa la cantidad exacta entregada (ej. $980 o $4,000)</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2 pt-2">
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-rose-700 mb-1">Aporte Mandado (Fijo)</label>
-                                    <input type="number" id="espMandado" value="1500" oninput="calcularGastoEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white">
+                                    <label class="block text-[11px] font-semibold text-rose-700 mb-1">Tomado para Comida / Mandado</label>
+                                    <input type="number" id="espMandado" value="1500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white" placeholder="Ej. 200">
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-semibold text-rose-700 mb-1">Gastos de Taxis / Viáticos</label>
-                                    <input type="number" id="espTaxis" value="500" oninput="calcularGastoEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white">
+                                    <input type="number" id="espTaxis" value="500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white" placeholder="Ej. 0">
                                 </div>
                             </div>
                         </div>
 
                         <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-3">
-                            <h3 class="font-bold text-purple-800 text-xs uppercase">💳 Pagos Fijos Obligatorios</h3>
+                            <h3 class="font-bold text-purple-800 text-xs uppercase">💳 Pagos Fijos / Otras Cosas Pagadas</h3>
                             <div class="grid grid-cols-2 gap-2 text-xs">
                                 <div>
                                     <label class="block font-[11px] font-semibold text-purple-700 mb-1">Compartamos (Semanal)</label>
-                                    <input type="number" id="espCompartamosSem" value="500" oninput="calcularGastoEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                    <input type="number" id="espCompartamosSem" value="500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                 </div>
                                 <div>
                                     <label class="block font-[11px] font-semibold text-purple-700 mb-1">Colchón (Semanal)</label>
-                                    <input type="number" id="espColchon" value="300" oninput="calcularGastoEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                    <input type="number" id="espColchon" value="300" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                 </div>
                                 <div>
                                     <label class="block font-[11px] font-semibold text-purple-700 mb-1">Señor de los Quesos</label>
-                                    <input type="number" id="espQuesos" value="100" oninput="calcularGastoEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                    <input type="number" id="espQuesos" value="100" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                 </div>
                                 <div>
                                     <label class="block font-[11px] font-semibold text-purple-700 mb-1">Apartado Mensual (1/4)</label>
-                                    <input type="number" id="espCompartamosMes" value="200" oninput="calcularGastoEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
+                                    <input type="number" id="espCompartamosMes" value="200" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-purple-200 rounded-lg bg-white">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- RESULTADO Y RESUMEN INTERactivo -->
+                    <!-- RESULTADO Y RESUMEN INTERACTIVO CON GUARDADO EN FIREBASE -->
                     <div class="p-5 bg-white rounded-2xl border border-rose-200 shadow-sm space-y-3">
                         <h3 class="font-bold text-rose-700 text-sm border-b pb-2">📊 Resumen de Distribución Semanal</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                             <div class="p-3 bg-rose-50 rounded-xl border border-rose-100">
-                                <span class="text-rose-600 font-semibold block">Total Apartados Fijos + Mandado:</span>
+                                <span class="text-rose-600 font-semibold block">Total Gastos + Pagos + Comida:</span>
                                 <strong id="espResTotalFijos" class="text-base text-rose-800">$0.00 MXN</strong>
                             </div>
                             <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                                <span class="text-emerald-700 font-semibold block">Disponible Real para Taxis / Extras:</span>
+                                <span class="text-emerald-700 font-semibold block">Sobrante / Restante Disponible:</span>
                                 <strong id="espResDisponible" class="text-base text-emerald-800">$0.00 MXN</strong>
                             </div>
                             <div class="p-3 bg-amber-50 rounded-xl border border-amber-100" id="espBoxAlerta">
@@ -1028,6 +1018,21 @@
             if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
         });
 
+        // ESCUCHADOR PARA CONTROL DE ESPOSO EN FIREBASE
+        db.collection("configuracion").doc("gastoEsposo").onSnapshot(doc => {
+            if(doc.exists) {
+                const data = doc.data();
+                if(document.getElementById('espSueldoSemanal')) document.getElementById('espSueldoSemanal').value = data.sueldo || '';
+                if(document.getElementById('espMandado')) document.getElementById('espMandado').value = data.mandado || '';
+                if(document.getElementById('espTaxis')) document.getElementById('espTaxis').value = data.taxis || '';
+                if(document.getElementById('espCompartamosSem')) document.getElementById('espCompartamosSem').value = data.compartamosSem || '';
+                if(document.getElementById('espColchon')) document.getElementById('espColchon').value = data.colchon || '';
+                if(document.getElementById('espQuesos')) document.getElementById('espQuesos').value = data.quesos || '';
+                if(document.getElementById('espCompartamosMes')) document.getElementById('espCompartamosMes').value = data.compartamosMes || '';
+                calcularGastoEsposo();
+            }
+        });
+
         db.collection("configuracion").doc("bloqueosManuales").onSnapshot(doc => {
             if(doc.exists) {
                 bloqueosManualesDia = doc.data().datos || {};
@@ -1048,9 +1053,6 @@
         if(document.getElementById('filtroFechaAgenda')) {
             document.getElementById('filtroFechaAgenda').valueAsDate = new Date();
         }
-
-        // Inicializar cálculo de esposo al cargar
-        setTimeout(() => { calcularGastoEsposo(); }, 500);
 
         function setupCanvas(id) {
             const canvas = document.getElementById(id);
@@ -1814,24 +1816,7 @@
             `).join('');
         }
 
-        function editarTinta(idDoc) {
-            const t = tintas.find(i => i.idDoc === idDoc);
-            if(!t) return;
-            abrirModalTinta();
-            document.getElementById('tintaEditId').value = t.idDoc;
-            document.getElementById('tintaNombre').value = t.nombre;
-            document.getElementById('tintaMarca').value = t.marca;
-            document.getElementById('tintaSubtono').value = t.subtono;
-            document.getElementById('tintaCI').value = t.ci;
-            document.getElementById('tintaCAS').value = t.cas;
-            document.getElementById('tintaFuncion').value = t.funcion;
-        }
-
-        async function eliminarTinta(idDoc) {
-            if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
-        }
-
-        // MÓDULO INVENTARIO GENERAL (FALTANTES Y NO DISPONIBLES ARRIBA AUTOMÁTICAMENTE)
+        // MÓDULO INVENTARIO GENERAL EN TARJETAS / CUADRÍCULA
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1869,10 +1854,10 @@
         }
 
         function renderInventario() {
-            const tbody = document.getElementById('tablaInventarioGeneral');
-            if(!tbody) return;
+            const grid = document.getElementById('gridInventarioGeneral');
+            if(!grid) return;
             if(inventario.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>`;
+                grid.innerHTML = `<p class="col-span-full text-center py-4 text-slate-400 text-xs">No hay artículos registrados.</p>`;
                 return;
             }
 
@@ -1889,10 +1874,10 @@
                 return (a.categoria || "").localeCompare(b.categoria || "");
             });
 
-            tbody.innerHTML = inventario.map(i => {
-                let badgeStyle = "bg-emerald-100 text-emerald-800";
-                if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800";
-                if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800";
+            grid.innerHTML = inventario.map(i => {
+                let badgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800 border-amber-200";
+                if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800 border-rose-200";
 
                 let estadoTextoLimpio = i.estadoDisp || 'DISP';
                 if(estadoTextoLimpio === 'DISP') estadoTextoLimpio = 'Disponible';
@@ -1900,23 +1885,24 @@
                 if(estadoTextoLimpio === 'No hay') estadoTextoLimpio = 'No disponible';
 
                 return `
-                    <tr class="border-b border-rose-50">
-                        <td class="p-2 font-bold text-slate-800">${i.nombre}</td>
-                        <td class="p-2 font-semibold text-rose-600">${i.categoria}</td>
-                        <td class="p-2 text-center">
-                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2 py-1 rounded-md font-bold border border-rose-200 text-rose-700">
-                                ${i.cantidad}
-                            </button>
-                        </td>
-                        <td class="p-2 text-center">
-                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-1 rounded-md font-bold ${badgeStyle}">
+                    <div class="p-3.5 bg-rose-50/40 rounded-2xl border border-rose-100 space-y-2 shadow-sm flex flex-col justify-between text-xs">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">${i.nombre}</h4>
+                                <span class="font-semibold text-rose-600 text-[11px]">${i.categoria}</span>
+                            </div>
+                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-0.5 rounded-full font-bold border ${badgeStyle}">
                                 ${estadoTextoLimpio}
                             </button>
-                        </td>
-                        <td class="p-2 text-center">
-                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold hover:text-rose-700">🗑️</button>
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="flex justify-between items-center pt-1 border-t border-rose-100">
+                            <span class="text-slate-500 font-medium">Stock:</span>
+                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-white hover:bg-rose-100 px-3 py-1 rounded-lg font-bold border border-rose-200 text-rose-700">
+                                ${i.cantidad} pzs
+                            </button>
+                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold hover:text-rose-700 ml-2">🗑️</button>
+                        </div>
+                    </div>
                 `;
             }).join('');
         }
@@ -1925,19 +1911,7 @@
             if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
         }
 
-        // MÓDULO NUEVO: BLÍSTERES DE PESTAÑAS
-        async function cargarBlistersPredeterminados() {
-            // Eliminar y recargar limpios según tu imagen
-            const snapshot = await db.collection("blisters").get();
-            for(const doc of snapshot.docs) {
-                await db.collection("blisters").doc(doc.id).delete();
-            }
-            for(const b of blistersPredeterminados) {
-                await db.collection("blisters").add(b);
-            }
-            alert("✨ Cuadrícula de blísteres sincronizada con éxito.");
-        }
-
+        // MÓDULO BLÍSTERES DE PESTAÑAS (CORREGIDO Y SIN DUPLICAR)
         async function actualizarCantidadBlister(idDoc, itemIndex, nuevaCantidad) {
             const val = parseInt(nuevaCantidad);
             if(isNaN(val)) return;
@@ -1956,7 +1930,17 @@
                 return;
             }
 
-            grid.innerHTML = blisters.map(b => {
+            // Filtrar duplicados en pantalla por nombre si existían antes
+            const modelosUnicos = [];
+            const idsProcesados = new Set();
+            blisters.forEach(b => {
+                if(!idsProcesados.has(b.modelo)) {
+                    idsProcesados.add(b.modelo);
+                    modelosUnicos.push(b);
+                }
+            });
+
+            grid.innerHTML = modelosUnicos.map(b => {
                 const filasHtml = b.items.map((it, idx) => `
                     <div class="flex justify-between items-center py-1 border-b border-rose-50 text-xs">
                         <span class="font-semibold text-slate-600">Medida ${it.m}:</span>
@@ -2243,7 +2227,42 @@
             document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${totalGeneralAcumulado.toFixed(2)} MXN`;
         }
 
-        // LÓGICA DE CÁLCULO DE GASTO DE TU ESPOSO
+        // LÓGICA DE CÁLCULO DE GASTO DE TU ESPOSO CON PERSISTENCIA EN FIREBASE
+        let timerGuardadoEsposo = null;
+        function guardarYCalcularEsposo() {
+            calcularGastoEsposo();
+            if(timerGuardadoEsposo) clearTimeout(timerGuardadoEsposo);
+            timerGuardadoEsposo = setTimeout(async () => {
+                const sueldo = document.getElementById('espSueldoSemanal').value;
+                const mandado = document.getElementById('espMandado').value;
+                const taxis = document.getElementById('espTaxis').value;
+                const compartamosSem = document.getElementById('espCompartamosSem').value;
+                const colchon = document.getElementById('espColchon').value;
+                const quesos = document.getElementById('espQuesos').value;
+                const compartamosMes = document.getElementById('espCompartamosMes').value;
+
+                await db.collection("configuracion").doc("gastoEsposo").set({
+                    sueldo, mandado, taxis, compartamosSem, colchon, quesos, compartamosMes
+                });
+            }, 500);
+        }
+
+        async function limpiarCamposEsposo() {
+            if(confirm('¿Borrar y reiniciar las casillas de gastos de tu esposo?')) {
+                document.getElementById('espSueldoSemanal').value = '';
+                document.getElementById('espMandado').value = '';
+                document.getElementById('espTaxis').value = '';
+                document.getElementById('espCompartamosSem').value = '';
+                document.getElementById('espColchon').value = '';
+                document.getElementById('espQuesos').value = '';
+                document.getElementById('espCompartamosMes').value = '';
+                await db.collection("configuracion").doc("gastoEsposo").set({
+                    sueldo: '', mandado: '', taxis: '', compartamosSem: '', colchon: '', quesos: '', compartamosMes: ''
+                });
+                calcularGastoEsposo();
+            }
+        }
+
         function calcularGastoEsposo() {
             const sueldo = parseFloat(document.getElementById('espSueldoSemanal').value) || 0;
             const mandado = parseFloat(document.getElementById('espMandado').value) || 0;
@@ -2264,10 +2283,10 @@
 
             if(disponible >= 0) {
                 boxAlerta.className = "p-3 bg-emerald-50 rounded-xl border border-emerald-100";
-                txtAlerta.innerText = `✨ Sueldo cubierto con éxito. Le quedan $${disponible.toFixed(2)} libres.`;
+                txtAlerta.innerText = `✨ Sueldo cubierto con éxito. Quedan $${disponible.toFixed(2)} libres.`;
             } else {
                 boxAlerta.className = "p-3 bg-rose-50 rounded-xl border border-rose-200";
-                txtAlerta.innerText = `⚠️ ¡Déficit! Faltan $${Math.abs(disponible).toFixed(2)} para cubrir todos los apartados y taxis de la semana.`;
+                txtAlerta.innerText = `⚠️ ¡Déficit! Faltan $${Math.abs(disponible).toFixed(2)} para cubrir todos los apartados y gastos anotados.`;
             }
         }
 
