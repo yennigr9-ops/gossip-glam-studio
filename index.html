@@ -524,13 +524,13 @@
                 </div>
             </section>
 
-            <!-- 📦 PESTAÑA 1 MODIFICADA: INVENTARIO GENERAL EN CAJAS / CONTENEDORES POR CATEGORÍA -->
+            <!-- 📦 PESTAÑA INVENTARIO GENERAL (SIN CAJITA INDIVIDUAL, SÓLO CAJAS POR CATEGORÍA CON EDICIÓN DIRECTA) -->
             <section id="seccion-inventario" class="space-y-6 hidden">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
                         <div>
                             <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General (Cajas por Categoría)</h2>
-                            <p class="text-xs text-slate-400">Cada categoría en su propia caja ordenada (cejas en un recuadro, pestañas en otro, etc.).</p>
+                            <p class="text-xs text-slate-400">Toca cualquier número de stock para editarlo o el botón de estado para cambiarlo.</p>
                         </div>
                         <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Artículo</button>
                     </div>
@@ -715,7 +715,7 @@
                 </div>
             </section>
 
-            <!-- 👷‍♂️ PESTAÑA 2 MODIFICADA: CONTROL GASTO ESPOSO (CON GASTOS EXTRAS / DESGLOSE Y RESTA AUTOMÁTICA) -->
+            <!-- 👷‍♂️ SECCIÓN CONTROL GASTO ESPOSO -->
             <section id="seccion-esposo" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
@@ -769,9 +769,9 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO APARTADO: REGISTRAR GASTO EXTRA / DESGLOSE (SE DESCUENTA DEL RESTANTE AUTOMÁTICAMENTE) -->
+                    <!-- APARTADO GASTO EXTRA / DESGLOSE -->
                     <div class="p-4 bg-amber-50/60 rounded-xl border border-amber-200 space-y-3">
-                        <h3 class="font-bold text-amber-800 text-xs uppercase">💸 Registrar Gasto Extra o Salida (Ej. Comida con lo que sobró, tacos, gasolina, etc.)</h3>
+                        <h3 class="font-bold text-amber-800 text-xs uppercase">💸 Registrar Gasto Extra o Salida</h3>
                         <form onsubmit="agregarGastoExtraEsposo(event)" class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                             <div>
                                 <label class="block font-semibold mb-1">Concepto del Gasto *</label>
@@ -1035,7 +1035,6 @@
             if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
         });
 
-        // ESCUCHADOR PARA CONTROL DE ESPOSO EN FIREBASE (INCLUYENDO GASTOS EXTRAS)
         db.collection("configuracion").doc("gastoEsposo").onSnapshot(doc => {
             if(doc.exists) {
                 const data = doc.data();
@@ -1835,7 +1834,7 @@
             `).join('');
         }
 
-        // 📦 MÓDULO INVENTARIO GENERAL EN CAJAS / CONTENEDORES POR CATEGORÍA
+        // 📦 MÓDULO INVENTARIO GENERAL EN CAJAS POR CATEGORÍA CON EDICIÓN DIRECTA DE STOCK Y ESTADO
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1859,6 +1858,13 @@
             e.target.reset();
         }
 
+        async function cambiarCantidadDirecta(idDoc, cantidadActual) {
+            const nueva = prompt("Ingresa la cantidad en stock:", cantidadActual);
+            if(nueva !== null && !isNaN(nueva)) {
+                await db.collection("inventario").doc(idDoc).update({ cantidad: parseInt(nueva) });
+            }
+        }
+
         async function cambiarEstadoRapido(idDoc, estadoActual) {
             const estados = ["DISP", "Poca", "No hay"];
             const siguienteEstado = estados[(estados.indexOf(estadoActual) + 1) % estados.length];
@@ -1877,7 +1883,6 @@
                 return;
             }
 
-            // Agrupar por categoría en contenedores (cajas)
             const categoriasMap = {};
             inventario.forEach(item => {
                 const cat = (item.categoria || "Sin categoría").trim();
@@ -1888,7 +1893,6 @@
             contCajas.innerHTML = Object.keys(categoriasMap).map(catNombre => {
                 const itemsCat = categoriasMap[catNombre];
                 
-                // Ordenar por faltantes primero dentro de cada caja
                 itemsCat.sort((a,b) => {
                     const peso = (est) => { if(est === 'No hay') return 1; if(est === 'Poca') return 2; return 3; };
                     return peso(a.estadoDisp) - peso(b.estadoDisp);
@@ -1905,11 +1909,11 @@
                         <div class="p-3 bg-white rounded-xl border border-rose-100 space-y-1 text-xs shadow-sm flex flex-col justify-between">
                             <div class="flex justify-between items-start">
                                 <span class="font-bold text-slate-800">${i.nombre}</span>
-                                <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-0.5 rounded-full font-bold text-[10px] border ${badgeStyle}">${estadoTxt}</button>
+                                <button type="button" onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-0.5 rounded-full font-bold text-[10px] border ${badgeStyle}">${estadoTxt}</button>
                             </div>
                             <div class="flex justify-between items-center pt-1 border-t border-rose-50">
-                                <span class="text-slate-500">Stock: <strong class="text-rose-700">${i.cantidad} pzs</strong></span>
-                                <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
+                                <span class="text-slate-500">Stock: <button type="button" onclick="cambiarCantidadDirecta('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded font-bold text-rose-700 border border-rose-200">${i.cantidad} pzs</button></span>
+                                <button type="button" onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -2241,7 +2245,7 @@
             document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${totalGeneralAcumulado.toFixed(2)} MXN`;
         }
 
-        // 👷‍♂️ LÓGICA DE CONTROL DE GASTOS Y GASTOS EXTRAS DE TU ESPOSO CON PERSISTENCIA EN FIREBASE
+        // LÓGICA DE CONTROL DE GASTOS Y GASTOS EXTRAS DE TU ESPOSO
         let timerGuardadoEsposo = null;
 
         async function agregarGastoExtraEsposo(e) {
