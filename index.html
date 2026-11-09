@@ -105,12 +105,9 @@
 
                 <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm mt-2">💖 Solicitar Cita</button>
             </form>
-            <div id="pubMensajeExito" class="hidden p-4 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold space-y-2 text-center">
-                <p>¡Solicitud enviada con éxito!</p>
-                <a id="btnNotifWa" href="#" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">
-                    📲 Enviar notificación por WhatsApp a Yennifer
-                </a>
-            </div>
+            <div id="pubMensajeExito" class="hidden p-4 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold text-center">
+    <p>¡Solicitud enviada con éxito! Tu cita ha quedado registrada en el sistema.</p>
+</div>
         </div>
     </div>
 
@@ -844,10 +841,10 @@
             const btn = document.getElementById('btnModoDiciembre');
             if(modoDiciembre) {
                 btn.className = "text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-full font-bold";
-                btn.innerText = "🎄 Modo Diciembre Activo (8am-3am)";
+                btn.innerText = "🎄 Modo Diciembre Activo (8am-10:30pm)";
             } else {
                 btn.className = "text-xs bg-purple-100 text-purple-800 border border-purple-200 px-2.5 py-1 rounded-full font-bold";
-                btn.innerText = "🎄 Modo Normal (8am-7pm)";
+                btn.innerText = "🎄 Modo Normal (8am-7:30pm)";
             }
             if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
         }
@@ -1325,78 +1322,115 @@
         }
 
         function cargarHorariosDisponibles() {
-            const fechaSel = document.getElementById('pubFecha').value;
-            const cont = document.getElementById('contenedorHorarios');
-            document.getElementById('pubHoraSeleccionada').value = '';
+    const fechaSel = document.getElementById('pubFecha').value;
+    const cont = document.getElementById('contenedorHorarios');
+    document.getElementById('pubHoraSeleccionada').value = '';
 
-            if(!fechaSel) return;
+    if(!fechaSel) return;
 
-            const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
-            let tiempoRequeridoMin = 180;
-            if(seleccionados.length > 0) {
-                tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
+    const seleccionados = Array.from(document.querySelectorAll('input[name="pubServicio"]:checked'));
+    let tiempoRequeridoMin = 180; // Por defecto 3 hrs (Pestañas / Micro)
+    if(seleccionados.length > 0) {
+        tiempoRequeridoMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
+    }
+
+    const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay();
+    const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
+
+    // Revisar si para esta fecha hay un bloqueo escolar activo en la pestaña de Bloqueos
+    let tieneBloqueoEscolarActivo = false;
+    if (!esExcepcionLibre && !modoDiciembre) {
+        tieneBloqueoEscolarActivo = bloqueos.some(b => {
+            const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
+            if (dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
+                // Detecta si el bloqueo es el escolar (por ejemplo si bloquea horas de mañana/tarde)
+                return true;
             }
+            return false;
+        });
+    }
 
-            const horasBase = modoDiciembre 
-                ? ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"]
-                : ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
-            
-            cont.innerHTML = '';
-            const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay();
-            const ahoraMs = new Date().getTime();
-            const margen4HorasMs = 4 * 60 * 60 * 1000; // 4 horas de anticipación requerida
+    let horasDisponiblesBase = [];
 
-            horasBase.forEach(hora => {
-                const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
-                const margenMs = tiempoRequeridoMin * 60 * 1000;
-                const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
+        if (modoDiciembre) {
+        // Horario de diciembre con turnos fijos exactos
+        horasDisponiblesBase = ["08:00", "11:00", "14:00", "17:00", "20:00", "22:30"];
+    }else if (tieneBloqueoEscolarActivo) {
+        // Si hay bloqueo escolar activo, se muestran tus horarios alternativos (ej. 8:00, 1:30 PM, 6:00 PM)
+        horasDisponiblesBase = ["08:00", "13:30", "18:00"];
+    } else {
+        // Días libres, sin bloqueo o fines de semana: Tus horas fijas normales
+        horasDisponiblesBase = ["08:00", "11:00", "14:00", "17:00", "19:30"];
+    }
 
-                // REGLA DE 4 HORAS DE ANTICIPACIÓN
-                const esMenorA4Horas = timestampDeseado < (ahoraMs + margen4HorasMs);
+    // Liberación dinámica si hay servicios cortos (ej. depilación) que dejan huecos libres
+    const citasDelDia = citas.filter(c => c.estado !== 'Cancelada' && c.fechaHora.startsWith(fechaSel));
+    citasDelDia.forEach(c => {
+        const duracionCitaMs = (c.duracionMin || 180) * 60 * 1000;
+        const horaFinCita = new Date(new Date(c.fechaHora).getTime() + duracionCitaMs);
+        const horasFin = String(horaFinCita.getHours()).padStart(2, '0');
+        const minsFin = String(horaFinCita.getMinutes()).padStart(2, '0');
+        const horaLibreCalculada = `${horasFin}:${minsFin}`;
 
-                const ocupadoCita = citas.some(c => {
-                    if(c.estado === 'Cancelada') return false;
-                    const timeCita = new Date(c.fechaHora).getTime();
-                    const duracionCitaMs = (c.duracionMin || 180) * 60 * 1000;
-                    return (timestampDeseado < timeCita + duracionCitaMs) && (timestampDeseado + margenMs > timeCita);
-                });
+        if (horasFin < 22 && !horasDisponiblesBase.includes(horaLibreCalculada)) {
+            horasDisponiblesBase.push(horaLibreCalculada);
+        }
+    });
 
-                let ocupadoBloqueo = false;
-                if(!esExcepcionLibre) {
-                    ocupadoBloqueo = bloqueos.some(b => {
-                        const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
-                        const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
-                        const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
+    horasDisponiblesBase.sort();
 
-                        if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
-                            return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
-                        }
-                        return false;
-                    });
+    cont.innerHTML = '';
+    const ahoraMs = new Date().getTime();
+    const margen4HorasMs = 4 * 60 * 60 * 1000; // Regla de 4 horas
+
+    horasDisponiblesBase.forEach(hora => {
+        const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
+        const margenMs = tiempoRequeridoMin * 60 * 1000;
+
+        const esMenorA4Horas = timestampDeseado < (ahoraMs + margen4HorasMs);
+
+        const ocupadoCita = citas.some(c => {
+            if(c.estado === 'Cancelada') return false;
+            const timeCita = new Date(c.fechaHora).getTime();
+            const duracionCitaMs = (c.duracionMin || 180) * 60 * 1000;
+            return (timestampDeseado < timeCita + duracionCitaMs) && (timestampDeseado + margenMs > timeCita);
+        });
+
+        let ocupadoBloqueo = false;
+        if(!esExcepcionLibre) {
+            ocupadoBloqueo = bloqueos.some(b => {
+                const inicioB = new Date(`${fechaSel}T${b.horaInicio}:00`).getTime();
+                const finB = new Date(`${fechaSel}T${b.horaFin}:00`).getTime();
+                const dentroDeRango = (!b.fechaInicio || fechaSel >= b.fechaInicio) && (!b.fechaFin || fechaSel <= b.fechaFin);
+
+                if(dentroDeRango && b.diasRecurrentes && b.diasRecurrentes.includes(diaSemanaSel.toString())) {
+                    return (timestampDeseado < finB) && (timestampDeseado + margenMs > inicioB);
                 }
-
-                const manualBloqueado = bloqueosManualesDia[fechaSel]?.[hora] === true;
-                const estaBloqueado = esMenorA4Horas || ocupadoCita || ocupadoBloqueo || manualBloqueado;
-
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `p-2 rounded-xl text-xs font-bold border ${estaBloqueado ? 'bg-gray-200 text-gray-400 border-gray-300 line-through cursor-not-allowed' : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'}`;
-                btn.innerText = hora;
-                btn.disabled = estaBloqueado;
-
-                if(!estaBloqueado) {
-                    btn.onclick = () => {
-                        document.querySelectorAll('#contenedorHorarios button').forEach(b => {
-                            if(!b.disabled) b.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-50 text-rose-700 border-rose-200';
-                        });
-                        btn.className = 'p-2 rounded-xl text-xs font-bold border bg-rose-600 text-white border-rose-600';
-                        document.getElementById('pubHoraSeleccionada').value = hora;
-                    };
-                }
-                cont.appendChild(btn);
+                return false;
             });
         }
 
+        const manualBloqueado = bloqueosManualesDia[fechaSel]?.[hora] === true;
+        const estaBloqueado = esMenorA4Horas || ocupadoCita || ocupadoBloqueo || manualBloqueado;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `p-2.5 rounded-xl text-xs font-bold border ${estaBloqueado ? 'bg-gray-200 text-gray-400 border-gray-300 line-through cursor-not-allowed' : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'}`;
+        btn.innerText = hora;
+        btn.disabled = estaBloqueado;
+
+        if(!estaBloqueado) {
+            btn.onclick = () => {
+                document.querySelectorAll('#contenedorHorarios button').forEach(b => {
+                    if(!b.disabled) b.className = 'p-2.5 rounded-xl text-xs font-bold border bg-rose-50 text-rose-700 border-rose-200';
+                });
+                btn.className = 'p-2.5 rounded-xl text-xs font-bold border bg-rose-600 text-white border-rose-600';
+                document.getElementById('pubHoraSeleccionada').value = hora;
+            };
+        }
+        cont.appendChild(btn);
+    });
+}
         function renderVistaCalendarioDia() {
             const fechaVal = document.getElementById('filtroFechaAgenda').value;
             const grid = document.getElementById('gridDisponibilidadDia');
@@ -1494,13 +1528,7 @@
                 monto: montoTotal,
                 estado: 'Pendiente'
             });
-
-            // ENLACE AUTOMÁTICO DE NOTIFICACIÓN WHATSAPP PARA YENNIFER
-            const textoWa = encodeURIComponent(`Hola Yennifer 👑, he solicitado una nueva cita en línea:\n\n👤 *Nombre:* ${nombre}\n📱 *Teléfono:* ${telefono}\n📅 *Fecha y Hora:* ${fecha} a las ${hora}\n💄 *Servicio(s):* ${serviciosTxt}\n💵 *Total estimado:* $${montoTotal} MXN`);
-            const urlWaNotif = `https://wa.me/528681000000?text=${textoWa}`; // Reemplaza el número si deseas tu número personal completo con lada (ej. 521 + 10 dígitos)
-            document.getElementById('btnNotifWa').href = urlWaNotif;
-
-            document.getElementById('pubMensajeExito').classList.remove('hidden');
+           document.getElementById('pubMensajeExito').classList.remove('hidden');
             e.target.reset();
             calcularResumenPublico();
         }
