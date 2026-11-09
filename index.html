@@ -832,23 +832,33 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let modoDiciembre = false;
-        let ocultarSaldosPersonal = false;
-        let gastosExtrasEsposo = [];
+         // Leer si el modo diciembre estaba activo en la memoria
+let modoDiciembre = localStorage.getItem('gossip_modoDiciembre') === 'true';
+let ocultarSaldosPersonal = false;
+let gastosExtrasEsposo = [];
 
         function toggleModoDiciembre() {
-            modoDiciembre = !modoDiciembre;
-            const btn = document.getElementById('btnModoDiciembre');
-            if(modoDiciembre) {
-                btn.className = "text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-full font-bold";
-                btn.innerText = "🎄 Modo Diciembre Activo (8am-10:30pm)";
-            } else {
-                btn.className = "text-xs bg-purple-100 text-purple-800 border border-purple-200 px-2.5 py-1 rounded-full font-bold";
-                btn.innerText = "🎄 Modo Normal (8am-7:30pm)";
-            }
-            if(document.getElementById('pubFecha').value) cargarHorariosDisponibles();
-        }
+    modoDiciembre = !modoDiciembre;
+    
+    // 👉 1. Guardar el estado en la memoria del navegador
+    localStorage.setItem('gossip_modoDiciembre', modoDiciembre ? 'true' : 'false');
 
+    const btn = document.getElementById('btnModoDiciembre'); // O el ID que tenga tu botón
+    if(modoDiciembre) {
+        if(btn) {
+            btn.className = "text-xs bg-emerald-600 ..."; // mantén tus clases originales
+            btn.innerText = "🎄 Modo Diciembre Activo (8am-10:30pm)";
+        }
+    } else {
+        if(btn) {
+            btn.className = "text-xs bg-purple-600 ..."; // mantén tus clases originales
+            btn.innerText = "🎄 Modo Normal (8am-7:30pm)";
+        }
+    }
+    if(document.getElementById('pubFecha')) {
+        cargarHorariosDisponibles();
+    }
+}
         function toggleOcultarSaldos() {
             ocultarSaldosPersonal = !ocultarSaldosPersonal;
             const btn = document.getElementById('btnOcultarSaldos');
