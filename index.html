@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gossip & Glam Studio - Lash & Brow Book</title>
+    <title>Gossip & Glam Studio - Lash & Brow Professional Book</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -25,7 +25,7 @@
         <div class="bg-white p-6 rounded-2xl shadow-md border border-rose-100 max-w-lg w-full space-y-4 text-center">
             <span class="text-3xl">👑</span>
             <h1 class="text-xl font-bold text-rose-600">Gossip & Glam Studio</h1>
-            <p class="text-xs text-rose-400 font-medium">Reserva tu cita en línea</p>
+            <p class="text-xs text-rose-400 font-medium">Reserva tu cita en línea (Mínimo con 4 horas de anticipación)</p>
             
             <form onsubmit="reservarClientaPublica(event)" class="space-y-4 text-left pt-2">
                 <div>
@@ -96,17 +96,20 @@
 
                 <div class="p-3 bg-rose-50/80 border border-rose-200 rounded-xl text-left space-y-2">
                     <p class="text-[11px] text-rose-800 font-medium leading-relaxed">
-                        🌙 <strong>¿Necesitas una cita después de las 9:00 PM?</strong> Las citas nocturnas tienen un costo extra de +$30 MXN y están sujetas a disponibilidad.
+                        🌙 <strong>¿Necesitas una cita urgente?</strong> Las reservas deben hacerse con al menos 4 horas de anticipación. Para consultas de última hora consúltalo directamente.
                     </p>
                     <a href="https://api.whatsapp.com/message/POTWPXJFGZIEK1?autoload=1&app_absent=0" target="_blank" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-sm">
-                        📲 Consultar Cita Nocturna por WhatsApp
+                        📲 Consultar Urgencia por WhatsApp
                     </a>
                 </div>
 
                 <button type="submit" class="w-full btn-glam text-white font-bold py-3 rounded-xl shadow-md text-sm mt-2">💖 Solicitar Cita</button>
             </form>
-            <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">
-                ¡Solicitud enviada! Nos pondremos en contacto contigo por WhatsApp para confirmar tu cita.
+            <div id="pubMensajeExito" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold space-y-2">
+                <p>¡Solicitud enviada correctamente!</p>
+                <a id="linkAvisoWpp" href="#" target="_blank" class="block bg-emerald-600 text-white p-2.5 rounded-xl text-xs font-bold text-center shadow-md">
+                    🔔 Toca aquí para enviarme la alerta a mi WhatsApp
+                </a>
             </div>
         </div>
     </div>
@@ -141,10 +144,8 @@
                 <button onclick="cambiarTab('bloqueos')" id="tab-bloqueos" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">⚙️ Bloqueo Horarios</button>
                 <button onclick="cambiarTab('tintas')" id="tab-tintas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">🎨 Inventario & Tintas</button>
                 <button onclick="cambiarTab('inventario')" id="tab-inventario" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">📦 Inventario General</button>
-                <button onclick="cambiarTab('blisters')" id="tab-blisters" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">👁️ Blísteres Pestañas</button>
                 <button onclick="cambiarTab('deudas')" id="tab-deudas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💳 Mis Deudas (Préstamos)</button>
                 <button onclick="cambiarTab('finanzas')" id="tab-finanzas" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">💵 Finanzas</button>
-                <button onclick="cambiarTab('esposo')" id="tab-esposo" class="nav-tab px-4 py-3 text-sm font-medium flex items-center gap-2 whitespace-nowrap rounded-t-lg">👷‍♂️ Control Gasto Esposo</button>
             </nav>
         </header>
 
@@ -330,7 +331,7 @@
                                 </div>
 
                                 <div id="resultadoCalculador" class="p-3 bg-white border border-purple-200 rounded-xl space-y-1 text-xs">
-                                    <p class="font-bold text-purple-800">🧪 Resultado y Fórmula Calculada:</p>
+                                    <p class="font-bold text-purple-800">🧪Resultado y Fórmula Calculada:</p>
                                     <p id="resFormulaTxt" class="text-slate-700 italic">Selecciona los datos para generar la fórmula exacta basada en tus tintas registradas...</p>
                                 </div>
                             </div>
@@ -391,7 +392,7 @@
                         <span id="contadorCitas" class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full font-bold">0 citas</span>
                     </div>
 
-                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA -->
+                    <!-- VISTA CALENDARIO Y DISPONIBILIDAD DIARIA (CON CLIC MANUAL PARA BLOQUEAR/DESBLOQUEAR HUECOS) -->
                     <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase">📅 Consultor de Disponibilidad por Día (Horarios: 8am - 1:20pm / 2pm - 6pm)</h3>
                         <p class="text-[11px] text-slate-500">Haz clic en cualquier hora "Libre" para marcarla (bloquearla con rojo suave si no puedes atender) y vuelve a hacer clic para liberarla.</p>
@@ -491,7 +492,7 @@
             <section id="seccion-tintas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">🎨 Catálogo e Inventario de Tintas & Color Index (CI)</h2>
+                        <h2 class="text-lg font-bold text-rose-700">🎨 Catalogo e Inventario de Tintas & Color Index (CI)</h2>
                         <div class="flex gap-2">
                             <button onclick="cargarCatalogoCompletoTintas()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold">🔄 Cargar Catálogo Completo</button>
                             <button onclick="abrirModalTinta()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Agregar Nueva Tinta</button>
@@ -524,14 +525,11 @@
                 </div>
             </section>
 
-            <!-- 📦 PESTAÑA INVENTARIO GENERAL (SIN CAJITA INDIVIDUAL, SÓLO CAJAS POR CATEGORÍA CON EDICIÓN DIRECTA) -->
+            <!-- SECCIÓN INVENTARIO GENERAL (AJUSTADO PARA PANTALLA DE CELULAR Y SIN TEXTOS MOLESTOS) -->
             <section id="seccion-inventario" class="space-y-6 hidden">
-                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
+                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <div>
-                            <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General (Cajas por Categoría)</h2>
-                            <p class="text-xs text-slate-400">Toca cualquier número de stock para editarlo o el botón de estado para cambiarlo.</p>
-                        </div>
+                        <h2 class="text-base md:text-lg font-bold text-rose-700">📦 Inventario General</h2>
                         <button onclick="abrirModalInv()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">+ Artículo</button>
                     </div>
 
@@ -542,7 +540,7 @@
                             <input type="hidden" id="invEditId">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div><label class="block font-semibold mb-1">Nombre Artículo *</label><input type="text" id="invNombre" required placeholder="Ej. Lash Shampoo" class="w-full p-2 border rounded-lg bg-white"></div>
-                                <div><label class="block font-semibold mb-1">Categoría / Caja *</label><input type="text" id="invCategoria" required placeholder="Ej. cejas HD y 4K" class="w-full p-2 border rounded-lg bg-white"></div>
+                                <div><label class="block font-semibold mb-1">Categoría / Sección *</label><input type="text" id="invCategoria" required placeholder="Ej. insumos de pestanas" class="w-full p-2 border rounded-lg bg-white"></div>
                                 <div><label class="block font-semibold mb-1">Stock / Cantidad *</label><input type="number" id="invCantidad" required placeholder="Ej. 10" class="w-full p-2 border rounded-lg bg-white"></div>
                             </div>
                             <div>
@@ -560,26 +558,27 @@
                         </form>
                     </div>
 
-                    <!-- CONTENEDOR DE CAJAS POR CATEGORÍA -->
-                    <div id="contenedorCajasInventario" class="space-y-6 pt-2">
-                        <p class="text-center text-slate-400 text-xs">Cargando cajas de inventario...</p>
+                    <!-- TABLA COMPACTA Y AJUSTADA A PANTALLA -->
+                    <div class="overflow-x-auto pt-1">
+                        <table class="w-full text-left text-[11px] md:text-xs">
+                            <thead>
+                                <tr class="bg-rose-50 text-rose-700 uppercase font-bold">
+                                    <th class="p-2 rounded-l-lg">Artículo</th>
+                                    <th class="p-2">Categoría</th>
+                                    <th class="p-2 text-center">Cantidad</th>
+                                    <th class="p-2 text-center">Estado</th>
+                                    <th class="p-2 rounded-r-lg text-center">🗑️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaInventarioGeneral">
+                                <tr><td colspan="5" class="text-center py-4 text-slate-400">Cargando inventario general...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
 
-            <!-- SECCIÓN BLÍSTERES DE PESTAÑAS -->
-            <section id="seccion-blisters" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                    <div class="border-b border-rose-100 pb-3">
-                        <h2 class="text-lg font-bold text-rose-700">👁️ Control de Blísteres de Pestañas</h2>
-                        <p class="text-xs text-slate-400">Revisa qué medidas te hacen falta y cuántas te quedan en existencia.</p>
-                    </div>
-
-                    <div id="gridBlisters" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
-                </div>
-            </section>
-
-            <!-- SECCIÓN MIS DEUDAS -->
+            <!-- SECCIÓN MIS DEUDAS (ORDENADAS POR FECHA DE PRÓXIMO PAGO Y HISTORIAL DE ABONOS) -->
             <section id="seccion-deudas" class="space-y-6 hidden">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
@@ -587,6 +586,7 @@
                         <button onclick="abrirModalDeuda()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Registrar Préstamo / Deuda</button>
                     </div>
 
+                    <!-- Formulario Deuda -->
                     <div id="boxFormDeuda" class="hidden p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-3">
                         <h3 class="font-bold text-rose-800 text-xs uppercase" id="tituloFormDeuda">Registrar / Editar Deuda</h3>
                         <form onsubmit="guardarDeuda(event)" class="space-y-3 text-xs">
@@ -604,6 +604,7 @@
                         </form>
                     </div>
 
+                    <!-- Modal Abonar -->
                     <div id="boxFormAbono" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-3">
                         <h3 class="font-bold text-emerald-800 text-xs uppercase">💸 Registrar Abono a Deuda</h3>
                         <form onsubmit="guardarAbono(event)" class="space-y-3 text-xs">
@@ -640,6 +641,7 @@
                     <button onclick="toggleOcultarSaldos()" id="btnOcultarSaldos" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">👁️ Ocultar Saldos</button>
                 </div>
 
+                <!-- ADMINISTRADOR Y EDITOR DE CATEGORÍAS -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-rose-700 text-sm">🏷️ Gestionar Categorías / Sectores</h3>
@@ -649,6 +651,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- FORMULARIO DE MOVIMIENTOS Y GASTOS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100">
                         <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100" id="tituloFormFinanzas">💵 Registrar Movimiento o Gasto</h3>
                         <form onsubmit="agregarMovimientoFinanciero(event)" class="space-y-3">
@@ -675,6 +678,7 @@
                         </form>
                     </div>
 
+                    <!-- BALANCE NETO GENERAL DINÁMICO POR CATEGORÍAS -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex flex-col justify-between">
                         <div>
                             <h3 class="text-base font-bold text-rose-700 mb-3 pb-2 border-b border-rose-100">📊 Balance Neto General (Dinámico)</h3>
@@ -685,6 +689,7 @@
                     </div>
                 </div>
 
+                <!-- TABLA DETALLADA DE MOVIMIENTOS -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-3">
                     <div class="flex flex-wrap justify-between items-center gap-3 border-b border-rose-100 pb-2">
                         <h3 class="text-base font-bold text-rose-700">📋 Historial Detallado de Entradas y Salidas</h3>
@@ -715,106 +720,6 @@
                 </div>
             </section>
 
-            <!-- 👷‍♂️ SECCIÓN CONTROL GASTO ESPOSO -->
-            <section id="seccion-esposo" class="space-y-6 hidden">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 space-y-4">
-                    <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-                        <div>
-                            <h2 class="text-lg font-bold text-rose-700">👷‍♂️ Control de Sueldo y Gastos de tu Esposo</h2>
-                            <p class="text-xs text-slate-400">Registra su sueldo, apartados fijos y agrega gastos extras con historial y descuento automático.</p>
-                        </div>
-                        <button onclick="limpiarCamposEsposo()" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-3 py-1.5 rounded-xl text-xs font-bold">🗑️ Limpiar / Borrar Datos</button>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-3">
-                            <h3 class="font-bold text-rose-800 text-xs uppercase">⚙️ Parámetros Semanales y Entrega de Efectivo</h3>
-                            <div>
-                                <label class="block text-xs font-semibold text-rose-700 mb-1">Sueldo Entregado / Recibido ($ MXN):</label>
-                                <input type="number" id="espSueldoSemanal" value="4000" oninput="guardarYCalcularEsposo()" class="w-full p-2.5 border border-rose-200 rounded-xl text-sm bg-white font-bold text-rose-700" placeholder="Ej. 980">
-                                <span class="text-[10px] text-slate-400">Ingresa la cantidad exacta entregada (ej. $980 o $4,000)</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 pt-2">
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-rose-700 mb-1">Tomado para Comida / Mandado</label>
-                                    <input type="number" id="espMandado" value="1500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white" placeholder="Ej. 200">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-rose-700 mb-1">Gastos de Taxis / Viáticos</label>
-                                    <input type="number" id="espTaxis" value="500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border border-rose-200 rounded-lg text-xs bg-white" placeholder="Ej. 0">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-3">
-                            <h3 class="font-bold text-purple-800 text-xs uppercase">💳 Pagos Fijos / Otras Cosas Pagadas</h3>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
-                                <div>
-                                    <label class="block font-[11px] font-semibold text-purple-700 mb-1">Compartamos (Semanal)</label>
-                                    <input type="number" id="espCompartamosSem" value="500" oninput="guardarYCalcularEsposo()" class="w-full p-2 border rounded-lg bg-white">
-                                </div>
-                                <div>
-                                    <label class="block font-[11px] font-semibold text-purple-700 mb-1">Colchón (Semanal)</label>
-                                    <input type="number" id="espColchon" value="300" oninput="guardarYCalcularEsposo()" class="w-full p-2 border rounded-lg bg-white">
-                                </div>
-                                <div>
-                                    <label class="block font-[11px] font-semibold text-purple-700 mb-1">Señor de los Quesos</label>
-                                    <input type="number" id="espQuesos" value="100" oninput="guardarYCalcularEsposo()" class="w-full p-2 border rounded-lg bg-white">
-                                </div>
-                                <div>
-                                    <label class="block font-[11px] font-semibold text-purple-700 mb-1">Apartado Mensual (1/4)</label>
-                                    <input type="number" id="espCompartamosMes" value="200" oninput="guardarYCalcularEsposo()" class="w-full p-2 border rounded-lg bg-white">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- APARTADO GASTO EXTRA / DESGLOSE -->
-                    <div class="p-4 bg-amber-50/60 rounded-xl border border-amber-200 space-y-3">
-                        <h3 class="font-bold text-amber-800 text-xs uppercase">💸 Registrar Gasto Extra o Salida</h3>
-                        <form onsubmit="agregarGastoExtraEsposo(event)" class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-                            <div>
-                                <label class="block font-semibold mb-1">Concepto del Gasto *</label>
-                                <input type="text" id="gastoExtraDesc" required placeholder="Ej. Tacos o mandado extra" class="w-full p-2 border rounded-lg bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Monto ($ MXN) *</label>
-                                <input type="number" step="0.01" id="gastoExtraMonto" required placeholder="Ej. 200" class="w-full p-2 border rounded-lg bg-white">
-                            </div>
-                            <div class="flex items-end">
-                                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-3 rounded-lg shadow-sm">Agregar y Descontar</button>
-                            </div>
-                        </form>
-
-                        <div class="pt-2">
-                            <h4 class="font-bold text-amber-900 text-xs mb-1">📋 Historial de Gastos Extras Registrados:</h4>
-                            <div id="listaGastosExtrasEsposo" class="space-y-1 max-h-36 overflow-y-auto">
-                                <p class="text-slate-400 italic text-[11px]">No hay gastos extras registrados en esta semana.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- RESUMEN INTERACTIVO -->
-                    <div class="p-5 bg-white rounded-2xl border border-rose-200 shadow-sm space-y-3">
-                        <h3 class="font-bold text-rose-700 text-sm border-b pb-2">📊 Resumen de Distribución Semanal</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                            <div class="p-3 bg-rose-50 rounded-xl border border-rose-100">
-                                <span class="text-rose-600 font-semibold block">Total Gastos + Pagos + Extras:</span>
-                                <strong id="espResTotalFijos" class="text-base text-rose-800">$0.00 MXN</strong>
-                            </div>
-                            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                                <span class="text-emerald-700 font-semibold block">Sobrante / Restante Disponible:</span>
-                                <strong id="espResDisponible" class="text-base text-emerald-800">$0.00 MXN</strong>
-                            </div>
-                            <div class="p-3 bg-amber-50 rounded-xl border border-amber-100" id="espBoxAlerta">
-                                <span class="text-amber-800 font-semibold block">Estado del Flujo:</span>
-                                <strong id="espResAlerta" class="text-xs text-amber-900">Calculando...</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
         </main>
     </div>
 
@@ -834,7 +739,6 @@
 
         let modoDiciembre = false;
         let ocultarSaldosPersonal = false;
-        let gastosExtrasEsposo = [];
 
         function toggleModoDiciembre() {
             modoDiciembre = !modoDiciembre;
@@ -873,7 +777,6 @@
         let tintas = [];
         let inventario = [];
         let deudas = [];
-        let blisters = [];
         let bloqueosManualesDia = {}; 
         let categoriasFinanzas = ["Ingreso Cita/Servicio", "Gasto/Insumos", "Dinero Jose", "Tanda tarjeta", "Tanda efectivo", "Tarjeta dinero extra"];
 
@@ -904,7 +807,6 @@
             { nombre: "agujas shading", categoria: "insumos de pestanas", cantidad: 10, estadoDisp: "DISP" },
             { nombre: "thinner tinta", categoria: "insumos de pestanas", cantidad: 2, estadoDisp: "DISP" },
             { nombre: "plumon mapping", categoria: "insumos de pestanas", cantidad: 3, estadoDisp: "DISP" },
-
             { nombre: "papel osmotico", categoria: "cejas HD y 4K", cantidad: 5, estadoDisp: "DISP" },
             { nombre: "kit laminado", categoria: "cejas HD y 4K", cantidad: 2, estadoDisp: "Poca" },
             { nombre: "cera facial", categoria: "cejas HD y 4K", cantidad: 4, estadoDisp: "DISP" },
@@ -934,17 +836,6 @@
             { nombre: "cubrebocas", categoria: "cejas HD y 4K", cantidad: 30, estadoDisp: "DISP" },
             { nombre: "benezil verde", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" },
             { nombre: "lapiz de cera", categoria: "cejas HD y 4K", cantidad: 0, estadoDisp: "No hay" }
-        ];
-
-        const blistersPredeterminados = [
-            { modelo: "HAWAINO yy 2mix", items: [{m:8, c:6},{m:9, c:11},{m:10, c:11},{m:11, c:2},{m:12, c:10},{m:13, c:4},{m:14, c:3},{m:15, c:8}] },
-            { modelo: "EGIPCIO 5D 3mix", items: [{m:8, c:2},{m:9, c:1},{m:10, c:0},{m:11, c:5},{m:12, c:3},{m:13, c:3},{m:14, c:7},{m:15, c:15}] },
-            { modelo: "WISPY spigas", items: [{m:8, c:0},{m:9, c:0},{m:10, c:0},{m:11, c:1},{m:12, c:1},{m:13, c:0},{m:14, c:0},{m:15, c:0}] },
-            { modelo: "GRIEGO 3Ddouble", items: [{m:8, c:2},{m:9, c:0},{m:10, c:6},{m:11, c:3},{m:12, c:1},{m:13, c:1},{m:14, c:3},{m:15, c:4}] },
-            { modelo: "VOLUMEN TECH 5D uu", items: [{m:8, c:2},{m:9, c:1},{m:10, c:3},{m:11, c:3},{m:12, c:1},{m:13, c:2},{m:14, c:1},{m:15, c:1}] },
-            { modelo: "BUCHILASHES", items: [{m:12, c:1},{m:13, c:0},{m:14, c:0},{m:15, c:0},{m:16, c:0},{m:17, c:1},{m:18, c:1},{m:19, c:2},{m:20, c:2}] },
-            { modelo: "AURORA 2uu", items: [{m:8, c:1},{m:9, c:0},{m:10, c:1},{m:11, c:1},{m:12, c:0},{m:13, c:0},{m:14, c:1},{m:15, c:1}] },
-            { modelo: "SPIRE COMIC", items: [{m:8, c:3},{m:9, c:3},{m:10, c:7},{m:11, c:5},{m:12, c:3},{m:13, c:3},{m:14, c:0},{m:15, c:0}] }
         ];
 
         const deudasPredeterminadas = [
@@ -1012,17 +903,7 @@
                     await db.collection("inventario").add(item);
                 }
             }
-            if(!document.getElementById('seccion-inventario').classList.contains('hidden')) renderInventarioCajas();
-        });
-
-        db.collection("blisters").onSnapshot(async snapshot => {
-            blisters = snapshot.docs.map(doc => ({ idDoc: doc.id, ...doc.data() }));
-            if(blisters.length === 0) {
-                for(const b of blistersPredeterminados) {
-                    await db.collection("blisters").add(b);
-                }
-            }
-            if(!document.getElementById('seccion-blisters').classList.contains('hidden')) renderBlisters();
+            if(!document.getElementById('seccion-inventario').classList.contains('hidden')) renderInventario();
         });
 
         db.collection("deudas").onSnapshot(async snapshot => { 
@@ -1033,22 +914,6 @@
                 }
             }
             if(!document.getElementById('seccion-deudas').classList.contains('hidden')) renderDeudas();
-        });
-
-        db.collection("configuracion").doc("gastoEsposo").onSnapshot(doc => {
-            if(doc.exists) {
-                const data = doc.data();
-                if(document.getElementById('espSueldoSemanal')) document.getElementById('espSueldoSemanal').value = data.sueldo || '';
-                if(document.getElementById('espMandado')) document.getElementById('espMandado').value = data.mandado || '';
-                if(document.getElementById('espTaxis')) document.getElementById('espTaxis').value = data.taxis || '';
-                if(document.getElementById('espCompartamosSem')) document.getElementById('espCompartamosSem').value = data.compartamosSem || '';
-                if(document.getElementById('espColchon')) document.getElementById('espColchon').value = data.colchon || '';
-                if(document.getElementById('espQuesos')) document.getElementById('espQuesos').value = data.quesos || '';
-                if(document.getElementById('espCompartamosMes')) document.getElementById('espCompartamosMes').value = data.compartamosMes || '';
-                gastosExtrasEsposo = data.gastosExtras || [];
-                renderGastosExtrasEsposo();
-                calcularGastoEsposo();
-            }
         });
 
         db.collection("configuracion").doc("bloqueosManuales").onSnapshot(doc => {
@@ -1118,10 +983,8 @@
             if(tab === 'expedientes') renderExpedientes();
             if(tab === 'finanzas') calcularFinanzas();
             if(tab === 'tintas') renderTintas();
-            if(tab === 'inventario') renderInventarioCajas();
-            if(tab === 'blisters') renderBlisters();
+            if(tab === 'inventario') renderInventario();
             if(tab === 'deudas') renderDeudas();
-            if(tab === 'esposo') calcularGastoEsposo();
         }
 
         function toggleServicio() {
@@ -1291,7 +1154,7 @@
                     return `
                         <div class="p-3 bg-rose-50 rounded-xl text-xs border border-rose-100 space-y-1">
                             <div class="flex justify-between items-center">
-                               <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
+                                <span>📅 <strong>${f.fecha}</strong> - <strong class="text-rose-700">${f.servicioTipo}</strong></span>
                                 <button type="button" onclick="cargarFichaEnFormulario(${f.id})" class="text-[10px] bg-rose-200 text-rose-800 px-2 py-0.5 rounded font-bold">📂 Ver esta fecha</button>
                             </div>
                             <p class="text-[11px] text-slate-600 leading-relaxed">${detalleExtra}</p>
@@ -1340,11 +1203,16 @@
             
             cont.innerHTML = '';
             const diaSemanaSel = new Date(`${fechaSel}T00:00:00`).getDay();
+            const ahoraMs = new Date().getTime();
+            const cuatroHorasMs = 4 * 60 * 60 * 1000; // REGLA: MÍNIMO 4 HORAS DE ANTICIPACIÓN
 
             horasBase.forEach(hora => {
                 const timestampDeseado = new Date(`${fechaSel}T${hora}:00`).getTime();
                 const margenMs = tiempoRequeridoMin * 60 * 1000;
                 const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaSel);
+
+                // REGLA: Si faltan menos de 4 horas para la cita, se bloquea automáticamente
+                const muyPronto = (timestampDeseado - ahoraMs) < cuatroHorasMs;
 
                 const ocupadoCita = citas.some(c => {
                     if(c.estado === 'Cancelada') return false;
@@ -1368,7 +1236,7 @@
                 }
 
                 const manualBloqueado = bloqueosManualesDia[fechaSel]?.[hora] === true;
-                const estaBloqueado = ocupadoCita || ocupadoBloqueo || manualBloqueado;
+                const estaBloqueado = muyPronto || ocupadoCita || ocupadoBloqueo || manualBloqueado;
 
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -1400,10 +1268,13 @@
 
             const diaSemana = new Date(`${fechaVal}T00:00:00`).getDay();
             const esExcepcionLibre = excepciones.some(ex => ex.fecha === fechaVal);
+            const ahoraMs = new Date().getTime();
+            const cuatroHorasMs = 4 * 60 * 60 * 1000;
 
             grid.innerHTML = horasJornada.map(h => {
                 const timeStr = `${fechaVal}T${h}:00`;
                 const timestamp = new Date(timeStr).getTime();
+                const muyPronto = (timestamp - ahoraMs) < cuatroHorasMs;
 
                 const ocupadaPorCita = citas.find(c => {
                     if(c.estado === 'Cancelada') return false;
@@ -1431,7 +1302,11 @@
                 let estadoTxt = "Libre ✨";
                 let accionClick = `onclick="toggleBloqueoManual('${fechaVal}', '${h}')"`;
 
-                if(ocupadaPorCita) {
+                if(muyPronto && !ocupadaPorCita && !ocupadaPorBloqueo) {
+                    badgeColor = "bg-gray-100 text-gray-400 border-gray-200";
+                    estadoTxt = "< 4 hrs ⏰";
+                    accionClick = "";
+                } else if(ocupadaPorCita) {
                     badgeColor = "bg-rose-200 text-rose-900 border-rose-300";
                     estadoTxt = ocupadaPorCita.nombre.split('(')[0];
                     accionClick = "";
@@ -1472,6 +1347,14 @@
             if(seleccionados.length === 0) { alert('⚠️ Por favor selecciona al menos un servicio.'); return; }
             if(!hora) { alert('⚠️ Por favor selecciona una hora disponible.'); return; }
 
+            // DOBLE VERIFICACIÓN DE LAS 4 HORAS DE ANTICIPACIÓN
+            const timestampCita = new Date(`${fecha}T${hora}:00`).getTime();
+            const ahoraMs = new Date().getTime();
+            if((timestampCita - ahoraMs) < (4 * 60 * 60 * 1000)) {
+                alert('⚠️ No se pueden agendar citas con menos de 4 horas de anticipación. Por favor comunícate directamente por WhatsApp.');
+                return;
+            }
+
             const serviciosTxt = seleccionados.map(c => c.value).join(', ');
             let tiempoTotalMin = seleccionados.reduce((acc, c) => acc + parseInt(c.getAttribute('data-tiempo')), 0);
             let montoTotal = seleccionados.reduce((acc, c) => acc + parseFloat(c.getAttribute('data-precio')), 0);
@@ -1486,6 +1369,13 @@
                 monto: montoTotal,
                 estado: 'Pendiente'
             });
+
+            // CONFIGURACIÓN DE TU WHATSAPP PERSONAL (REEMPLAZA ESTE NÚMERO SI NECESITAS)
+            const tuNumeroWhatsApp = "5218681234567"; // <--- Asegúrate de poner tu número con lada aquí
+            const textoAlerta = encodeURIComponent(`🚨 NUEVA CITA EN LÍNEA APARTADA:\n\n👤 Clienta: ${nombre}\n📱 Tel: ${telefono}\n📅 Fecha: ${fecha} a las ${hora}\n💄 Servicio: ${serviciosTxt}\n💵 Total: $${montoTotal} MXN\n\n¡Revisa tu agenda de inmediato!`);
+            
+            const linkWpp = `https://api.whatsapp.com/send?phone=${tuNumeroWhatsApp}&text=${textoAlerta}`;
+            document.getElementById('linkAvisoWpp').href = linkWpp;
 
             document.getElementById('pubMensajeExito').classList.remove('hidden');
             e.target.reset();
@@ -1834,7 +1724,23 @@
             `).join('');
         }
 
-        // 📦 MÓDULO INVENTARIO GENERAL EN CAJAS POR CATEGORÍA CON EDICIÓN DIRECTA DE STOCK Y ESTADO
+        function editarTinta(idDoc) {
+            const t = tintas.find(i => i.idDoc === idDoc);
+            if(!t) return;
+            abrirModalTinta();
+            document.getElementById('tintaEditId').value = t.idDoc;
+            document.getElementById('tintaNombre').value = t.nombre;
+            document.getElementById('tintaMarca').value = t.marca;
+            document.getElementById('tintaSubtono').value = t.subtono;
+            document.getElementById('tintaCI').value = t.ci;
+            document.getElementById('tintaCAS').value = t.cas;
+            document.getElementById('tintaFuncion').value = t.funcion;
+        }
+
+        async function eliminarTinta(idDoc) {
+            if(confirm('¿Eliminar tinta del inventario?')) await db.collection("tintas").doc(idDoc).delete();
+        }
+
         function abrirModalInv() {
             document.getElementById('boxFormInv').classList.remove('hidden');
             document.getElementById('invEditId').value = '';
@@ -1858,10 +1764,10 @@
             e.target.reset();
         }
 
-        async function cambiarCantidadDirecta(idDoc, cantidadActual) {
-            const nueva = prompt("Ingresa la cantidad en stock:", cantidadActual);
-            if(nueva !== null && !isNaN(nueva)) {
-                await db.collection("inventario").doc(idDoc).update({ cantidad: parseInt(nueva) });
+        async function cambiarCantidadRapida(idDoc, cantidadActual) {
+            const nuevaCant = prompt("Ingresa la nueva cantidad (Stock):", cantidadActual);
+            if(nuevaCant !== null && !isNaN(nuevaCant)) {
+                await db.collection("inventario").doc(idDoc).update({ cantidad: parseInt(nuevaCant) });
             }
         }
 
@@ -1871,113 +1777,52 @@
             await db.collection("inventario").doc(idDoc).update({ estadoDisp: siguienteEstado });
         }
 
+        function renderInventario() {
+            const tbody = document.getElementById('tablaInventarioGeneral');
+            if(!tbody) return;
+            if(inventario.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">No hay artículos registrados.</td></tr>`;
+                return;
+            }
+
+            inventario.sort((a,b) => (a.categoria || "").localeCompare(b.categoria || ""));
+
+            tbody.innerHTML = inventario.map(i => {
+                let badgeStyle = "bg-emerald-100 text-emerald-800";
+                if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800";
+                if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800";
+
+                let estadoTextoLimpio = i.estadoDisp || 'DISP';
+                if(estadoTextoLimpio === 'DISP') estadoTextoLimpio = 'Disponible';
+                if(estadoTextoLimpio === 'Poca') estadoTextoLimpio = 'Pocas piezas';
+                if(estadoTextoLimpio === 'No hay') estadoTextoLimpio = 'No disponible';
+
+                return `
+                    <tr class="border-b border-rose-50">
+                        <td class="p-2 font-bold text-slate-800">${i.nombre}</td>
+                        <td class="p-2 font-semibold text-rose-600">${i.categoria}</td>
+                        <td class="p-2 text-center">
+                            <button onclick="cambiarCantidadRapida('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2 py-1 rounded-md font-bold border border-rose-200 text-rose-700">
+                                ${i.cantidad}
+                            </button>
+                        </td>
+                        <td class="p-2 text-center">
+                            <button onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-1 rounded-md font-bold ${badgeStyle}">
+                                ${estadoTextoLimpio}
+                            </button>
+                        </td>
+                        <td class="p-2 text-center">
+                            <button onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold hover:text-rose-700">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
         async function eliminarInventario(idDoc) {
             if(confirm('¿Eliminar artículo del inventario?')) await db.collection("inventario").doc(idDoc).delete();
         }
 
-        function renderInventarioCajas() {
-            const contCajas = document.getElementById('contenedorCajasInventario');
-            if(!contCajas) return;
-            if(inventario.length === 0) {
-                contCajas.innerHTML = `<p class="text-center py-4 text-slate-400 text-xs">No hay artículos en inventario.</p>`;
-                return;
-            }
-
-            const categoriasMap = {};
-            inventario.forEach(item => {
-                const cat = (item.categoria || "Sin categoría").trim();
-                if(!categoriasMap[cat]) categoriasMap[cat] = [];
-                categoriasMap[cat].push(item);
-            });
-
-            contCajas.innerHTML = Object.keys(categoriasMap).map(catNombre => {
-                const itemsCat = categoriasMap[catNombre];
-                
-                itemsCat.sort((a,b) => {
-                    const peso = (est) => { if(est === 'No hay') return 1; if(est === 'Poca') return 2; return 3; };
-                    return peso(a.estadoDisp) - peso(b.estadoDisp);
-                });
-
-                const itemsHtml = itemsCat.map(i => {
-                    let badgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200";
-                    if(i.estadoDisp === 'Poca') badgeStyle = "bg-amber-100 text-amber-800 border-amber-200";
-                    if(i.estadoDisp === 'No hay') badgeStyle = "bg-rose-100 text-rose-800 border-rose-200";
-                    
-                    let estadoTxt = i.estadoDisp === 'DISP' ? 'Disponible' : (i.estadoDisp === 'Poca' ? 'Pocas piezas' : 'No disponible');
-
-                    return `
-                        <div class="p-3 bg-white rounded-xl border border-rose-100 space-y-1 text-xs shadow-sm flex flex-col justify-between">
-                            <div class="flex justify-between items-start">
-                                <span class="font-bold text-slate-800">${i.nombre}</span>
-                                <button type="button" onclick="cambiarEstadoRapido('${i.idDoc}', '${i.estadoDisp || 'DISP'}')" class="px-2 py-0.5 rounded-full font-bold text-[10px] border ${badgeStyle}">${estadoTxt}</button>
-                            </div>
-                            <div class="flex justify-between items-center pt-1 border-t border-rose-50">
-                                <span class="text-slate-500">Stock: <button type="button" onclick="cambiarCantidadDirecta('${i.idDoc}', ${i.cantidad})" class="bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded font-bold text-rose-700 border border-rose-200">${i.cantidad} pzs</button></span>
-                                <button type="button" onclick="eliminarInventario('${i.idDoc}')" class="text-rose-500 font-bold">🗑️</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                return `
-                    <div class="p-4 bg-rose-50/60 rounded-2xl border border-rose-200 space-y-3">
-                        <h3 class="font-bold text-rose-800 text-sm uppercase tracking-wide border-b border-rose-200 pb-1">🗂️ Caja / Categoría: ${catNombre}</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // MÓDULO BLÍSTERES DE PESTAÑAS
-        async function actualizarCantidadBlister(idDoc, itemIndex, nuevaCantidad) {
-            const val = parseInt(nuevaCantidad);
-            if(isNaN(val)) return;
-            const b = blisters.find(item => item.idDoc === idDoc);
-            if(b) {
-                b.items[itemIndex].c = val;
-                await db.collection("blisters").doc(idDoc).update({ items: b.items });
-            }
-        }
-
-        function renderBlisters() {
-            const grid = document.getElementById('gridBlisters');
-            if(!grid) return;
-            if(blisters.length === 0) {
-                grid.innerHTML = `<p class="col-span-full text-center text-slate-400 text-xs">Cargando blísteres...</p>`;
-                return;
-            }
-
-            const modelosUnicos = [];
-            const idsProcesados = new Set();
-            blisters.forEach(b => {
-                if(!idsProcesados.has(b.modelo)) {
-                    idsProcesados.add(b.modelo);
-                    modelosUnicos.push(b);
-                }
-            });
-
-            grid.innerHTML = modelosUnicos.map(b => {
-                const filasHtml = b.items.map((it, idx) => `
-                    <div class="flex justify-between items-center py-1 border-b border-rose-50 text-xs">
-                        <span class="font-semibold text-slate-600">Medida ${it.m}:</span>
-                        <input type="number" value="${it.c}" onchange="actualizarCantidadBlister('${b.idDoc}', ${idx}, this.value)" class="w-16 p-1 text-center border border-rose-200 rounded font-bold bg-white text-rose-700">
-                    </div>
-                `).join('');
-
-                return `
-                    <div class="p-4 bg-rose-50/40 rounded-2xl border border-rose-200 space-y-2 shadow-sm">
-                        <h4 class="font-bold text-rose-800 text-sm border-b border-rose-200 pb-1">${b.modelo}</h4>
-                        <div class="space-y-1 max-h-56 overflow-y-auto pr-1">
-                            ${filasHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // MÓDULO MIS DEUDAS
         function abrirModalDeuda() {
             document.getElementById('boxFormDeuda').classList.remove('hidden');
             document.getElementById('deudaEditId').value = '';
@@ -2243,105 +2088,6 @@
             }).join('');
 
             document.getElementById('gananciaNeta').innerText = ocultarSaldosPersonal ? '$**** MXN' : `$${totalGeneralAcumulado.toFixed(2)} MXN`;
-        }
-
-        // LÓGICA DE CONTROL DE GASTOS Y GASTOS EXTRAS DE TU ESPOSO
-        let timerGuardadoEsposo = null;
-
-        async function agregarGastoExtraEsposo(e) {
-            e.preventDefault();
-            const desc = document.getElementById('gastoExtraDesc').value.trim();
-            const monto = parseFloat(document.getElementById('gastoExtraMonto').value) || 0;
-            if(!desc || monto <= 0) return;
-
-            gastosExtrasEsposo.push({ id: Date.now(), desc, monto });
-            await guardarDatosEsposoEnFirebase();
-            document.getElementById('gastoExtraDesc').value = '';
-            document.getElementById('gastoExtraMonto').value = '';
-        }
-
-        async function eliminarGastoExtraEsposo(id) {
-            gastosExtrasEsposo = gastosExtrasEsposo.filter(g => g.id !== id);
-            await guardarDatosEsposoEnFirebase();
-        }
-
-        function renderGastosExtrasEsposo() {
-            const cont = document.getElementById('listaGastosExtrasEsposo');
-            if(!cont) return;
-            if(gastosExtrasEsposo.length === 0) {
-                cont.innerHTML = `<p class="text-slate-400 italic text-[11px]">No hay gastos extras registrados en esta semana.</p>`;
-                return;
-            }
-            cont.innerHTML = gastosExtrasEsposo.map(g => `
-                <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-amber-200 text-xs">
-                    <span>📝 <strong>${g.desc}</strong>: <strong class="text-rose-600">-$${g.monto.toFixed(2)}</strong></span>
-                    <button type="button" onclick="eliminarGastoExtraEsposo(${g.id})" class="text-rose-500 font-bold ml-2">✕</button>
-                </div>
-            `).join('');
-        }
-
-        async function guardarDatosEsposoEnFirebase() {
-            const sueldo = document.getElementById('espSueldoSemanal').value;
-            const mandado = document.getElementById('espMandado').value;
-            const taxis = document.getElementById('espTaxis').value;
-            const compartamosSem = document.getElementById('espCompartamosSem').value;
-            const colchon = document.getElementById('espColchon').value;
-            const quesos = document.getElementById('espQuesos').value;
-            const compartamosMes = document.getElementById('espCompartamosMes').value;
-
-            await db.collection("configuracion").doc("gastoEsposo").set({
-                sueldo, mandado, taxis, compartamosSem, colchon, quesos, compartamosMes, gastosExtras: gastosExtrasEsposo
-            });
-            calcularGastoEsposo();
-            renderGastosExtrasEsposo();
-        }
-
-        function guardarYCalcularEsposo() {
-            calcularGastoEsposo();
-            if(timerGuardadoEsposo) clearTimeout(timerGuardadoEsposo);
-            timerGuardadoEsposo = setTimeout(() => { guardarDatosEsposoEnFirebase(); }, 500);
-        }
-
-        async function limpiarCamposEsposo() {
-            if(confirm('¿Borrar y reiniciar las casillas y gastos extras de tu esposo?')) {
-                document.getElementById('espSueldoSemanal').value = '';
-                document.getElementById('espMandado').value = '';
-                document.getElementById('espTaxis').value = '';
-                document.getElementById('espCompartamosSem').value = '';
-                document.getElementById('espColchon').value = '';
-                document.getElementById('espQuesos').value = '';
-                document.getElementById('espCompartamosMes').value = '';
-                gastosExtrasEsposo = [];
-                await guardarDatosEsposoEnFirebase();
-            }
-        }
-
-        function calcularGastoEsposo() {
-            const sueldo = parseFloat(document.getElementById('espSueldoSemanal').value) || 0;
-            const mandado = parseFloat(document.getElementById('espMandado').value) || 0;
-            const taxis = parseFloat(document.getElementById('espTaxis').value) || 0;
-            const compartamosSem = parseFloat(document.getElementById('espCompartamosSem').value) || 0;
-            const colchon = parseFloat(document.getElementById('espColchon').value) || 0;
-            const quesos = parseFloat(document.getElementById('espQuesos').value) || 0;
-            const compartamosMes = parseFloat(document.getElementById('espCompartamosMes').value) || 0;
-
-            const totalExtras = gastosExtrasEsposo.reduce((acc, g) => acc + g.monto, 0);
-            const totalFijos = mandado + compartamosSem + colchon + quesos + compartamosMes + totalExtras;
-            const disponible = sueldo - totalFijos - taxis;
-
-            document.getElementById('espResTotalFijos').innerText = `$${totalFijos.toFixed(2)} MXN`;
-            document.getElementById('espResDisponible').innerText = `$${disponible.toFixed(2)} MXN`;
-
-            const boxAlerta = document.getElementById('espBoxAlerta');
-            const txtAlerta = document.getElementById('espResAlerta');
-
-            if(disponible >= 0) {
-                boxAlerta.className = "p-3 bg-emerald-50 rounded-xl border border-emerald-100";
-                txtAlerta.innerText = `✨ Sueldo cubierto con éxito. Quedan $${disponible.toFixed(2)} libres.`;
-            } else {
-                boxAlerta.className = "p-3 bg-rose-50 rounded-xl border border-rose-200";
-                txtAlerta.innerText = `⚠️ ¡Déficit! Faltan $${Math.abs(disponible).toFixed(2)} para cubrir todos los apartados y gastos anotados.`;
-            }
         }
 
         function renderExpedientes() {
