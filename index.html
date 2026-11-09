@@ -842,7 +842,7 @@ let gastosExtrasEsposo = [];
     
     // 👉 1. Guardar el estado en la memoria del navegador
     localStorage.setItem('gossip_modoDiciembre', modoDiciembre ? 'true' : 'false');
-
+    db.collection("configuracion").doc("modoDiciembre").set({ activo: modoDiciembre });
     const btn = document.getElementById('btnModoDiciembre'); // O el ID que tenga tu botón
     if(modoDiciembre) {
         if(btn) {
@@ -1075,6 +1075,14 @@ let gastosExtrasEsposo = [];
             renderCategoriasFinanzas();
             calcularFinanzas();
         });
+        db.collection("configuracion").doc("modoDiciembre").onSnapshot(function(doc) {
+    if(!doc.exists) return;
+    modoDiciembre = doc.data().activo === true;
+    var btn = document.getElementById('btnModoDiciembre');
+    if(btn) { btn.innerText = modoDiciembre ? "🎄 Modo Diciembre Activo (8am-10:30pm)" : "🎄 Modo Normal (8am-7:30pm)"; }
+    if(document.getElementById('pubFecha') && document.getElementById('pubFecha').value) { cargarHorariosDisponibles(); }
+    if(document.getElementById('filtroFechaAgenda') && document.getElementById('filtroFechaAgenda').value) { renderVistaCalendarioDia(); }
+});
 
         setupCanvas('canvasMapping');
 
