@@ -1390,7 +1390,7 @@ let gastosExtrasEsposo = [];
         const minsFin = String(horaFinCita.getMinutes()).padStart(2, '0');
         const horaLibreCalculada = `${horasFin}:${minsFin}`;
 
-        if (horasFin < 22 && !horasDisponiblesBase.includes(horaLibreCalculada)) {
+        if (horasFin < 21 && !horasDisponiblesBase.includes(horaLibreCalculada)) {
             horasDisponiblesBase.push(horaLibreCalculada);
         }
     });
